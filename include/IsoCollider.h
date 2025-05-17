@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "GameObject.h"
-#include "IsoRect.h"
 #include "Line.h"
 #include "Rect.h"
 #include "Vec2.h"
@@ -14,7 +13,7 @@
 class IsoCollider : public Component
 {
 public:
-    IsoCollider(GameObject& associated, Vec2 scale = {1, 1}, Vec2 offset = {0, 0}, bool opaque = true);
+    IsoCollider(GameObject& associated, Vec2 scale = {1, 1}, Vec2 offset = {0, 0}, bool passable = false);
 
     void Update(float dt);
     void Render();
@@ -23,8 +22,9 @@ public:
     void SetScale(Vec2 scale);
     void SetOffset(Vec2 offset);
 
+    Rect prevBox;
     Rect box;
-    bool opaque;
+    bool passable;
 private:
     Vec2 scale;
     Vec2 offset;

@@ -93,7 +93,16 @@ void Character::Update(float dt) {
 }
 
 void Character::NotifyCollision(GameObject& other) {
-    std::cout << "COLL " << associated.box.x << std::endl;
+    IsoCollider* colB = (IsoCollider*) other.GetComponent("IsoCollider");
+    if (colB != nullptr && !colB->passable) {
+        IsoCollider* colA = (IsoCollider*) associated.GetComponent("IsoCollider");
+        Rect before = colA->box;
+        Rect after = Collision::Solve(colA->box, colB->box, colA->prevBox);
+        Vec2 diff = (after.TopLeft() - before.TopLeft()).ToCart();
+
+        colA->box = after;
+        associated.box = associated.box.Add(diff);
+    }
 
     if (tookDamage || hp <= 0) return;
     if (other.GetComponent("Zombie") != nullptr && this == player) {
@@ -131,18 +140,6 @@ int Character::GetHP() {
 }
 
 void Character::Render() {
-    /*
-    Vec2 pos = Vec2(associated.box.x, associated.box.y) - Camera::pos;
-    std::cout << "Pos " << pos.x << ", " << pos.y << std::endl;
-    auto iso_pos = [](float x, float y, float w, float h) {
-        return Vec2((x * 0.5 * w) - (y * 0.5 * w), (x * 0.25 * h) + (y * 0.25 * h));
-    };
-    Vec2 pos1 = iso_pos(pos.x, pos.y, associated.box.w, associated.box.h);
-    std::cout << "Pos1 " << pos1.x << ", " << pos1.y << std::endl;
-    Vec2 pos2 = iso_pos(pos.x + associated.box.w, pos.y, associated.box.w, associated.box.h);
-    SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(GAME_RENDERER, pos1.x, pos1.y, pos2.x, pos2.y);
-*/
 }
 
 void Character::Issue(Command task) {

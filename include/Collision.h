@@ -1,7 +1,6 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-#include "IsoRect.h"
 #include "Rect.h"
 #include "Vec2.h"
 
@@ -51,6 +50,27 @@ public:
         }
 
         return true;
+    }
+
+    static inline Rect Solve(Rect a, Rect& b, Rect prev) {
+        auto inside = [&](Rect a, Rect b) {
+            constexpr float eps = 0.01;
+            return !(a.x + eps > b.x + b.w || a.x + a.w < b.x + eps ||
+                     a.y + eps > b.y + b.h || a.y + a.h < b.y + eps);
+        };
+        if (!inside(a, b)) return a;
+
+        Rect moveX = prev.Add({a.x - prev.x, 0});
+        Rect moveY = prev.Add({0, a.y - prev.y});
+        // Solve X
+        if (inside(moveX, b)) {
+            a.x = abs(a.x + a.w - b.x) <= abs(b.x + b.w - a.x) ? b.x - a.w : b.x + b.w;
+        }
+        // Solve Y
+        if (inside(moveY, b)) {
+            a.y = abs(a.y + a.h - b.y) <= abs(b.y + b.h - a.y) ? b.y - a.h : b.y + b.h;
+        }
+        return a;
     }
 
 private:

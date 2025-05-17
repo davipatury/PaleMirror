@@ -8,17 +8,18 @@
 #include "Game.h"
 #endif
 
-IsoCollider::IsoCollider(GameObject& associated, Vec2 scale, Vec2 offset, bool opaque) : Component(associated) {
+IsoCollider::IsoCollider(GameObject& associated, Vec2 scale, Vec2 offset, bool passable) : Component(associated) {
     this->scale = scale;
     this->offset = offset;
-    this->opaque = opaque;
+    this->passable = passable;
 }
 
 void IsoCollider::Update(float dt) {
     Vec2 bli = (associated.box.BottomLeft() + offset).ToIso();
     Vec2 tl = bli.Add({0, -associated.box.w});
 
-    box = Rect(tl.x, tl.y, associated.box.w, associated.box.w);
+    prevBox = box;
+    box = Rect(tl.x, tl.y, associated.box.w * scale.x, associated.box.w * scale.y);
 }
 
 void IsoCollider::Render() {
