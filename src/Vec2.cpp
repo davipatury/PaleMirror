@@ -62,3 +62,11 @@ Vec2 Vec2::Rotate(float angle) {
     float seno = sin(angle);
     return Vec2(x * coss - y * seno, y * coss + x * seno);
 }
+
+Vec2 Vec2::ToCart() {
+    return {(x - y) / 2.0f, (x + y) / 4.0f};
+}
+
+Vec2 Vec2::ToIso() {
+    return {x + 2.0f * y, -x + 2.0f * y};
+}

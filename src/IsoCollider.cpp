@@ -15,66 +15,28 @@ IsoCollider::IsoCollider(GameObject& associated, Vec2 scale, Vec2 offset, bool o
 }
 
 void IsoCollider::Update(float dt) {
-    box = IsoRect(associated.box);
-    box.w = box.w * scale.x;
-    box.h = box.h * scale.y;
-    box = box.Add(offset);
-}
+    Vec2 bli = (associated.box.BottomLeft() + offset).ToIso();
+    Vec2 tl = bli.Add({0, -associated.box.w});
 
-std::vector<Vec2> IsoCollider::GetPoints() {
-    return std::vector<Vec2>{
-        box.Top(),
-        box.Right(),
-        box.Bottom(),
-        box.Left(),
-    };
-}
-
-std::vector<Vec2> IsoCollider::GetExtendedPoints() {
-    return std::vector<Vec2>{
-        box.Top(),
-        box.Top().Rotate(0.00001),
-        box.Top().Rotate(-0.00001),
-        box.Right(),
-        box.Right().Rotate(0.00001),
-        box.Right().Rotate(-0.00001),
-        box.Bottom(),
-        box.Bottom().Rotate(0.00001),
-        box.Bottom().Rotate(-0.00001),
-        box.Left(),
-        box.Left().Rotate(0.00001),
-        box.Left().Rotate(-0.00001),
-    };
-}
-
-std::vector<Line> IsoCollider::GetLines() {
-    return std::vector<Line>{
-        Line(box.Top(), box.Right()),
-        Line(box.Right(), box.Bottom()),
-        Line(box.Bottom(), box.Left()),
-        Line(box.Left(), box.Top())
-    };
+    box = Rect(tl.x, tl.y, associated.box.w, associated.box.w);
 }
 
 void IsoCollider::Render() {
 #ifdef DEBUG_COLLIDER
     SDL_Point points[5];
 
-    // Bottom
-    Vec2 point = box.Bottom() - Camera::pos;
+    Vec2 point = box.TopLeft().ToCart() - Camera::pos;
     points[0] = {(int) point.x, (int) point.y};
     points[4] = {(int) point.x, (int) point.y};
 
-    // Right
-    point = box.Right() - Camera::pos;
+    point = box.TopRight().ToCart() - Camera::pos;
     points[1] = {(int) point.x, (int) point.y};
 
-    // Top
-    point = box.Top() - Camera::pos;
+    point = box.BottomRight().ToCart() - Camera::pos;
     points[2] = {(int) point.x, (int) point.y};
 
     // Left
-    point = box.Left() - Camera::pos;
+    point = box.BottomLeft().ToCart() - Camera::pos;
     points[3] = {(int) point.x, (int) point.y};
 
     SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
@@ -85,6 +47,34 @@ void IsoCollider::Render() {
     // Center
     point = box.Center() - Camera::pos;
     SDL_RenderDrawPoint(Game::GetInstance().GetRenderer(), point.x, point.y);
+
+/*
+    Vec2 bli = to_iso(associated.box.BottomLeft());
+
+    Vec2 tl = to_cart(bli.Add({0, -associated.box.w}));
+    Vec2 tr = to_cart(bli.Add({associated.box.w, -associated.box.w}));
+    Vec2 br = to_cart(bli.Add({associated.box.w, 0}));
+    Vec2 bl = to_cart(bli);
+
+    SDL_Point points[5];
+    Vec2 point = tl - Camera::pos;
+    points[0] = {(int) point.x, (int) point.y};
+    points[4] = {(int) point.x, (int) point.y};
+
+    point = tr - Camera::pos;
+    points[1] = {(int) point.x, (int) point.y};
+
+    point = br - Camera::pos;
+    points[2] = {(int) point.x, (int) point.y};
+
+    point = bl - Camera::pos;
+    points[3] = {(int) point.x, (int) point.y};
+
+    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawLines(Game::GetInstance().GetRenderer(), points, 5);
+    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 0, 255, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawPoints(Game::GetInstance().GetRenderer(), points, 5);
+*/
 #endif // DEBUG
 }
 

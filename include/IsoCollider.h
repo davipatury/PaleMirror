@@ -23,11 +23,7 @@ public:
     void SetScale(Vec2 scale);
     void SetOffset(Vec2 offset);
 
-    std::vector<Vec2> GetPoints();
-    std::vector<Vec2> GetExtendedPoints();
-    std::vector<Line> GetLines();
-
-    IsoRect box;
+    Rect box;
     bool opaque;
 private:
     Vec2 scale;
