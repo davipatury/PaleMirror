@@ -107,6 +107,21 @@ void StageState::Update(float dt) {
         AddObject(test);
     }
 
+    // Spawn mirror puzzle
+    if (InputManager::GetInstance().KeyPress('m')) {
+        GameObject* mp = new GameObject();
+        mp->AddComponent(new MirrorPuzzle((*mp), std::vector<MirrorPuzzle::Piece>{
+            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/1.png", Vec2{0, 0}),
+            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/2.png", Vec2{103, 0}),
+            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/3.png", Vec2{129, 147}),
+            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/4.png", Vec2{0, 175}),
+            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/5.png", Vec2{121, 311}),
+            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/6.png", Vec2{0, 329})
+        }));
+        mp->box.z = 2;
+        AddObject(mp);
+    }
+
     // Update game objects
     UpdateArray(dt);
 
