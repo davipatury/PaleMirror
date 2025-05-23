@@ -5,6 +5,8 @@
 #include <string>
 #include <memory>
 #include <queue>
+#include <vector>
+#include <cmath>
 
 #include "Animator.h"
 #include "Collider.h"
@@ -15,6 +17,8 @@
 #include "Sound.h"
 #include "Timer.h"
 #include "Vec2.h"
+
+#define RENDER_HITBOX 1  // Define para controlar a renderização da hitbox
 
 class Character : public Component
 {
@@ -30,7 +34,7 @@ public:
 
     class Command {
     public:
-        enum CommandType { MOVE, SHOOT };
+        enum CommandType { MOVE, ATTACK, SHOOT };
         Command(CommandType type, float x, float y);
         CommandType type;
         Vec2 pos;
@@ -42,19 +46,32 @@ public:
 
     int GetHP();
 
+    SDL_Rect CalculateAttackBox(float x, float y, float angle);
+
     static Character* player;
 private:
+    int GetDirectionFromAngle(float angle);
+
     std::weak_ptr<GameObject> gun;
     std::queue<Command> taskQueue;
     Vec2 speed;
+    Vec2 lastMoveDirection;
     float linearSpeed;
     int hp;
     Timer deathTimer;
+    Timer damageTimer;
+    Timer attackTimer;
     bool flip;
     bool tookDamage;
-    Timer damageTimer;
+    bool isAttacking;
     Sound* deathSound;
     Sound* hitSound;
+
+    std::vector<std::string> idleSprites;    // 17 frames, 142ms por frame
+    std::vector<std::string> walkSprites;    // 11 frames, 100ms por frame
+    std::vector<std::string> attackSprites;  // 15 frames, 100ms por frame
+    std::string currentSprite;
+    int currentDirection; // Índice da direção atual (0-7)
 };
 
 #endif // CHARACTER_H

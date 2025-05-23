@@ -1,26 +1,46 @@
 #include "Character.h"
-
 #include "Game.h"
+#include "HitAttack.h"
 
 Character* Character::player;
 Character::Character(GameObject& associated, const char* sprite) : Component(associated) {
     linearSpeed = 100;
     hp = 100;
     flip = false;
+    lastMoveDirection = Vec2(1, 0);
     deathSound = new Sound("Recursos/audio/Dead.wav");
     hitSound = new Sound("Recursos/audio/Hit1.wav");
 
-    SpriteRenderer* spriteRdr = new SpriteRenderer(associated, sprite, 3, 4);
+    const std::string basePath = "Recursos/img/Knight/";
+    const std::string types[] = {"Idle", "Walk", "Attack"};
+
+    for (int i = 0; i < 8; i++) {
+        idleSprites.push_back(basePath + types[0] + "/Knight_" + types[0] + "_dir" + std::to_string(i+1) + ".png");
+        walkSprites.push_back(basePath + types[1] + "/Knight_" + types[1] + "_dir" + std::to_string(i+1) + ".png");
+        attackSprites.push_back(basePath + types[2] + "/Knight_" + types[2] + "_dir" + std::to_string(i+1) + ".png");
+    }
+
+    SpriteRenderer* spriteRdr = new SpriteRenderer(associated, idleSprites[7].c_str(), 5, 4);
     associated.AddComponent(spriteRdr);
+    currentSprite = idleSprites[7];
+    currentDirection = 7;
 
     Animator* animator = new Animator(associated);
     associated.AddComponent(animator);
-    animator->AddAnimation("idle", Animation(6, 9, 0.5));
-    animator->AddAnimation("idleF", Animation(6, 9, 0.5, SDL_FLIP_HORIZONTAL));
-    animator->AddAnimation("walking", Animation(0, 5, 0.2));
-    animator->AddAnimation("walkingF", Animation(0, 5, 0.2, SDL_FLIP_HORIZONTAL));
-    animator->AddAnimation("dead", Animation(10, 11, 0.5));
-    animator->SetAnimation("idle");
+    
+    for (int i = 0; i < 8; i++) {
+        animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 16, 0.142));
+        animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 10, 0.1));
+        animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 14, 0.1));
+    }
+
+    animator->AddAnimation("dead", Animation(0, 0, 0.5));
+    animator->SetAnimation("idle8");
+
+    isAttacking = false;
+    deathTimer = Timer();
+    damageTimer = Timer();
+    attackTimer = Timer();
 }
 
 Character::~Character() {
@@ -31,15 +51,9 @@ Character::~Character() {
 }
 
 void Character::Start() {
-    GameObject* gunGO = new GameObject();
-    Gun* gunComp = new Gun((*gunGO), Game::GetInstance().GetCurrentState().GetObjectPtr(&associated));
-    gunGO->AddComponent(gunComp);
-    gun = Game::GetInstance().GetCurrentState().AddObject(gunGO);
-
     Collider* collider = new Collider(associated);
     associated.AddComponent(collider);
-
-    IsoCollider* isoCollider = new IsoCollider(associated, {1, 1}, {0, 0}, false);
+    IsoCollider* isoCollider = new IsoCollider(associated, {0.30, 0.30}, {0, -125}, false);
     associated.AddComponent(isoCollider);
 }
 
@@ -49,36 +63,107 @@ void Character::Update(float dt) {
         Command task = taskQueue.front();
         switch (task.type) {
         case Command::MOVE: {
-            Vec2 moveSpeed = task.pos.Normalized().MulScalar(linearSpeed * dt);
-            associated.box = associated.box.Add(moveSpeed);
-            moving = true;
-            flip = moveSpeed.x < 0;
+            if (!isAttacking) {
+                Vec2 moveSpeed = task.pos.Normalized().MulScalar(linearSpeed * dt);
+                associated.box = associated.box.Add(moveSpeed);
+                moving = true;
+                if (moveSpeed.x != 0 || moveSpeed.y != 0) {
+                    lastMoveDirection = task.pos.Normalized();
+                }
 
-            if (this == player) {
-                if (associated.box.x < 640) associated.box.x = 640;
-                if (associated.box.y < 512) associated.box.y = 512;
-                float maxX = 1920 - associated.box.w;
-                float maxY = 2048 - associated.box.h;
-                if (associated.box.x > maxX) associated.box.x = maxX;
-                if (associated.box.y > maxY) associated.box.y = maxY;
+                if (this == player) {
+                    float playerOffsetY = 0;
+                    float playerOffsetX = -125;
+                    if (associated.box.x + playerOffsetX < 640) associated.box.x = 640 - playerOffsetX;
+                    if (associated.box.y + playerOffsetY < 512) associated.box.y = 512 - playerOffsetY;
+                    float maxX = 1920 - associated.box.w;
+                    float maxY = 2048 - associated.box.h;
+                    if (associated.box.x + playerOffsetX > maxX) associated.box.x = maxX - playerOffsetX;
+                    if (associated.box.y + playerOffsetY > maxY) associated.box.y = maxY - playerOffsetY;
+                }
             }
+            taskQueue.pop();
             break;
         }
-        case Command::SHOOT: {
-            Gun* gunComp = (Gun*) gun.lock().get()->GetComponent("Gun");
-            gunComp->Shoot(task.pos);
+        case Command::ATTACK: {
+            if (!isAttacking) {
+                isAttacking = true;
+                attackTimer.Restart();
+                SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+                if (spriteRdr) {
+                    spriteRdr->Open(attackSprites[currentDirection].c_str());
+                    spriteRdr->SetFrameCount(4, 4);
+                }
+
+                float angle = atan2(lastMoveDirection.y, lastMoveDirection.x);
+                int centerX = (int)(associated.box.x + associated.box.w/2);
+                int centerY = (int)(associated.box.y + associated.box.h/2);
+                SDL_Rect attackBox = CalculateAttackBox(centerX, centerY, angle);
+                
+                GameObject* attackGO = new GameObject();
+                attackGO->box.x = attackBox.x;
+                attackGO->box.y = attackBox.y;
+                attackGO->box.w = attackBox.w;
+                attackGO->box.h = attackBox.h;
+                
+                HitAttack* hitAttack = new HitAttack(*attackGO, 20, 1);
+                attackGO->AddComponent(hitAttack);
+                
+                Game::GetInstance().GetCurrentState().AddObject(attackGO);
+            }
+            taskQueue.pop();
             break;
         }
         }
-        taskQueue.pop();
     }
 
     deathTimer.Update(dt);
     damageTimer.Update(dt);
+    attackTimer.Update(dt);
 
     Animator* animator = (Animator*) associated.GetComponent("Animator");
+    SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+    
     if (hp > 0) {
-        animator->SetAnimation(moving ? (flip ? "walkingF" : "walking") : (flip ? "idleF" : "idle"));
+        std::string animName;
+        float angle = atan2(lastMoveDirection.y, lastMoveDirection.x) * 180 / M_PI;
+        currentDirection = GetDirectionFromAngle(angle);
+        
+        if (isAttacking) {
+            animName = "attack" + std::to_string(currentDirection + 1);
+
+            if (attackTimer.Get() > 1.0) {
+                isAttacking = false;
+                if (spriteRdr) {
+                    if (moving) {
+                        spriteRdr->Open(walkSprites[currentDirection].c_str());
+                        spriteRdr->SetFrameCount(4, 3);
+                        currentSprite = walkSprites[currentDirection];
+                    } else {
+                        spriteRdr->Open(idleSprites[currentDirection].c_str());
+                        spriteRdr->SetFrameCount(5, 4);
+                        currentSprite = idleSprites[currentDirection];
+                    }
+                }
+            }
+        } else if (moving) {
+            animName = "walking" + std::to_string(currentDirection + 1);
+
+            if (spriteRdr && currentSprite != walkSprites[currentDirection]) {
+                spriteRdr->Open(walkSprites[currentDirection].c_str());
+                spriteRdr->SetFrameCount(4, 3);
+                currentSprite = walkSprites[currentDirection];
+            }
+        } else {
+            animName = "idle" + std::to_string(currentDirection + 1);
+
+            if (spriteRdr && currentSprite != idleSprites[currentDirection]) {
+                spriteRdr->Open(idleSprites[currentDirection].c_str());
+                spriteRdr->SetFrameCount(5, 4);
+                currentSprite = idleSprites[currentDirection];
+            }
+        }
+        animator->SetAnimation(animName);
     } else {
         if (deathTimer.Get() > 3) {
             associated.RequestDelete();
@@ -93,8 +178,6 @@ void Character::Update(float dt) {
 }
 
 void Character::NotifyCollision(GameObject& other) {
-    std::cout << "COLL " << associated.box.x << std::endl;
-
     if (tookDamage || hp <= 0) return;
     if (other.GetComponent("Zombie") != nullptr && this == player) {
         Hit(20);
@@ -130,20 +213,31 @@ int Character::GetHP() {
     return hp;
 }
 
-void Character::Render() {
-    /*
-    Vec2 pos = Vec2(associated.box.x, associated.box.y) - Camera::pos;
-    std::cout << "Pos " << pos.x << ", " << pos.y << std::endl;
-    auto iso_pos = [](float x, float y, float w, float h) {
-        return Vec2((x * 0.5 * w) - (y * 0.5 * w), (x * 0.25 * h) + (y * 0.25 * h));
-    };
-    Vec2 pos1 = iso_pos(pos.x, pos.y, associated.box.w, associated.box.h);
-    std::cout << "Pos1 " << pos1.x << ", " << pos1.y << std::endl;
-    Vec2 pos2 = iso_pos(pos.x + associated.box.w, pos.y, associated.box.w, associated.box.h);
-    SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(GAME_RENDERER, pos1.x, pos1.y, pos2.x, pos2.y);
-*/
+SDL_Rect Character::CalculateAttackBox(float x, float y, float angle) {
+    SDL_Rect box;
+    float distance = 50;
+    int size = 70;
+    
+    float centerX = x + distance * cos(angle);
+    float centerY = y + distance * sin(angle);
+    
+    float perspectiveOffset = 0;
+    float normalizedAngle = angle * 180.0f / M_PI;
+    if (normalizedAngle < 0) normalizedAngle += 360;
+    
+    if (normalizedAngle >= 0 && normalizedAngle <= 180) {
+        perspectiveOffset = -50;
+    }
+    
+    box.x = centerX - size/2;
+    box.y = centerY - size/2 + perspectiveOffset;
+    box.w = size;
+    box.h = size;
+    
+    return box;
 }
+
+void Character::Render() {}
 
 void Character::Issue(Command task) {
     taskQueue.push(task);
@@ -157,4 +251,17 @@ Character::Command::Command(CommandType type, float x, float y) {
     this->type = type;
     pos.x = x;
     pos.y = y;
+}
+
+int Character::GetDirectionFromAngle(float angle) {
+    if (angle < 0) angle += 360;
+    
+    if (angle >= 337.5 || angle < 22.5) return 5;      // Direita (6)
+    if (angle >= 22.5 && angle < 67.5) return 6;       // Baixo-Direita (7)
+    if (angle >= 67.5 && angle < 112.5) return 7;      // Baixo (8)
+    if (angle >= 112.5 && angle < 157.5) return 0;     // Baixo-Esquerda (1)
+    if (angle >= 157.5 && angle < 202.5) return 1;     // Esquerda (2)
+    if (angle >= 202.5 && angle < 247.5) return 2;     // Cima-Esquerda (3)
+    if (angle >= 247.5 && angle < 292.5) return 3;     // Cima (4)
+    return 4;                                          // Cima-Direita (5)
 }
