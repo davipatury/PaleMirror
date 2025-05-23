@@ -1,5 +1,5 @@
 #include "Zombie.h"
-
+#include "HitAttack.h"
 int Zombie::zombieCounter;
 Zombie::Zombie(GameObject& associated) : Component(associated) {
     hitpoints = 100;
@@ -78,6 +78,10 @@ void Zombie::NotifyCollision(GameObject& other) {
     if (bullet != nullptr) {
         Damage(bullet->GetDamage());
         hitSound->Play();
+    }
+    HitAttack* hitAttack = (HitAttack*) other.GetComponent("HitAttack");
+    if (hitAttack != nullptr) {
+        Damage(hitAttack->GetDamage());
     }
 }
 

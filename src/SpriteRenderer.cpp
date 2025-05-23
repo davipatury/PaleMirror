@@ -15,6 +15,8 @@ void SpriteRenderer::Open(const char* file) {
 
 void SpriteRenderer::SetFrameCount(int frameCountW, int frameCountH) {
     sprite.SetFrameCount(frameCountW, frameCountH);
+    associated.box.w = sprite.GetWidth();
+    associated.box.h = sprite.GetHeight();
 }
 
 void SpriteRenderer::Update(float dt) { }

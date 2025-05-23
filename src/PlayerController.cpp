@@ -14,10 +14,8 @@ void PlayerController::Update(float dt) {
     if (InputManager::GetInstance().IsKeyDown(SDLK_a)) moveX--;
     if (InputManager::GetInstance().IsKeyDown(SDLK_s)) moveY++;
     if (InputManager::GetInstance().IsKeyDown(SDLK_d)) moveX++;
-    if (InputManager::GetInstance().MousePress(LEFT_MOUSE_BUTTON)) {
-        float shootX = InputManager::GetInstance().GetMouseX() + Camera::pos.x;
-        float shootY = InputManager::GetInstance().GetMouseY() + Camera::pos.y;
-        chr->Issue(Character::Command(Character::Command::SHOOT, shootX, shootY));
+    if (InputManager::GetInstance().KeyPress('c')) {
+        chr->Issue(Character::Command(Character::Command::ATTACK, 0, 0));
     }
     if (moveX != 0 || moveY != 0) {
         chr->Issue(Character::Command(Character::Command::MOVE, moveX, moveY));
