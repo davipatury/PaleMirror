@@ -1,7 +1,6 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-#include "IsoRect.h"
 #include "Rect.h"
 #include "Vec2.h"
 
@@ -53,46 +52,25 @@ public:
         return true;
     }
 
-    static inline bool IsIsoColliding(IsoRect& a, IsoRect& b, float angleOfA, float angleOfB) {
-        Vec2 A[] = { a.Left(),
-            a.Bottom(),
-            a.Right(),
-            a.Top()
+    static inline Rect Solve(Rect a, Rect& b, Rect prev) {
+        auto inside = [&](Rect a, Rect b) {
+            constexpr float eps = 0.01;
+            return !(a.x + eps > b.x + b.w || a.x + a.w < b.x + eps ||
+                     a.y + eps > b.y + b.h || a.y + a.h < b.y + eps);
         };
-        Vec2 B[] = { b.Left(),
-            b.Bottom(),
-            b.Right(),
-            b.Top()
-        };
+        if (!inside(a, b)) return a;
 
-        for (auto& v : A) {
-            v = (v - a.Center()).Rotate(angleOfA * 180 * M_PI) + a.Center();
+        Rect moveX = prev.Add({a.x - prev.x, 0});
+        Rect moveY = prev.Add({0, a.y - prev.y});
+        // Solve X
+        if (inside(moveX, b)) {
+            a.x = abs(a.x + a.w - b.x) <= abs(b.x + b.w - a.x) ? b.x - a.w : b.x + b.w;
         }
-
-        for (auto& v : B) {
-            v = (v - b.Center()).Rotate(angleOfB * 180 * M_PI) + b.Center();
+        // Solve Y
+        if (inside(moveY, b)) {
+            a.y = abs(a.y + a.h - b.y) <= abs(b.y + b.h - a.y) ? b.y - a.h : b.y + b.h;
         }
-
-        Vec2 axes[] = { (A[0] - A[1]).Normalized(), (A[1] - A[2]).Normalized(), (B[0] - B[1]).Normalized(), (B[1] - B[2]).Normalized() };
-
-        for (auto& axis : axes) {
-            float P[4];
-
-            for (int i = 0; i < 4; ++i) P[i] = Dot(A[i], axis);
-
-            float minA = *std::min_element(P, P + 4);
-            float maxA = *std::max_element(P, P + 4);
-
-            for (int i = 0; i < 4; ++i) P[i] = Dot(B[i], axis);
-
-            float minB = *std::min_element(P, P + 4);
-            float maxB = *std::max_element(P, P + 4);
-
-            if (maxA < minB || minA > maxB)
-                return false;
-        }
-
-        return true;
+        return a;
     }
 
 private:

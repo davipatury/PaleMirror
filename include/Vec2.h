@@ -23,6 +23,9 @@ public:
     float Angle(Vec2 vec);
     Vec2 Rotate(float angle);
 
+    Vec2 ToIso();
+    Vec2 ToCart();
+
     float x;
     float y;
 };

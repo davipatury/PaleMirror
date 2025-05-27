@@ -51,6 +51,7 @@ add_executable(PaleMirror src/main.cpp
     include/Ray.h src/Ray.cpp
     include/ShadowCaster.h src/ShadowCaster.cpp
     include/MirrorPuzzle.h src/MirrorPuzzle.cpp
+    include/HitAttack.h src/HitAttack.cpp
 )
 
 include(GNUInstallDirs)

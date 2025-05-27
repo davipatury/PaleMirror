@@ -20,10 +20,6 @@ Rect Rect::Add(Vec2 vec) {
     return Rect(x + vec.x, y + vec.y, w, h);
 }
 
-Vec2 Rect::Center() {
-    return Vec2(x + (w / 2), y + (h / 2));
-}
-
 float Rect::CenterDistance(Rect rect) {
     return Center().Distance(rect.Center());
 }

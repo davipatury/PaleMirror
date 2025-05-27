@@ -157,13 +157,12 @@ void StageState::Update(float dt) {
                 GameObject* go2 = objectArray[j].get();
                 IsoCollider* colliderB = (IsoCollider*) go2->GetComponent("IsoCollider");
                 if (colliderB != nullptr) {
-                    if (Collision::IsIsoColliding(
+                    if (Collision::IsColliding(
                             colliderA->box,
                             colliderB->box,
                             go->angleDeg,
                             go2->angleDeg
                             )) {
-                        std::cout << "Real coll" << std::endl;
                         go->NotifyCollision(*go2);
                         go2->NotifyCollision(*go);
                     }
@@ -240,152 +239,6 @@ void StageState::Render() {
     SDL_SetRenderTarget(GAME_RENDERER, nullptr);
     SDL_RenderCopy(GAME_RENDERER, light, &screenRect, &screenRect);
 */
-#ifdef TESTE
-    Vec2 origin = IsoRect(Character::player->associated.box).Center();
-
-    // Initialize points and lines vectors only with the camera rect
-    std::vector<Vec2> points{Camera::pos, Camera::pos.Add({1200, 0}),
-                                 Camera::pos.Add({1200, 900}), Camera::pos.Add({0, 900})};
-
-    std::vector<Line> lines{Line(points[0], points[1]), Line(points[1], points[2]),
-                                Line(points[2], points[3]), Line(points[3], points[0])};
-
-    // Get all valid points/lines
-    for (int i = 0; i < objectArray.size(); i++) {
-        GameObject* go = objectArray[i].get();
-        IsoCollider* collider = (IsoCollider*) go->GetComponent("IsoCollider");
-        if (collider != nullptr && collider->opaque) {
-            Vec2 objCenter = collider->box.Center();
-            if (objCenter.x > Camera::pos.x && objCenter.x < Camera::pos.x + 1200 &&
-                objCenter.y > Camera::pos.y && objCenter.y < Camera::pos.y + 900) {
-                std::vector<Vec2> colPoints = collider->GetExtendedPoints();
-                std::vector<Line> colLines = collider->GetLines();
-                points.insert(points.end(), colPoints.begin(), colPoints.end());
-                lines.insert(lines.end(), colLines.begin(), colLines.end());
-            }
-        }
-    }
-
-#ifdef DEBUG_VISIBILITY
-    for (int i = 0; i < lines.size(); i++) {
-        Line line = lines[i];
-        SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawLine(GAME_RENDERER,
-                            line.src.x - Camera::pos.x, line.src.y - Camera::pos.y,
-                            line.dst.x - Camera::pos.x, line.dst.y - Camera::pos.y);
-    }
-#endif
-
-    auto gen_vertex = [](float x, float y) {
-        return SDL_Vertex {SDL_FPoint {x, y}, SDL_Color{ 255, 255, 255, 0 }, SDL_FPoint{ 0, 0 } };
-    };
-
-    // Create list with all intersection vertices
-    std::vector<SDL_Vertex> vertices;
-    for (int i = 0; i < points.size(); i++) {
-        Ray::Intersection inter = Ray::ClosestIntersection(Line(origin, points[i]), lines);
-        if (inter.exists) {
-#ifdef DEBUG_VISIBILITY
-            SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 255, SDL_ALPHA_OPAQUE);
-            SDL_RenderDrawLine(GAME_RENDERER,
-                                origin.x - Camera::pos.x, origin.y - Camera::pos.y,
-                                inter.pos.x - Camera::pos.x, inter.pos.y - Camera::pos.y);
-#endif
-            vertices.emplace_back(gen_vertex(inter.pos.x - Camera::pos.x, inter.pos.y - Camera::pos.y));
-        }
-    }
-
-    origin = origin.Sub(Camera::pos);
-    // Sort all vertices based on ray angle
-    std::sort(vertices.begin(), vertices.end(), [origin](SDL_Vertex a, SDL_Vertex b) {
-        return Vec2(a.position.x, a.position.y).Angle(origin) < Vec2(b.position.x, b.position.y).Angle(origin);
-    });
-    // First vertix is always origin
-    vertices.insert(vertices.begin(), gen_vertex(origin.x, origin.y));
-
-    /* Create indice vector
-     * For every vertice we must have:
-     * origin, vertice index, next vertice index
-     */
-    std::vector<int> indices;
-    for (int i = 1; i < vertices.size(); i++) {
-        indices.insert(indices.end(), { 0, i, i == vertices.size() - 1 ? 1 : i + 1 });
-    }
-
-    // Visibility layer
-    SDL_Texture* visibility = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 1200, 900);
-    SDL_SetRenderTarget(GAME_RENDERER, visibility);
-
-    // Black everything
-    SDL_Rect screenRect;
-    screenRect.x = screenRect.y = 0;
-    screenRect.w = 1200;
-    screenRect.h = 900;
-    SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, 255);
-    SDL_RenderFillRect(GAME_RENDERER, &screenRect);
-
-    // Render white triangles
-    SDL_SetTextureBlendMode(visibility, SDL_BLENDMODE_BLEND);
-    SDL_RenderGeometry(GAME_RENDERER, nullptr, vertices.data(), vertices.size(), indices.data(), indices.size());
-
-    // Light layer
-    SDL_Texture* light = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 1200, 900);
-    SDL_SetRenderTarget(GAME_RENDERER, light);
-    SDL_SetTextureBlendMode(light, SDL_BLENDMODE_BLEND);
-
-    // Backlight gradient
-    SDL_Texture* backlight = Resources::GetImage("Recursos/img/backlight.png");
-    //SDL_RenderCopy(GAME_RENDERER, backlight, &screenRect, &screenRect);
-
-    // Flashlight
-    Vec2 mousePos = Vec2(InputManager::GetInstance().GetMouseX(), InputManager::GetInstance().GetMouseY());
-    float mouseAngle = mousePos.Angle(origin) + M_PI * 0.5;
-    int flashlightSize = 600;
-    float flashlightAngle = M_PI / 8;
-    Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(mouseAngle - flashlightAngle), origin.y - flashlightSize * cos(mouseAngle - flashlightAngle));
-    Vec2 flRight = Vec2(origin.x + flashlightSize * sin(mouseAngle + flashlightAngle), origin.y - flashlightSize * cos(mouseAngle + flashlightAngle));
-
-    /*SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, 255);
-    SDL_RenderDrawLine(GAME_RENDERER, origin.x, origin.y, flashlightCenter.x, flashlightCenter.y);
-    SDL_RenderDrawLine(GAME_RENDERER, origin.x, origin.y, flLeft.x, flLeft.y);
-    SDL_RenderDrawLine(GAME_RENDERER, origin.x, origin.y, flRight.x, flRight.y);*/
-
-    //std::vector<SDL_Vertex> lightVertices = { gen_vertex(origin.x, origin.y), gen_vertex(flLeft.x, flLeft.y), gen_vertex(flRight.x, flRight.y) };
-    //return SDL_Vertex {SDL_FPoint {x, y}, SDL_Color{ 255, 255, 255, 0 }, SDL_FPoint{ 0, 0 } };
-    std::vector<SDL_Vertex> lightVertices = {
-        SDL_Vertex {SDL_FPoint {origin.x, origin.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 0.5, 0.5 } },
-        SDL_Vertex {SDL_FPoint {flLeft.x, flLeft.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 1, 0.3 } },
-        SDL_Vertex {SDL_FPoint {flRight.x, flRight.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 1, 0.7 } }
-    };
-    SDL_BlendMode bm;
-    SDL_GetRenderDrawBlendMode(GAME_RENDERER, &bm);
-    std::cout << bm << std::endl;
-    SDL_Texture* flashlight = Resources::GetImage("Recursos/img/flashlight.png");
-    int r = SDL_RenderGeometry(GAME_RENDERER, flashlight, lightVertices.data(), lightVertices.size(), nullptr, 0);
-
-    std::cout << r << " " << SDL_GetError() << std::endl;
-    //SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDOPERATION_MAXIMUM, );
-
-    //SDL_Texture* flashlight = Resources::GetImage("Recursos/img/flashlight.png");
-    SDL_Rect flSrcRect;
-    flSrcRect.x = 0;
-    flSrcRect.y = 0;
-    SDL_Rect flDstRect;
-    flDstRect.x = 450;
-    flDstRect.y = 242;
-    flDstRect.w = flSrcRect.w = 450;
-    flDstRect.h = flSrcRect.h = 415;
-    //SDL_RenderCopy(GAME_RENDERER, flashlight, &flSrcRect, &flDstRect);
-    //SDL_RenderCopy(GAME_RENDERER, backlight, &screenRect, &screenRect);
-
-
-    // Render visibility layer onto light layer
-    //SDL_SetRenderDrawBlendMode(GAME_RENDERER, SDL_BLENDMODE_BLEND);
-    SDL_RenderCopy(GAME_RENDERER, visibility, &screenRect, &screenRect);
-    SDL_SetRenderTarget(GAME_RENDERER, nullptr);
-    SDL_RenderCopy(GAME_RENDERER, light, &screenRect, &screenRect);
-    //SDL_SetRenderDrawBlendMode(GAME_RENDERER, SDL_BLENDMODE_NONE);
-#endif
 }
 
 void StageState::Pause() {}

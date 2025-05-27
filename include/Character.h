@@ -10,6 +10,7 @@
 
 #include "Animator.h"
 #include "Collider.h"
+#include "Collision.h"
 #include "Component.h"
 #include "Gun.h"
 #include "IsoCollider.h"

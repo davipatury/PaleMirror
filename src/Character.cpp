@@ -53,7 +53,7 @@ Character::~Character() {
 void Character::Start() {
     Collider* collider = new Collider(associated);
     associated.AddComponent(collider);
-    IsoCollider* isoCollider = new IsoCollider(associated, {0.30, 0.30}, {0, -125}, false);
+    IsoCollider* isoCollider = new IsoCollider(associated, {0.30, 0.30}, {0, -80}, false);
     associated.AddComponent(isoCollider);
 }
 
@@ -178,6 +178,16 @@ void Character::Update(float dt) {
 }
 
 void Character::NotifyCollision(GameObject& other) {
+    IsoCollider* colB = (IsoCollider*) other.GetComponent("IsoCollider");
+    if (colB != nullptr && !colB->passable) {
+        IsoCollider* colA = (IsoCollider*) associated.GetComponent("IsoCollider");
+        Rect before = colA->box;
+        Rect after = Collision::Solve(colA->box, colB->box, colA->prevBox);
+        Vec2 diff = (after.TopLeft() - before.TopLeft()).ToCart();
+
+        colA->box = after;
+        associated.box = associated.box.Add(diff);
+    }
     if (tookDamage || hp <= 0) return;
     if (other.GetComponent("Zombie") != nullptr && this == player) {
         Hit(20);
