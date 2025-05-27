@@ -9,6 +9,8 @@
 #define SPACE_KEY SDLK_SPACE
 #define LEFT_MOUSE_BUTTON SDL_BUTTON_LEFT
 
+#define INPUT_MANAGER InputManager::GetInstance()
+
 #include "SDL.h"
 
 class InputManager
