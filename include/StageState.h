@@ -17,6 +17,7 @@
 #include "InputManager.h"
 #include "IsoCollider.h"
 #include "Line.h"
+#include "MirrorPuzzle.h"
 #include "Music.h"
 #include "PlayerController.h"
 #include "Ray.h"
