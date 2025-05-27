@@ -70,17 +70,6 @@ void Character::Update(float dt) {
                 if (moveSpeed.x != 0 || moveSpeed.y != 0) {
                     lastMoveDirection = task.pos.Normalized();
                 }
-
-                if (this == player) {
-                    float playerOffsetY = 0;
-                    float playerOffsetX = -125;
-                    if (associated.box.x + playerOffsetX < 640) associated.box.x = 640 - playerOffsetX;
-                    if (associated.box.y + playerOffsetY < 512) associated.box.y = 512 - playerOffsetY;
-                    float maxX = 1920 - associated.box.w;
-                    float maxY = 2048 - associated.box.h;
-                    if (associated.box.x + playerOffsetX > maxX) associated.box.x = maxX - playerOffsetX;
-                    if (associated.box.y + playerOffsetY > maxY) associated.box.y = maxY - playerOffsetY;
-                }
             }
             taskQueue.pop();
             break;

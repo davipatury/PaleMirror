@@ -13,13 +13,43 @@ StageState::StageState() {
 
     // BG
     GameObject* bg = new GameObject();
-    SpriteRenderer* bgSprite = new SpriteRenderer((*bg), "Recursos/img/Background.png", 1, 1);
-    bgSprite->SetCameraFollower(true);
+    SpriteRenderer* bgSprite = new SpriteRenderer(*bg, "Recursos/img/obj/bg.png");
+    //bgSprite->SetCameraFollower(true);
     bg->AddComponent(bgSprite);
+    bg->box.x = 0;
+    bg->box.y = 0;
     bg->box.z = -2;
     AddObject(bg);
 
+    // Talvez criar uma funcao GenerateMap() pra gerar esses objetos pra não spammar o constructor de gameobject
+    // Arvores
+    GameObject* tree1 = new GameObject();
+    tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/obj/tree.png"));
+    tree1->box.x = 380;
+    tree1->box.y = 910;
+    tree1->box.z = 0;
+    AddObject(tree1);
+
+    // Canteiros jardim
+    GameObject* garden1 = new GameObject();
+    garden1->AddComponent(new SpriteRenderer(*garden1, "Recursos/img/obj/garden.png"));
+    garden1->AddComponent(new IsoCollider(*garden1, {1.5, 0.5}, {-175, -190}));
+    garden1->box.x = 1826;
+    garden1->box.y = 1365;
+    garden1->box.z = 0;
+    AddObject(garden1);
+
+    // Bloco de salas
+    GameObject* crblock = new GameObject();
+    crblock->AddComponent(new SpriteRenderer(*crblock, "Recursos/img/obj/classroom_block.png"));
+    crblock->AddComponent(new IsoCollider(*crblock, {1.5, 0.5}, {-245, -180}));
+    crblock->box.x = 2321;
+    crblock->box.y = 843;
+    crblock->box.z = 0;
+    AddObject(crblock);
+
     // TileMap
+    /*
     GameObject* map = new GameObject();
     TileSet* tileSet = new TileSet(64, 64, "Recursos/img/Tileset.png");
     TileMap* tileMap = new TileMap((*map), "Recursos/map/map.txt", tileSet);
@@ -28,6 +58,7 @@ StageState::StageState() {
     map->box.y = 0;
     map->box.z = -1;
     AddObject(map);
+    */
 
     // Player
     GameObject* character = new GameObject();
@@ -35,8 +66,8 @@ StageState::StageState() {
     PlayerController* playerController = new PlayerController(*character);
     character->AddComponent(playerController);
     character->AddComponent(charCmp);
-    character->box.x = 1280;
-    character->box.y = 1280;
+    character->box.x = 2500;
+    character->box.y = 1450;
     character->box.z = 0;
     Character::player = charCmp;
     Camera::Follow(character);
@@ -49,11 +80,11 @@ StageState::StageState() {
     AddObject(waveSpawner);*/
 
     // HP HUD
-    GameObject* hud = new GameObject();
+    /*GameObject* hud = new GameObject();
     HealthHUD* hpHud = new HealthHUD(*hud);
     hud->AddComponent(hpHud);
     hud->box.z = 3;
-    AddObject(hud);
+    AddObject(hud);*/
 }
 
 StageState::~StageState() {
