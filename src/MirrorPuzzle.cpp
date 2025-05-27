@@ -22,9 +22,6 @@ void MirrorPuzzle::Update(float dt) {
             }
             std::cout << "GRAB = " << selectedPiece << std::endl;
         } else {
-            if (pieces[selectedPiece].pos.Distance(pieces[selectedPiece].posCerta) <= DISTANCE_THRESHOLD) {
-                pieces[selectedPiece].pos = pieces[selectedPiece].posCerta;
-            }
             selectedPiece = -1;
             std::cout << "RELEASE = -1" << std::endl;
         }
