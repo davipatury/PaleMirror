@@ -1,0 +1,85 @@
+#include "components/MirrorPuzzle.h"
+
+#define MIRROR_PUZZLE_RECT_X 475
+#define MIRROR_PUZZLE_RECT_Y 100
+#define DISTANCE_THRESHOLD 5
+
+MirrorPuzzle::MirrorPuzzle(GameObject& associated, std::vector<Piece> pieces) : Component(associated) {
+    this->pieces = pieces;
+    selectedPiece = -1;
+}
+
+void MirrorPuzzle::Update(float dt) {
+    if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
+        if (selectedPiece == -1) {
+            Vec2 mousePos = {INPUT_MANAGER.GetMouseX(), INPUT_MANAGER.GetMouseY()};
+            for (int i = 0; i < pieces.size(); i++) {
+                Rect pieceRect = pieces[i].GetRect().Add(Vec2{MIRROR_PUZZLE_RECT_X, MIRROR_PUZZLE_RECT_Y});
+                if (pieceRect.Contains(mousePos)) {
+                    selectedPiece = i;
+                    break;
+                }
+            }
+            std::cout << "GRAB = " << selectedPiece << std::endl;
+        } else {
+            selectedPiece = -1;
+            std::cout << "RELEASE = -1" << std::endl;
+        }
+    }
+
+    if (selectedPiece != -1) {
+        pieces[selectedPiece].pos.x = INPUT_MANAGER.GetMouseX() - pieces[selectedPiece].GetWidth() / 2 - MIRROR_PUZZLE_RECT_X;
+        pieces[selectedPiece].pos.y = INPUT_MANAGER.GetMouseY() - pieces[selectedPiece].GetHeight() / 2 - MIRROR_PUZZLE_RECT_Y;
+    } else if (IsSolved()) {
+        std::cout << "!!! SOLVED !!!" << std::endl;
+    }
+}
+
+void MirrorPuzzle::Render() {
+    SDL_Rect bgRect;
+    bgRect.x = MIRROR_PUZZLE_RECT_X;
+    bgRect.y = MIRROR_PUZZLE_RECT_Y;
+    bgRect.w = 250;
+    bgRect.h = 500;
+
+    // Background rectangle
+    SDL_SetRenderDrawColor(GAME_RENDERER, 136, 136, 136, SDL_ALPHA_OPAQUE);
+    SDL_RenderFillRect(GAME_RENDERER, &bgRect);
+
+    // Pieces
+    for (int i = 0; i < pieces.size(); i++) {
+        float x = pieces[i].pos.x + bgRect.x;
+        float y = pieces[i].pos.y + bgRect.y;
+        if (selectedPiece == i) {
+            if (pieces[i].pos.Distance(pieces[i].posCerta) <= DISTANCE_THRESHOLD) {
+                SDL_SetRenderDrawColor(GAME_RENDERER, 0, 255, 0, SDL_ALPHA_OPAQUE);
+            } else {
+                SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
+            }
+            SDL_RenderDrawLine(GAME_RENDERER, x, y, pieces[i].posCerta.x + bgRect.x, pieces[i].posCerta.y + bgRect.y);
+        }
+        pieces[i].sprite.Render(x, y, pieces[i].GetWidth(), pieces[i].GetHeight());
+    }
+}
+
+void MirrorPuzzle::Start() {
+    for (int i = 0; i < pieces.size(); i++) {
+        // Min x = 150
+        int randomOffset = std::rand() % 900;
+        std::cout << "rand " << randomOffset << std::endl;
+        pieces[i].pos = {(randomOffset) - 325, 525};
+    }
+}
+
+bool MirrorPuzzle::IsSolved() {
+    for (int i = 0; i < pieces.size(); i++) {
+        if (pieces[i].pos.Distance(pieces[i].posCerta) > DISTANCE_THRESHOLD) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool MirrorPuzzle::Is(std::string type) {
+    return type == "MirrorPuzzle";
+}
