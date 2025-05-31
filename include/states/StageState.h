@@ -44,6 +44,9 @@ public:
     void Start();
     void Pause();
     void Resume();
+
+    float pauseX;
+    float pauseY;
 private:
     Music backgroundMusic;
 };

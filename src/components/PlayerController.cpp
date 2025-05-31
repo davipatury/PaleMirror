@@ -8,6 +8,8 @@ PlayerController::PlayerController(GameObject &associated) : Component(associate
 
 void PlayerController::Update(float dt) {
     Character* chr = (Character*) associated.GetComponent("Character");
+    if (!chr) return;
+
     float moveX = 0;
     float moveY = 0;
     if (InputManager::GetInstance().IsKeyDown(SDLK_w)) moveY--;

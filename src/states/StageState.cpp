@@ -1,5 +1,8 @@
 #include "states/StageState.h"
-
+#include "actions/NewStateAction.h"
+#include "components/Interactable.h"
+#include "states/ClassRoomState.h"
+#include <memory>
 #include "math.h"
 //#define DEBUG_VISIBILITY
 
@@ -47,6 +50,22 @@ StageState::StageState() {
     crblock->box.y = 843;
     crblock->box.z = 0;
     AddObject(crblock);
+
+    // Porta
+    GameObject* door = new GameObject();
+    door->box.x = 2600;
+    door->box.y = 1350;
+    door->box.z = 0;
+    auto it = new SpriteRenderer(*door, "Recursos/img/obj/espelho.png");
+    it->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    it->SetScale(1.5, 1.5);
+    door->AddComponent(it);
+    door->AddComponent(new IsoCollider(*door, {0.5, 0.5}, {0, 0}));
+    std::unique_ptr<Action> newStateAction(new NewStateAction(new ClassRoomState()));
+    Interactable* interact = new Interactable(*door, std::move(newStateAction));
+    interact->SetRequireMouseOver(true);
+    door->AddComponent(interact);
+    AddObject(door);
 
     // TileMap
     /*
@@ -272,5 +291,25 @@ void StageState::Render() {
 */
 }
 
-void StageState::Pause() {}
-void StageState::Resume() {}
+void StageState::Pause() {
+    pauseX = Character::player->Pos().x;
+    pauseY = Character::player->Pos().y;
+
+}
+void StageState::Resume() {
+    Camera::Unfollow();
+    Camera::pos.x = 0;
+    Camera::pos.y = 0;
+
+    GameObject* character = new GameObject();
+    Character* charCmp = new Character((*character), "Recursos/img/Player.png");
+    character->AddComponent(charCmp);
+    PlayerController* playerController = new PlayerController(*character);
+    character->AddComponent(playerController);
+    character->box.x = pauseX;
+    character->box.y = pauseY;
+    character->box.z = 0;
+    Character::player = charCmp;
+    Camera::Follow(character);
+    AddObject(character);
+}

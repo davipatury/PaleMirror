@@ -13,7 +13,8 @@
 #include "utils/Timer.h"
 #include "utils/Animation.h"
 
-Character* Character::player;
+Character* Character::player = nullptr;
+
 Character::Character(GameObject& associated, const char* sprite) : Component(associated) {
     linearSpeed = 100;
     hp = 100;
