@@ -8,7 +8,7 @@ TitleState::TitleState() {
     popRequested = false;
 
     GameObject* bg = new GameObject();
-    SpriteRenderer* bgSprite = new SpriteRenderer((*bg), "Recursos/img/Title.png", 1, 1);
+    SpriteRenderer* bgSprite = new SpriteRenderer((*bg), "Recursos/img/Home.jpeg", 1, 1);
     bgSprite->SetCameraFollower(true);
     bg->AddComponent(bgSprite);
     bg->box.z = -2;
