@@ -2,7 +2,7 @@ COMPILER = g++
 RMDIR = rm -rdf
 RM = rm -f
 
-DEP_FLAGS = -M -MT $@ -MT $(BIN_PATH)/$(*F).o -MP -MF $@
+DEP_FLAGS = -M -MT $@ -MT $(OBJ_PATH)/$(*F).o -MP -MF $@
 LIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm
 
 INC_PATHS = -I$(INC_PATH) $(addprefix -I,$(SDL_INC_PATH))
@@ -16,14 +16,14 @@ RFLAGS = -O3 -mtune=native
 INC_PATH = include
 SRC_PATH = src
 BIN_PATH = bin
+OBJ_PATH = obj
 DEP_PATH = dep
 
-CPP_FILES = $(wildcard $(SRC_PATH)/*.cpp)
-INC_FILES = $(wildcard $(SRC_PATH)/*.hpp)
+CPP_FILES = $(shell find $(SRC_PATH) -name "*.cpp")
+INC_FILES = $(shell find $(SRC_PATH) -name "*.hpp")
 FILE_NAMES = $(sort $(notdir $(CPP_FILES:.cpp=)) $(notdir $(INC_FILES:.h=)))
-DEP_FILES = $(addprefix $(DEP_PATH)/,$(addsuffix .d,$(FILE_NAMES)))
-OBJ_FILES = $(addprefix $(BIN_PATH)/,$(notdir $(CPP_FILES:.cpp=.o)))
-
+DEP_FILES = $(patsubst $(SRC_PATH)/%.cpp,$(DEP_PATH)/%.d,$(CPP_FILES))
+OBJ_FILES = $(patsubst $(SRC_PATH)/%.cpp,$(OBJ_PATH)/%.o,$(CPP_FILES))
 
 EXEC = JOGO
 
@@ -59,19 +59,23 @@ endif
 .PRECIOUS: $(DEP_FILES)
 .PHONY: release debug clean folders help
 
-all: $(EXEC)
+all: folders $(EXEC)
 
 $(EXEC): $(OBJ_FILES)
 	$(COMPILER) -o $@ $^ $(LINK_PATH) $(LIBS) $(FLAGS)
 
-$(BIN_PATH)/%.o: $(DEP_PATH)/%.d | folders
-	$(COMPILER) $(INC_PATHS) $(addprefix $(SRC_PATH)/,$(notdir $(<:.d=.cpp))) -c $(FLAGS) -o $@
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp | folders
+	@mkdir -p $(dir $@)
+	$(COMPILER) $(INC_PATHS) $< -c $(FLAGS) -o $@
+
 
 $(DEP_PATH)/%.d: $(SRC_PATH)/%.cpp | folders
+	@mkdir -p $(dir $@)
 	$(COMPILER) $(INC_PATHS) $< $(DEP_FLAGS) $(FLAGS)
 
 clean:
 	$(RMDIR) $(DEP_PATH)
+	$(RMDIR) $(OBJ_PATH)
 	$(RMDIR) $(BIN_PATH)
 	$(RM) $(EXEC)
 
@@ -84,11 +88,12 @@ debug: $(EXEC)
 folders:
 ifeq ($(OS), Windows_NT)
 	@if NOT exist $(DEP_PATH) (mkdir $(DEP_PATH))
+	@if NOT exist $(OBJ_PATH) (mkdir $(OBJ_PATH))
 	@if NOT exist $(BIN_PATH) (mkdir $(BIN_PATH))
 	@if NOT exist $(INC_PATH) (mkdir $(INC_PATH))
 	@if NOT exist $(SRC_PATH) (mkdir $(SRC_PATH))
 else
-	@mkdir -p $(DEP_PATH) $(BIN_PATH) $(INC_PATH) $(SRC_PATH)
+	@mkdir -p $(DEP_PATH) $(OBJ_PATH) $(BIN_PATH) $(INC_PATH) $(SRC_PATH)
 endif
 
 print-% : ; echo $* = $($*)

@@ -1,6 +1,6 @@
-#include <Game.h>
-
-#include <TitleState.h>
+#include "core/Game.h"
+#include "states/TitleState.h"
+#include "utils/Resources.h"
 
 int main (int argc, char** argv) {
     Game& game = Game::GetInstance();
