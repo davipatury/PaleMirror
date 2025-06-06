@@ -2,6 +2,7 @@
 
 Sound::Sound() {
     chunk = nullptr;
+    channel = -1;
 }
 
 Sound::Sound(const char *file): Sound() {

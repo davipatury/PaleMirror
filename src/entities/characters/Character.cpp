@@ -16,7 +16,7 @@
 Character* Character::player = nullptr;
 
 Character::Character(GameObject& associated, const char* sprite) : Component(associated) {
-    linearSpeed = 100;
+    linearSpeed = 120;
     hp = 100;
     flip = false;
     lastMoveDirection = Vec2(1, 0);
@@ -28,7 +28,11 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
 
     for (int i = 0; i < 8; i++) {
         idleSprites.push_back(basePath + types[0] + "/Knight_" + types[0] + "_dir" + std::to_string(i+1) + ".png");
-        walkSprites.push_back(basePath + types[1] + "/Knight_" + types[1] + "_dir" + std::to_string(i+1) + ".png");
+        // if(i+1 == 2){
+        //     walkSprites.push_back("Recursos/img/personagem.png");
+        // }else{
+            walkSprites.push_back(basePath + types[1] + "/Knight_" + types[1] + "_dir" + std::to_string(i+1) + ".png");
+        //}
         attackSprites.push_back(basePath + types[2] + "/Knight_" + types[2] + "_dir" + std::to_string(i+1) + ".png");
     }
 
@@ -42,7 +46,7 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
     
     for (int i = 0; i < 8; i++) {
         animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 16, 0.142));
-        animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 10, 0.1));
+        animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.1));
         animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 14, 0.1));
     }
 
@@ -60,6 +64,8 @@ Character::~Character() {
         Camera::Unfollow();
         player = nullptr;
     }
+    delete deathSound;
+    delete hitSound;
 }
 
 void Character::Start() {
@@ -137,9 +143,15 @@ void Character::Update(float dt) {
                 isAttacking = false;
                 if (spriteRdr) {
                     if (moving) {
-                        spriteRdr->Open(walkSprites[currentDirection].c_str());
-                        spriteRdr->SetFrameCount(4, 3);
-                        currentSprite = walkSprites[currentDirection];
+                        // if(currentDirection == 2){
+                        //     spriteRdr->Open(walkSprites[currentDirection].c_str());
+                        //     spriteRdr->SetFrameCount(4, 1);
+                        //     currentSprite = walkSprites[currentDirection];
+                        // }else{
+                            spriteRdr->Open(walkSprites[currentDirection].c_str());
+                            spriteRdr->SetFrameCount(4, 3);
+                            currentSprite = walkSprites[currentDirection];
+                        //}
                     } else {
                         spriteRdr->Open(idleSprites[currentDirection].c_str());
                         spriteRdr->SetFrameCount(5, 4);
@@ -151,9 +163,16 @@ void Character::Update(float dt) {
             animName = "walking" + std::to_string(currentDirection + 1);
 
             if (spriteRdr && currentSprite != walkSprites[currentDirection]) {
-                spriteRdr->Open(walkSprites[currentDirection].c_str());
-                spriteRdr->SetFrameCount(4, 3);
-                currentSprite = walkSprites[currentDirection];
+
+                // if(currentDirection == 2){
+                //     spriteRdr->Open(walkSprites[currentDirection].c_str());
+                //     spriteRdr->SetFrameCount(4, 1);
+                //     currentSprite = walkSprites[currentDirection];
+                // }else{
+                    spriteRdr->Open(walkSprites[currentDirection].c_str());
+                    spriteRdr->SetFrameCount(4, 3);
+                    currentSprite = walkSprites[currentDirection];
+                //}
             }
         } else {
             animName = "idle" + std::to_string(currentDirection + 1);

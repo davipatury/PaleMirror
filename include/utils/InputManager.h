@@ -21,10 +21,12 @@ public:
     bool KeyPress(int key);
     bool KeyRelease(int key);
     bool IsKeyDown(int key);
+    void ReleaseKey(int key);
 
     bool MousePress(int button);
     bool MouseRelease(int button);
     bool IsMouseDown(int button);
+
 
     int GetMouseX();
     int GetMouseY();

@@ -6,6 +6,7 @@
 #include "components/SpriteRenderer.h"
 #include "core/State.h"
 #include "utils/Text.h"
+#include "core/Music.h"
 
 class TitleState : public State
 {
@@ -19,6 +20,10 @@ public:
     void Start();
     void Pause();
     void Resume();
+
+    private:
+    Music titleMusic;
+    int selectedOption; // 0 = Novo, 1 = Carregar
 };
 
 #endif // TITLESTATE_H

@@ -47,7 +47,9 @@ void Interactable::Update(float dt) {
 
     if (can && InputManager::GetInstance().KeyPress(interactionKey)) {
         if(action){
-            action->Execute();
+            // Cria uma cópia do Action e executa
+            std::unique_ptr<Action> actionCopy = action->Clone();
+            actionCopy->Execute();
         }
     }
 }

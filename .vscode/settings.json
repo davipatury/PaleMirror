@@ -90,6 +90,7 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "__nullptr": "cpp"
     }
 }

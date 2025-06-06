@@ -1,5 +1,5 @@
 #include "states/StageState.h"
-#include "actions/NewStateAction.h"
+#include "actions/TeleportAction.h"
 #include "components/Interactable.h"
 #include "states/ClassRoomState.h"
 #include <memory>
@@ -51,21 +51,94 @@ StageState::StageState() {
     crblock->box.z = 0;
     AddObject(crblock);
 
+
+    // -------------------------- ClassRoom
+    GameObject* classroom = new GameObject();
+    SpriteRenderer* classroomSprite = new SpriteRenderer((*classroom), "Recursos/img/rooms/ClassRoom.png", 1, 1);
+    classroomSprite->SetScale(0.50, 0.50);
+    classroom->AddComponent(classroomSprite);
+    classroom->box.x = 10000;
+    classroom->box.y = 0;
+    classroom->box.z = -2;
+    AddObject(classroom);
     // Porta
     GameObject* door = new GameObject();
     door->box.x = 2600;
     door->box.y = 1350;
-    door->box.z = 0;
+    door->box.z = 1;
     auto it = new SpriteRenderer(*door, "Recursos/img/obj/espelho.png");
     it->SetFrame(0, SDL_FLIP_HORIZONTAL);
     it->SetScale(1.5, 1.5);
     door->AddComponent(it);
     door->AddComponent(new IsoCollider(*door, {0.5, 0.5}, {0, 0}));
-    std::unique_ptr<Action> newStateAction(new NewStateAction(new ClassRoomState()));
-    Interactable* interact = new Interactable(*door, std::move(newStateAction));
-    interact->SetRequireMouseOver(true);
-    door->AddComponent(interact);
+    Vec2 destinoSala(10765, 855);
+    std::unique_ptr<Action> teleportRoomAction(new TeleportAction(destinoSala, classroom, true));
+    Interactable* interactRoom = new Interactable(*door, std::move(teleportRoomAction));
+    interactRoom->SetRequireMouseOver(true);
+    door->AddComponent(interactRoom);
     AddObject(door);
+
+    // Mesa e Cadeira
+    GameObject* mesacad = new GameObject();
+    SpriteRenderer* mcSprite = new SpriteRenderer(*mesacad, "Recursos/img/obj/CADEIRAeMESA.png");
+    mcSprite->SetScale(1.25, 1.25);
+    mcSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesacad->AddComponent(mcSprite);
+    mesacad->AddComponent(new IsoCollider(*mesacad, {1, 1}, {0, -35}));
+    mesacad->box.x = 10700;
+    mesacad->box.y = 550;
+    mesacad->box.z = 0;
+    AddObject(mesacad);
+
+    // Mesa e Cadeira
+    GameObject* mesacad2 = new GameObject();
+    SpriteRenderer* mcSprite2 = new SpriteRenderer(*mesacad2, "Recursos/img/obj/CADEIRAeMESA.png");
+    mcSprite2->SetScale(1.25, 1.25);
+    mcSprite2->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesacad2->AddComponent(mcSprite2);
+    mesacad2->AddComponent(new IsoCollider(*mesacad2, {1, 1}, {0, -35}));
+    mesacad2->box.x = 10600;
+    mesacad2->box.y = 610;
+    mesacad2->box.z = 0;
+    AddObject(mesacad2);
+
+    // Cadeira
+    GameObject* cadeira = new GameObject();
+    SpriteRenderer* cadeiraSprite = new SpriteRenderer(*cadeira, "Recursos/img/obj/CADEIRAM.png");
+    cadeiraSprite->SetScale(1.25, 1.25);
+    cadeiraSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    cadeira->AddComponent(cadeiraSprite);
+    cadeira->AddComponent(new IsoCollider(*cadeira, {0.7, 0.7}, {0, -17}));
+    cadeira->box.x = 10700;
+    cadeira->box.y = 680;
+    cadeira->box.z = 0;
+    AddObject(cadeira);
+
+    // Mesa
+    GameObject* mesa = new GameObject();
+    SpriteRenderer* mesaSprite = new SpriteRenderer(*mesa, "Recursos/img/obj/MESAazul.png");
+    mesaSprite->SetScale(1.25, 1.25);
+    mesaSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesa->AddComponent(mesaSprite);
+    mesa->AddComponent(new IsoCollider(*mesa, {1, 1}, {0, -17}));
+    mesa->box.x = 10713;
+    mesa->box.y = 690;
+    mesa->box.z = 0;
+    AddObject(mesa);
+
+    // Porta
+    GameObject* roomDoorBack = new GameObject();
+    roomDoorBack->box.x = 10765;
+    roomDoorBack->box.y = 855;
+    roomDoorBack->box.z = 0;
+    Vec2 destinoDoorBack(2606, 1480);
+    std::unique_ptr<Action> teleportDoorBackAction(new TeleportAction(destinoDoorBack));
+    Interactable* interactDoorBack = new Interactable(*roomDoorBack, std::move(teleportDoorBackAction));
+    interactDoorBack->SetRequireMouseOver(true);
+    interactDoorBack->SetActivationDistance(30);
+    roomDoorBack->AddComponent(interactDoorBack);
+    AddObject(roomDoorBack);
+    
 
     // TileMap
     /*
@@ -126,6 +199,10 @@ void StageState::Update(float dt) {
 
     if (InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)) {
         popRequested = true;
+        InputManager::GetInstance().ReleaseKey(ESCAPE_KEY);
+
+        std::cout<<InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)<<std::endl;
+        //return;
     }
 
     // Debug

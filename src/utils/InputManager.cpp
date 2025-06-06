@@ -107,3 +107,8 @@ InputManager& InputManager::GetInstance() {
     static InputManager inputManager;
     return inputManager;
 }
+
+void InputManager::ReleaseKey(int key){
+    int i = KeyToIndex(key);
+    keyState[i] = false;
+}
