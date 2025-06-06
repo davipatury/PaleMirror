@@ -19,6 +19,9 @@ public:
     void Stop(int msToStop = 1500);
     void Open(const char* file);
 
+    void Pause();
+    void Resume();
+
     bool IsOpen();
 private:
     Mix_Music* music;

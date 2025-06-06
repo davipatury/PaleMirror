@@ -1,17 +1,19 @@
-#ifndef CLASSROOMSTATE_H
-#define CLASSROOMSTATE_H
+#ifndef LOADSTATE_H
+#define LOADSTATE_H
 
 #include "core/Game.h"
 #include "core/GameObject.h"
 #include "components/SpriteRenderer.h"
 #include "core/State.h"
 #include "utils/Text.h"
+#include "core/Music.h"
+#include "utils/Timer.h"
 
-class ClassRoomState : public State
+class LoadState : public State
 {
 public:
-    ClassRoomState();
-    ~ClassRoomState();
+    LoadState();
+    ~LoadState();
 
     void LoadAssets();
     void Update(float dt);
@@ -19,8 +21,6 @@ public:
     void Start();
     void Pause();
     void Resume();
-    float posReturnX;
-    float posReturnY;
 };
 
-#endif // CLASSROOMSTATE_H
+#endif // LOADSTATE_H

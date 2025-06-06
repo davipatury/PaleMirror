@@ -29,3 +29,15 @@ void Music::Open(const char* file) {
 bool Music::IsOpen() {
     return music != nullptr;
 }
+
+void Music::Pause() {
+    if (Mix_PlayingMusic() && !Mix_PausedMusic()) {
+        Mix_PauseMusic();
+    }
+}
+
+void Music::Resume() {
+    if (Mix_PausedMusic()) {
+        Mix_ResumeMusic();
+    }
+}

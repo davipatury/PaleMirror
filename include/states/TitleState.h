@@ -7,6 +7,7 @@
 #include "core/State.h"
 #include "utils/Text.h"
 #include "core/Music.h"
+#include "utils/Timer.h"
 
 class TitleState : public State
 {
@@ -23,7 +24,11 @@ public:
 
     private:
     Music titleMusic;
-    int selectedOption; // 0 = Novo, 1 = Carregar
+    int selectedOption;
+
+    Timer blinkTimer;
+    bool  blinkVisible;
+    static constexpr float BLINK_INTERVAL = 0.5f;
 };
 
 #endif // TITLESTATE_H

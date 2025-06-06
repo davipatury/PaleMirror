@@ -1,7 +1,6 @@
 #include "states/StageState.h"
 #include "actions/TeleportAction.h"
 #include "components/Interactable.h"
-#include "states/ClassRoomState.h"
 #include <memory>
 #include "math.h"
 //#define DEBUG_VISIBILITY
@@ -200,9 +199,6 @@ void StageState::Update(float dt) {
     if (InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)) {
         popRequested = true;
         InputManager::GetInstance().ReleaseKey(ESCAPE_KEY);
-
-        std::cout<<InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)<<std::endl;
-        //return;
     }
 
     // Debug
