@@ -2,7 +2,7 @@
 
 #define MIRROR_PUZZLE_RECT_X 475
 #define MIRROR_PUZZLE_RECT_Y 100
-#define DISTANCE_THRESHOLD 5
+#define DISTANCE_THRESHOLD 20
 
 MirrorPuzzle::MirrorPuzzle(GameObject& associated, std::vector<Piece> pieces) : Component(associated) {
     this->pieces = pieces;
