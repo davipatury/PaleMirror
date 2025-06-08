@@ -15,7 +15,7 @@ StageState::StageState() {
 
     // BG
     GameObject* bg = new GameObject();
-    SpriteRenderer* bgSprite = new SpriteRenderer(*bg, "Recursos/img/obj/bg.png");
+    SpriteRenderer* bgSprite = new SpriteRenderer(*bg, "Recursos/img/objetos/bg.png");
     //bgSprite->SetCameraFollower(true);
     bg->AddComponent(bgSprite);
     bg->box.x = 0;
@@ -26,7 +26,7 @@ StageState::StageState() {
     // Talvez criar uma funcao GenerateMap() pra gerar esses objetos pra não spammar o constructor de gameobject
     // Arvores
     GameObject* tree1 = new GameObject();
-    tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/obj/tree.png"));
+    tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/objetos/tree.png"));
     tree1->box.x = 380;
     tree1->box.y = 910;
     tree1->box.z = 0;
@@ -34,7 +34,7 @@ StageState::StageState() {
 
     // Canteiros jardim
     GameObject* garden1 = new GameObject();
-    garden1->AddComponent(new SpriteRenderer(*garden1, "Recursos/img/obj/garden.png"));
+    garden1->AddComponent(new SpriteRenderer(*garden1, "Recursos/img/objetos/garden.png"));
     garden1->AddComponent(new IsoCollider(*garden1, {1.5, 0.5}, {-175, -190}));
     garden1->box.x = 1826;
     garden1->box.y = 1365;
@@ -43,7 +43,7 @@ StageState::StageState() {
 
     // Bloco de salas
     GameObject* crblock = new GameObject();
-    crblock->AddComponent(new SpriteRenderer(*crblock, "Recursos/img/obj/classroom_block.png"));
+    crblock->AddComponent(new SpriteRenderer(*crblock, "Recursos/img/objetos/classroom_block.png"));
     crblock->AddComponent(new IsoCollider(*crblock, {1.5, 0.5}, {-245, -180}));
     crblock->box.x = 2321;
     crblock->box.y = 843;
@@ -65,7 +65,7 @@ StageState::StageState() {
     door->box.x = 2600;
     door->box.y = 1350;
     door->box.z = 1;
-    auto it = new SpriteRenderer(*door, "Recursos/img/obj/espelho.png");
+    auto it = new SpriteRenderer(*door, "Recursos/img/objetos/espelho.png");
     it->SetFrame(0, SDL_FLIP_HORIZONTAL);
     it->SetScale(1.5, 1.5);
     door->AddComponent(it);
@@ -79,7 +79,7 @@ StageState::StageState() {
 
     // Mesa e Cadeira
     GameObject* mesacad = new GameObject();
-    SpriteRenderer* mcSprite = new SpriteRenderer(*mesacad, "Recursos/img/obj/CADEIRAeMESA.png");
+    SpriteRenderer* mcSprite = new SpriteRenderer(*mesacad, "Recursos/img/objetos/CADEIRAeMESA.png");
     mcSprite->SetScale(1.25, 1.25);
     mcSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
     mesacad->AddComponent(mcSprite);
@@ -91,7 +91,7 @@ StageState::StageState() {
 
     // Mesa e Cadeira
     GameObject* mesacad2 = new GameObject();
-    SpriteRenderer* mcSprite2 = new SpriteRenderer(*mesacad2, "Recursos/img/obj/CADEIRAeMESA.png");
+    SpriteRenderer* mcSprite2 = new SpriteRenderer(*mesacad2, "Recursos/img/objetos/CADEIRAeMESA.png");
     mcSprite2->SetScale(1.25, 1.25);
     mcSprite2->SetFrame(0, SDL_FLIP_HORIZONTAL);
     mesacad2->AddComponent(mcSprite2);
@@ -103,7 +103,7 @@ StageState::StageState() {
 
     // Cadeira
     GameObject* cadeira = new GameObject();
-    SpriteRenderer* cadeiraSprite = new SpriteRenderer(*cadeira, "Recursos/img/obj/CADEIRAM.png");
+    SpriteRenderer* cadeiraSprite = new SpriteRenderer(*cadeira, "Recursos/img/objetos/CADEIRAM.png");
     cadeiraSprite->SetScale(1.25, 1.25);
     cadeiraSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
     cadeira->AddComponent(cadeiraSprite);
@@ -115,7 +115,7 @@ StageState::StageState() {
 
     // Mesa
     GameObject* mesa = new GameObject();
-    SpriteRenderer* mesaSprite = new SpriteRenderer(*mesa, "Recursos/img/obj/MESAazul.png");
+    SpriteRenderer* mesaSprite = new SpriteRenderer(*mesa, "Recursos/img/objetos/MESAazul.png");
     mesaSprite->SetScale(1.25, 1.25);
     mesaSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
     mesa->AddComponent(mesaSprite);
