@@ -3,7 +3,7 @@
 #include "core/GameObject.h"
 #include "components/Camera.h"
 
-TeleportAction::TeleportAction(const Vec2& dst, GameObject* target, bool followTarget) 
+TeleportAction::TeleportAction(const Vec2& dst, GameObject* target, bool followTarget)
     : destination(dst), target(target), followTarget(followTarget) {}
 
 void TeleportAction::Execute() {
@@ -13,8 +13,8 @@ void TeleportAction::Execute() {
     float halfW = playerGO.box.w / 2.0f;
     float halfH = playerGO.box.h / 2.0f;
 
-    playerGO.box.x = destination.x - halfW;
-    playerGO.box.y = destination.y - halfH;
+    Vec2 dest = {destination.x - halfW, destination.y - halfH};
+    Character::player->Issue(Character::Command(Character::Command::TELEPORT, dest.x, dest.y));
 
     Camera::Follow(objectToFollow);
 }

@@ -48,34 +48,6 @@ void IsoCollider::Render() {
     // Center
     point = box.Center() - Camera::pos;
     SDL_RenderDrawPoint(Game::GetInstance().GetRenderer(), point.x, point.y);
-
-/*
-    Vec2 bli = to_iso(associated.box.BottomLeft());
-
-    Vec2 tl = to_cart(bli.Add({0, -associated.box.w}));
-    Vec2 tr = to_cart(bli.Add({associated.box.w, -associated.box.w}));
-    Vec2 br = to_cart(bli.Add({associated.box.w, 0}));
-    Vec2 bl = to_cart(bli);
-
-    SDL_Point points[5];
-    Vec2 point = tl - Camera::pos;
-    points[0] = {(int) point.x, (int) point.y};
-    points[4] = {(int) point.x, (int) point.y};
-
-    point = tr - Camera::pos;
-    points[1] = {(int) point.x, (int) point.y};
-
-    point = br - Camera::pos;
-    points[2] = {(int) point.x, (int) point.y};
-
-    point = bl - Camera::pos;
-    points[3] = {(int) point.x, (int) point.y};
-
-    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLines(Game::GetInstance().GetRenderer(), points, 5);
-    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 0, 255, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawPoints(Game::GetInstance().GetRenderer(), points, 5);
-*/
 #endif // DEBUG
 }
 

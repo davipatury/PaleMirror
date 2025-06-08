@@ -27,3 +27,7 @@ float Rect::CenterDistance(Rect rect) {
 bool Rect::Contains(Vec2 vec) {
     return (vec.x >= x && vec.x <= (x + w) && vec.y >= y && vec.y <= (y + h));
 }
+
+bool Rect::Collides(Rect r) {
+    return !(x + w < r.x || x > r.x + r.w || y + h < r.y || y > r.y + r.h);
+}

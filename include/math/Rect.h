@@ -21,6 +21,7 @@ public:
 
     float CenterDistance(Rect rect);
     bool Contains(Vec2 vec);
+    bool Collides(Rect r);
 
     float x;
     float y;

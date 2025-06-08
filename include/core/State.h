@@ -6,7 +6,9 @@
 #include <memory>
 #include <algorithm>
 
+#include "components/Camera.h"
 #include "core/GameObject.h"
+#include "physics/IsoCollider.h"
 
 class State
 {
@@ -31,6 +33,8 @@ protected:
     void StartArray();
     virtual void UpdateArray(float dt);
     virtual void RenderArray();
+
+    std::vector<GameObject*> RenderSort();
 
     bool popRequested;
     bool quitRequested;

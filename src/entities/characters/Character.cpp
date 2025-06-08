@@ -89,7 +89,6 @@ void Character::Update(float dt) {
                     lastMoveDirection = task.pos.Normalized();
                 }
             }
-            taskQueue.pop();
             break;
         }
         case Command::ATTACK: {
@@ -118,10 +117,15 @@ void Character::Update(float dt) {
                 
                 Game::GetInstance().GetCurrentState().AddObject(attackGO);
             }
-            taskQueue.pop();
+            break;
+        }
+        case Command::TELEPORT: {
+            associated.box.x = task.pos.x;
+            associated.box.y = task.pos.y;
             break;
         }
         }
+        taskQueue.pop();
     }
 
     deathTimer.Update(dt);

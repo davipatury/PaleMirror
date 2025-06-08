@@ -69,7 +69,6 @@ StageState::StageState() {
     it->SetFrame(0, SDL_FLIP_HORIZONTAL);
     it->SetScale(1.5, 1.5);
     door->AddComponent(it);
-    door->AddComponent(new IsoCollider(*door, {0.5, 0.5}, {0, 0}));
     Vec2 destinoSala(10765, 855);
     std::unique_ptr<Action> teleportRoomAction(new TeleportAction(destinoSala, classroom, true));
     Interactable* interactRoom = new Interactable(*door, std::move(teleportRoomAction));
@@ -154,8 +153,7 @@ StageState::StageState() {
     // Player
     GameObject* character = new GameObject();
     Character* charCmp = new Character((*character), "Recursos/img/Player.png");
-    PlayerController* playerController = new PlayerController(*character);
-    character->AddComponent(playerController);
+    character->AddComponent(new PlayerController(*character));
     character->AddComponent(charCmp);
     character->box.x = 2500;
     character->box.y = 1450;
@@ -314,13 +312,7 @@ void StageState::Update(float dt) {
     }
 }
 
-bool ZYsorting(std::shared_ptr<GameObject> a, std::shared_ptr<GameObject> b) {
-    if (a->box.z == b->box.z) return (a->box.y + a->box.h) < (b->box.y + b->box.h);
-    return a->box.z < b->box.z;
-}
-
 void StageState::Render() {
-    sort(objectArray.begin(), objectArray.end(), ZYsorting);
     RenderArray();
 /*
 

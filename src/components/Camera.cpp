@@ -28,3 +28,7 @@ void Camera::Update(float dt) {
         pos.y += ySpeed * dt;
     }
 }
+
+Rect Camera::PosRect() {
+    return Rect(pos.x, pos.y, 1200, 900);
+}

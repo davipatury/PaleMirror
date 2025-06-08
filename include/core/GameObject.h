@@ -28,6 +28,11 @@ public:
 
     Rect box;
     float angleDeg;
+
+    // Do not call Render when off-screen
+    bool lazyRender = true;
+    // Do not call Update when off-screen
+    bool lazyUpdate = false;
 private:
     std::vector<std::unique_ptr<Component>> components;
     bool isDead;

@@ -35,7 +35,7 @@ public:
 
     class Command {
     public:
-        enum CommandType { MOVE, ATTACK, SHOOT };
+        enum CommandType { MOVE, ATTACK, SHOOT, TELEPORT };
         Command(CommandType type, float x, float y);
         CommandType type;
         Vec2 pos;
