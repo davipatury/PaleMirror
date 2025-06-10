@@ -3,6 +3,10 @@
 
 #include <math.h>
 
+const long double EPS = 1e-9;
+
+class Line; // Forward declaration
+
 class Vec2
 {
 public:
@@ -22,6 +26,9 @@ public:
     float Angle();
     float Angle(Vec2 vec);
     Vec2 Rotate(float angle);
+
+    float operator^(Vec2 const& vec);
+    int PointLine(Line l);
 
     Vec2 ToIso();
     Vec2 ToCart();

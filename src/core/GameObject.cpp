@@ -1,9 +1,10 @@
 #include "core/GameObject.h"
 
-GameObject::GameObject() {
+GameObject::GameObject(std::string name) {
     isDead = false;
     started = false;
     angleDeg = 0;
+    this->name = name;
 }
 
 GameObject::~GameObject() {

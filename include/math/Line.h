@@ -6,12 +6,13 @@
 class Line
 {
 public:
-    Line(Vec2 src, Vec2 dst);
-    Vec2 src;
-    Vec2 dst;
+    Line(Vec2 source, Vec2 destination);
+    Vec2 source;
+    Vec2 destination;
 
     Vec2 Dir();
     float Angle();
+    Vec2 MidPoint();
 };
 
 #endif // LINE_H
