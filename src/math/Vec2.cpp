@@ -1,4 +1,5 @@
 #include "math/Vec2.h"
+#include "math/Line.h"
 
 Vec2::Vec2() {
     x = 0;
@@ -69,4 +70,15 @@ Vec2 Vec2::ToCart() {
 
 Vec2 Vec2::ToIso() {
     return {x + 2.0f * y, -x + 2.0f * y};
+}
+
+float Vec2::operator^(Vec2 const& o){ 
+    return x * o.y - y * o.x; 
+}
+// -1 = esq, 0 = coll, 1 = dir
+int Vec2::PointLine(Line l){
+    Vec2 a = l.destination - l.source;
+    Vec2 b = Sub(l.destination);
+    float tmp = a ^ b;
+    return (tmp > EPS) - (tmp < EPS);
 }

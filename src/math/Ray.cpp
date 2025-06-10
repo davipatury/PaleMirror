@@ -1,15 +1,15 @@
 #include "math/Ray.h"
 
 Ray::Intersection Ray::GetIntersection(Line ray, Line line) {
-    float r_px = ray.src.x;
-    float r_py = ray.src.y;
-    float r_dx = ray.dst.x - r_px;
-    float r_dy = ray.dst.y - r_py;
+    float r_px = ray.source.x;
+    float r_py = ray.source.y;
+    float r_dx = ray.destination.x - r_px;
+    float r_dy = ray.destination.y - r_py;
 
-    float s_px = line.src.x;
-    float s_py = line.src.y;
-    float s_dx = line.dst.x - s_px;
-    float s_dy = line.dst.y - s_py;
+    float s_px = line.source.x;
+    float s_py = line.source.y;
+    float s_dx = line.destination.x - s_px;
+    float s_dy = line.destination.y - s_py;
 
     // Both lines parallel
     if (r_dx * s_dy == r_dy * s_dx) {

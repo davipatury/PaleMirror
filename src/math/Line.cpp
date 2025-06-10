@@ -1,14 +1,19 @@
 #include "math/Line.h"
+#include "math/Vec2.h"
 
-Line::Line(Vec2 src, Vec2 dst) {
-    this->src = src;
-    this->dst = dst;
+Line::Line(Vec2 source, Vec2 destination) {
+    this->source = source;
+    this->destination = destination;
 }
 
 Vec2 Line::Dir() {
-    return dst.Sub(src);
+    return destination.Sub(source).Normalized();
 }
 
 float Line::Angle() {
-    return src.Angle(dst);
+    return source.Angle(destination);
+}
+
+Vec2 Line::MidPoint(){
+    return Vec2((source.x + destination.x)/2,(source.y + destination.y)/2);
 }

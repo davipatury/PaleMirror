@@ -12,7 +12,7 @@
 class GameObject
 {
 public:
-    GameObject();
+    GameObject(std::string name = "");
     ~GameObject();
 
     void Update(float dt);
@@ -28,6 +28,7 @@ public:
 
     Rect box;
     float angleDeg;
+    std::string name;
 
     // Do not call Render when off-screen
     bool lazyRender = true;

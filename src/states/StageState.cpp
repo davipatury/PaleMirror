@@ -25,7 +25,7 @@ StageState::StageState() {
 
     // Talvez criar uma funcao GenerateMap() pra gerar esses objetos pra não spammar o constructor de gameobject
     // Arvores
-    GameObject* tree1 = new GameObject();
+    GameObject* tree1 = new GameObject("[OBJ] Tree");
     tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/objetos/tree.png"));
     tree1->box.x = 380;
     tree1->box.y = 910;
@@ -33,7 +33,7 @@ StageState::StageState() {
     AddObject(tree1);
 
     // Canteiros jardim
-    GameObject* garden1 = new GameObject();
+    GameObject* garden1 = new GameObject("[OBJ] Garden");
     garden1->AddComponent(new SpriteRenderer(*garden1, "Recursos/img/objetos/garden.png"));
     garden1->AddComponent(new IsoCollider(*garden1, {1.5, 0.5}, {-175, -190}));
     garden1->box.x = 1826;
@@ -42,7 +42,7 @@ StageState::StageState() {
     AddObject(garden1);
 
     // Bloco de salas
-    GameObject* crblock = new GameObject();
+    GameObject* crblock = new GameObject("[OBJ] ClassRoomBlock");
     crblock->AddComponent(new SpriteRenderer(*crblock, "Recursos/img/objetos/classroom_block.png"));
     crblock->AddComponent(new IsoCollider(*crblock, {1.5, 0.5}, {-245, -180}));
     crblock->box.x = 2321;
@@ -52,7 +52,7 @@ StageState::StageState() {
 
 
     // -------------------------- ClassRoom
-    GameObject* classroom = new GameObject();
+    GameObject* classroom = new GameObject("[BG] ClassRoom");
     SpriteRenderer* classroomSprite = new SpriteRenderer((*classroom), "Recursos/img/rooms/ClassRoom.png", 1, 1);
     classroomSprite->SetScale(0.50, 0.50);
     classroom->AddComponent(classroomSprite);
@@ -61,10 +61,10 @@ StageState::StageState() {
     classroom->box.z = -2;
     AddObject(classroom);
     // Porta
-    GameObject* door = new GameObject();
+    GameObject* door = new GameObject("[OBJ] Mirror");
     door->box.x = 2600;
     door->box.y = 1350;
-    door->box.z = 1;
+    door->box.z = 0;
     auto it = new SpriteRenderer(*door, "Recursos/img/objetos/espelho.png");
     it->SetFrame(0, SDL_FLIP_HORIZONTAL);
     it->SetScale(1.5, 1.5);
@@ -77,7 +77,7 @@ StageState::StageState() {
     AddObject(door);
 
     // Mesa e Cadeira
-    GameObject* mesacad = new GameObject();
+    GameObject* mesacad = new GameObject("[OBJ] CadeiraMesa");
     SpriteRenderer* mcSprite = new SpriteRenderer(*mesacad, "Recursos/img/objetos/CADEIRAeMESA.png");
     mcSprite->SetScale(1.25, 1.25);
     mcSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
@@ -89,7 +89,7 @@ StageState::StageState() {
     AddObject(mesacad);
 
     // Mesa e Cadeira
-    GameObject* mesacad2 = new GameObject();
+    GameObject* mesacad2 = new GameObject("[OBJ] CadeiraMesa ESQ");
     SpriteRenderer* mcSprite2 = new SpriteRenderer(*mesacad2, "Recursos/img/objetos/CADEIRAeMESA.png");
     mcSprite2->SetScale(1.25, 1.25);
     mcSprite2->SetFrame(0, SDL_FLIP_HORIZONTAL);
@@ -101,7 +101,7 @@ StageState::StageState() {
     AddObject(mesacad2);
 
     // Cadeira
-    GameObject* cadeira = new GameObject();
+    GameObject* cadeira = new GameObject("[OBJ] CadeiraAzul");
     SpriteRenderer* cadeiraSprite = new SpriteRenderer(*cadeira, "Recursos/img/objetos/CADEIRAM.png");
     cadeiraSprite->SetScale(1.25, 1.25);
     cadeiraSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
@@ -113,7 +113,7 @@ StageState::StageState() {
     AddObject(cadeira);
 
     // Mesa
-    GameObject* mesa = new GameObject();
+    GameObject* mesa = new GameObject("[OBJ] MesaAzul");
     SpriteRenderer* mesaSprite = new SpriteRenderer(*mesa, "Recursos/img/objetos/MESAazul.png");
     mesaSprite->SetScale(1.25, 1.25);
     mesaSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
@@ -125,7 +125,7 @@ StageState::StageState() {
     AddObject(mesa);
 
     // Porta
-    GameObject* roomDoorBack = new GameObject();
+    GameObject* roomDoorBack = new GameObject("[OBJ] Porta");
     roomDoorBack->box.x = 10765;
     roomDoorBack->box.y = 855;
     roomDoorBack->box.z = 0;
@@ -151,7 +151,7 @@ StageState::StageState() {
     */
 
     // Player
-    GameObject* character = new GameObject();
+    GameObject* character = new GameObject("[PLAYER]");
     Character* charCmp = new Character((*character), "Recursos/img/Player.png");
     character->AddComponent(new PlayerController(*character));
     character->AddComponent(charCmp);

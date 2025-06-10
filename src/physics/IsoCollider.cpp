@@ -48,6 +48,14 @@ void IsoCollider::Render() {
     // Center
     point = box.Center() - Camera::pos;
     SDL_RenderDrawPoint(Game::GetInstance().GetRenderer(), point.x, point.y);
+
+    Vec2 pointleft = box.BottomLeft().ToCart() - Camera::pos;
+    Vec2 pointright = box.TopRight().ToCart() - Camera::pos;
+
+    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawLine(Game::GetInstance().GetRenderer(), pointleft.x, pointleft.y, pointright.x, pointright.y);
+
+    
 #endif // DEBUG
 }
 
@@ -58,7 +66,7 @@ void IsoCollider::SetScale(Vec2 scale) {
 void IsoCollider::SetOffset(Vec2 offset) {
     this->offset = offset;
 }
-
 bool IsoCollider::Is(std::string type) {
     return type == "IsoCollider";
 }
+
