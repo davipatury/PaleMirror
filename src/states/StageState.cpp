@@ -124,7 +124,7 @@ StageState::StageState() {
     std::unique_ptr<Action> docRoomAction(new DocumentAction("Recursos/img/objetos/carteira-azul-icon.jpg"));
     Interactable* interactdocRoom = new Interactable(*mesa, std::move(docRoomAction));
     interactdocRoom->SetRequireMouseOver(true);
-    interactdocRoom->SetActivationDistance(50);
+    interactdocRoom->SetActivationDistance(60);
     mesa->AddComponent(interactdocRoom);
     mesa->box.x = 10713;
     mesa->box.y = 690;
@@ -140,7 +140,7 @@ StageState::StageState() {
     std::unique_ptr<Action> teleportDoorBackAction(new TeleportAction(destinoDoorBack));
     Interactable* interactDoorBack = new Interactable(*roomDoorBack, std::move(teleportDoorBackAction));
     interactDoorBack->SetRequireMouseOver(true);
-    interactDoorBack->SetActivationDistance(30);
+    interactDoorBack->SetActivationDistance(25);
     roomDoorBack->AddComponent(interactDoorBack);
     AddObject(roomDoorBack);
     
