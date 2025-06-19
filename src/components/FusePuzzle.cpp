@@ -4,7 +4,9 @@
 #define FUSE_PUZZLE_RECT_Y 100
 #define DISTANCE_THRESHOLD 20
 
-FusePuzzle::FusePuzzle(GameObject& associated, std::vector<Fuse> fuses) : Component(associated), bg("Recursos/img/fuse_puzzle/fuseboxbg.png"), fuses(fuses) {
+FusePuzzle::FusePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/fuse_puzzle/fuseboxbg.png"){
+    for(int i=0; i<9; i++) fuses.push_back(Fuse());
+    std::cout << "FusePuzzle()\n";
 }
 
 void FusePuzzle::Update(float dt) {

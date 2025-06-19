@@ -41,7 +41,7 @@ public:
         }
     };
 
-    FusePuzzle(GameObject& associated, std::vector<Fuse> fuses);
+    FusePuzzle(GameObject& associated);
 
     void Update(float dt);
     void Render();
