@@ -1,5 +1,6 @@
 #include "states/StageState.h"
 #include "actions/TeleportAction.h"
+#include "actions/DocumentAction.h"
 #include "components/Interactable.h"
 #include <memory>
 #include "math.h"
@@ -119,6 +120,12 @@ StageState::StageState() {
     mesaSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
     mesa->AddComponent(mesaSprite);
     mesa->AddComponent(new IsoCollider(*mesa, {1, 1}, {0, -17}));
+
+    std::unique_ptr<Action> docRoomAction(new DocumentAction("Recursos/img/objetos/carteira-azul-icon.jpg"));
+    Interactable* interactdocRoom = new Interactable(*mesa, std::move(docRoomAction));
+    interactdocRoom->SetRequireMouseOver(true);
+    interactdocRoom->SetActivationDistance(60);
+    mesa->AddComponent(interactdocRoom);
     mesa->box.x = 10713;
     mesa->box.y = 690;
     mesa->box.z = 0;
@@ -133,7 +140,7 @@ StageState::StageState() {
     std::unique_ptr<Action> teleportDoorBackAction(new TeleportAction(destinoDoorBack));
     Interactable* interactDoorBack = new Interactable(*roomDoorBack, std::move(teleportDoorBackAction));
     interactDoorBack->SetRequireMouseOver(true);
-    interactDoorBack->SetActivationDistance(30);
+    interactDoorBack->SetActivationDistance(25);
     roomDoorBack->AddComponent(interactDoorBack);
     AddObject(roomDoorBack);
     
@@ -239,7 +246,8 @@ void StageState::Update(float dt) {
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/5.png", Vec2{0, 290}),
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/6.png", Vec2{184, 382})
         }));
-        mp->box.z = 2;
+        mp->box.z = 5;
+        mp->lazyRender = false;
         AddObject(mp);
     }
 
