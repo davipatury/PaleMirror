@@ -251,6 +251,15 @@ void StageState::Update(float dt) {
         AddObject(mp);
     }
 
+    // Spawn fuse puzzle
+    if (InputManager::GetInstance().KeyPress('f')) {
+        GameObject* fp = new GameObject();
+        fp->AddComponent(new FusePuzzle((*fp)));
+        fp->box.z = 5;
+        fp->lazyRender = false;
+        AddObject(fp);
+    }
+
     // Update game objects
     UpdateArray(dt);
 

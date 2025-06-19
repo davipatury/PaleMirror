@@ -20,7 +20,8 @@ public:
         Fuse() {
             sprite.Open("Recursos/img/fuse_puzzle/fuse.png");
             sprite.SetFrameCount(2, 1);
-            sprite.SetFrame(1);
+            sprite.SetFrame(0);
+            sprite.SetCameraFollower(true);
             on = false;
         }
 
@@ -46,6 +47,7 @@ public:
     void Update(float dt);
     void Render();
     void Start();
+    void FusePressed(int idx);
     bool Is(std::string type);
 
     bool IsSolved();
