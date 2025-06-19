@@ -13,9 +13,18 @@ void Interactable::Update(float dt) {
     if (Character::player == nullptr) return;
 
     Vec2 playercoord = Character::player->Pos();
-    Vec2 objectcoord = associated.box.Center();
+    IsoCollider* col = (IsoCollider*) associated.GetComponent("IsoCollider");
 
-    float dist2 = playercoord.Distance(objectcoord);
+    Vec2 objectcoord;
+    float dist2;
+    if(col){
+        objectcoord = col->box.Center().ToCart();
+        IsoCollider* colplay = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
+        dist2 = colplay->box.Center().ToCart().Distance(objectcoord);
+    }else{
+        objectcoord = associated.box.Center();
+        dist2 = playercoord.Distance(objectcoord);
+    }
 
     canInteract = (dist2 <= activationDistance);
 
