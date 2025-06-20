@@ -64,12 +64,15 @@ Vec2 Vec2::Rotate(float angle) {
     return Vec2(x * coss - y * seno, y * coss + x * seno);
 }
 
+// Iso magic number = 0.578125
 Vec2 Vec2::ToCart() {
-    return {(x - y) / 2.0f, (x + y) / 4.0f};
+    //return {(x - y) / 2.0f, (x + y) / 4.0f}; old 26.6º
+    return {x * 0.578125 - y * 0.578125, x * 0.334228 + y * 0.334228};
 }
 
 Vec2 Vec2::ToIso() {
-    return {x + 2.0f * y, -x + 2.0f * y};
+    //return {x + 2.0f * y, -x + 2.0f * y}; old 26.6º
+    return {x * 0.864864 + y * 1.4959824, x * -0.864864 + y * 1.4959824};
 }
 
 float Vec2::operator^(Vec2 const& o){ 
