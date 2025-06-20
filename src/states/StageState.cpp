@@ -11,47 +11,7 @@ StageState::StageState() {
     quitRequested = false;
     popRequested = false;
 
-    backgroundMusic.Open("Recursos/audio/BGM.wav");
-    // backgroundMusic.Play();
-
-    // BG
-    GameObject* bg = new GameObject();
-    SpriteRenderer* bgSprite = new SpriteRenderer(*bg, "Recursos/img/objetos/bg.png");
-    //bgSprite->SetCameraFollower(true);
-    bg->AddComponent(bgSprite);
-    bg->box.x = 0;
-    bg->box.y = 0;
-    bg->box.z = -2;
-    AddObject(bg);
-
-    // Talvez criar uma funcao GenerateMap() pra gerar esses objetos pra não spammar o constructor de gameobject
-    // Arvores
-    GameObject* tree1 = new GameObject("[OBJ] Tree");
-    tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/objetos/tree.png"));
-    tree1->box.x = 380;
-    tree1->box.y = 910;
-    tree1->box.z = 0;
-    AddObject(tree1);
-
-    // Canteiros jardim
-    GameObject* garden1 = new GameObject("[OBJ] Garden");
-    garden1->AddComponent(new SpriteRenderer(*garden1, "Recursos/img/objetos/garden.png"));
-    garden1->AddComponent(new IsoCollider(*garden1, {1.5, 0.5}, {-175, -190}));
-    garden1->box.x = 1826;
-    garden1->box.y = 1365;
-    garden1->box.z = 0;
-    AddObject(garden1);
-
-    // Bloco de salas
-    GameObject* crblock = new GameObject("[OBJ] ClassRoomBlock");
-    crblock->AddComponent(new SpriteRenderer(*crblock, "Recursos/img/objetos/classroom_block.png"));
-    crblock->AddComponent(new IsoCollider(*crblock, {1.5, 0.5}, {-245, -180}));
-    crblock->box.x = 2321;
-    crblock->box.y = 843;
-    crblock->box.z = 0;
-    AddObject(crblock);
-
-
+    /*
     // -------------------------- ClassRoom
     GameObject* classroom = new GameObject("[BG] ClassRoom");
     SpriteRenderer* classroomSprite = new SpriteRenderer((*classroom), "Recursos/img/rooms/ClassRoom.png", 1, 1);
@@ -61,21 +21,6 @@ StageState::StageState() {
     classroom->box.y = 0;
     classroom->box.z = -2;
     AddObject(classroom);
-    // Porta
-    GameObject* door = new GameObject("[OBJ] Mirror");
-    door->box.x = 2600;
-    door->box.y = 1350;
-    door->box.z = 0;
-    auto it = new SpriteRenderer(*door, "Recursos/img/objetos/espelho.png");
-    it->SetFrame(0, SDL_FLIP_HORIZONTAL);
-    it->SetScale(1.5, 1.5);
-    door->AddComponent(it);
-    Vec2 destinoSala(10765, 855);
-    std::unique_ptr<Action> teleportRoomAction(new TeleportAction(destinoSala, classroom, true));
-    Interactable* interactRoom = new Interactable(*door, std::move(teleportRoomAction));
-    interactRoom->SetRequireMouseOver(true);
-    door->AddComponent(interactRoom);
-    AddObject(door);
 
     // Mesa e Cadeira
     GameObject* mesacad = new GameObject("[OBJ] CadeiraMesa");
@@ -143,18 +88,6 @@ StageState::StageState() {
     interactDoorBack->SetActivationDistance(25);
     roomDoorBack->AddComponent(interactDoorBack);
     AddObject(roomDoorBack);
-    
-
-    // TileMap
-    /*
-    GameObject* map = new GameObject();
-    TileSet* tileSet = new TileSet(64, 64, "Recursos/img/Tileset.png");
-    TileMap* tileMap = new TileMap((*map), "Recursos/map/map.txt", tileSet);
-    map->AddComponent(tileMap);
-    map->box.x = 0;
-    map->box.y = 0;
-    map->box.z = -1;
-    AddObject(map);
     */
 
     // Player
@@ -168,26 +101,25 @@ StageState::StageState() {
     Character::player = charCmp;
     Camera::Follow(character);
     AddObject(character);
-
-    // WaveSpawner
-    /*GameObject* waveSpawner = new GameObject();
-    WaveSpawner* waveSpawnerCmp = new WaveSpawner(*waveSpawner);
-    waveSpawner->AddComponent(waveSpawnerCmp);
-    AddObject(waveSpawner);*/
-
-    // HP HUD
-    /*GameObject* hud = new GameObject();
-    HealthHUD* hpHud = new HealthHUD(*hud);
-    hud->AddComponent(hpHud);
-    hud->box.z = 3;
-    AddObject(hud);*/
 }
 
 StageState::~StageState() {
     objectArray.clear();
 }
 
-void StageState::LoadAssets() {}
+void StageState::LoadAssets() {
+    MainRoom* mainRoom = new MainRoom(this);
+    mainRoom->Build();
+
+    ClassroomRoom* crRoom = new ClassroomRoom(this);
+    crRoom->Build();
+
+    rooms["main"] = mainRoom;
+    rooms["classroom"] = crRoom;
+
+    currentRoom = mainRoom;
+    mainRoom->Enter();
+}
 
 void StageState::Start() {
     LoadAssets();
@@ -394,4 +326,14 @@ void StageState::Resume() {
     Character::player = charCmp;
     Camera::Follow(character);
     AddObject(character);
+}
+
+void StageState::ChangeRoom(std::string room) {
+    currentRoom->Leave();
+    currentRoom = rooms[room];
+    currentRoom->Enter();
+}
+
+Room* StageState::GetRoom(std::string room) {
+    return rooms[room];
 }

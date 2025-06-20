@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <string>
+#include <unordered_map>
 
 #include "components/Camera.h"
 #include "physics/Collider.h"
@@ -32,6 +34,8 @@
 #include "math/Vec2.h"
 #include "components/WaveSpawner.h"
 #include "entities/characters/Zombie.h"
+#include "rooms/MainRoom.h"
+#include "rooms/ClassroomRoom.h"
 
 class StageState : public State
 {
@@ -46,10 +50,16 @@ public:
     void Pause();
     void Resume();
 
+    void ChangeRoom(std::string room);
+    Room* GetRoom(std::string room);
+
     float pauseX;
     float pauseY;
 private:
     Music backgroundMusic;
+
+    std::unordered_map<std::string, Room*> rooms;
+    Room* currentRoom;
 };
 
 #endif // STAGESTATE_H
