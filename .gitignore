@@ -77,3 +77,5 @@ CMakeLists.txt.user*
 bin/
 dep/
 obj/
+
+.vscode/*
