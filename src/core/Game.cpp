@@ -10,7 +10,7 @@
 Game* Game::instance;
 Game& Game::GetInstance() {
     if (Game::instance == nullptr) {
-        Game::instance = new Game("Davi Jesus - 200016784", 1200, 900);
+        Game::instance = new Game("Pale Mirror", 1200, 900);
     }
     return *Game::instance;
 }

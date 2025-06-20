@@ -20,6 +20,7 @@
 #include "physics/IsoCollider.h"
 #include "math/Line.h"
 #include "components/MirrorPuzzle.h"
+#include "components/FusePuzzle.h"
 #include "core/Music.h"
 #include "components/PlayerController.h"
 #include "math/Ray.h"

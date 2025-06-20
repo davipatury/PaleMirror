@@ -42,6 +42,8 @@ void MirrorPuzzle::Render() {
     bgRect.w = 250;
     bgRect.h = 500;
 
+    //std::cout<< "Renderizando MirrorPuzzle" << std::endl;
+
     // Background rectangle
     SDL_SetRenderDrawColor(GAME_RENDERER, 136, 136, 136, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(GAME_RENDERER, &bgRect);
