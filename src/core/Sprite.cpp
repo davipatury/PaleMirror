@@ -49,11 +49,13 @@ void Sprite::Render(int x, int y, int w, int h, float angle) {
 }
 
 void Sprite::SetFrame(int frame) {
-    int row = frame / frameCountW;
+    int row    = frame / frameCountW;
     int column = frame % frameCountW;
-    int x = column * GetWidth();
-    int y = row * GetHeight();
-    SetClip(x, y, GetWidth(), GetHeight());
+    int frameW = width  / frameCountW;
+    int frameH = height / frameCountH;
+    int x = column * frameW;
+    int y = row * frameH;
+    SetClip(x, y, frameW, frameH);
 }
 
 void Sprite::SetFrameCount(int frameCountW, int frameCountH) {

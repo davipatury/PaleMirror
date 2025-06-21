@@ -36,10 +36,10 @@ void SpriteRenderer::SetCameraFollower(bool newValue) {
 
 void SpriteRenderer::SetScale(float scaleX, float scaleY) {
     sprite.SetScale(scaleX, scaleY);
-    Vec2 oldScale = sprite.GetScale();
     Vec2 oldCenter = associated.box.Center();
-    if (scaleX != 0) associated.box.w *= scaleX * oldScale.x;
-    if (scaleY != 0) associated.box.h *= scaleY * oldScale.y;
+    associated.box.w = sprite.GetWidth();
+    associated.box.h = sprite.GetHeight();
+
     associated.box = associated.box.Add(oldCenter.Sub(associated.box.Center()));
 }
 

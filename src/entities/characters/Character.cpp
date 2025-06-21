@@ -23,35 +23,37 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
     deathSound = new Sound("Recursos/audio/Dead.wav");
     hitSound = new Sound("Recursos/audio/Hit1.wav");
 
-    const std::string basePath = "Recursos/img/Knight/";
+    const std::string basePath = "Recursos/img/Helena/";
     const std::string types[] = {"Idle", "Walk", "Attack"};
 
     for (int i = 0; i < 8; i++) {
-        idleSprites.push_back(basePath + types[0] + "/Knight_" + types[0] + "_dir" + std::to_string(i+1) + ".png");
-        // if(i+1 == 2){
-        //     walkSprites.push_back("Recursos/img/personagem.png");
-        // }else{
-            walkSprites.push_back(basePath + types[1] + "/Knight_" + types[1] + "_dir" + std::to_string(i+1) + ".png");
-        //}
-        attackSprites.push_back(basePath + types[2] + "/Knight_" + types[2] + "_dir" + std::to_string(i+1) + ".png");
+        //idleSprites.push_back(basePath + types[0] + "/Knight_" + types[0] + "_dir" + std::to_string(i+1) + ".png");
+        walkSprites.push_back(basePath + types[1] + "/" + types[1] + std::to_string(i+1) + ".png");
+        //attackSprites.push_back(basePath + types[2] + "/Knight_" + types[2] + "_dir" + std::to_string(i+1) + ".png");
     }
 
-    SpriteRenderer* spriteRdr = new SpriteRenderer(associated, idleSprites[7].c_str(), 5, 4);
+    SpriteRenderer* spriteRdr = new SpriteRenderer(associated, walkSprites[7].c_str(), 4, 1);
+    spriteRdr->SetScale(1, 1);
+    spriteRdr->SetScale(0.5, 0.5);
     associated.AddComponent(spriteRdr);
-    currentSprite = idleSprites[7];
+    currentSprite = walkSprites[7];
     currentDirection = 7;
 
     Animator* animator = new Animator(associated);
     associated.AddComponent(animator);
     
     for (int i = 0; i < 8; i++) {
-        animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 16, 0.142));
-        animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.1));
-        animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 14, 0.1));
+        if(i+1 == 7 or i+1 == 6 or i+1 == 3){
+            animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.250, SDL_FLIP_HORIZONTAL));
+        }else{
+            animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.250));
+        }
+        //animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 3, 0.250));
+        //animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 14, 0.1));
     }
 
     animator->AddAnimation("dead", Animation(0, 0, 0.5));
-    animator->SetAnimation("idle8");
+    animator->SetAnimation("walking8");
 
     isAttacking = false;
     deathTimer = Timer();
@@ -71,7 +73,7 @@ Character::~Character() {
 void Character::Start() {
     Collider* collider = new Collider(associated);
     associated.AddComponent(collider);
-    IsoCollider* isoCollider = new IsoCollider(associated, {0.30, 0.30}, {0, -80}, false);
+    IsoCollider* isoCollider = new IsoCollider(associated, {0.5, 0.5}, {-5, 0}, false);
     associated.AddComponent(isoCollider);
 }
 
@@ -98,6 +100,8 @@ void Character::Update(float dt) {
             break;
         }
         case Command::ATTACK: {
+            // TODO: Ao adicionar ataque, mudar isso.
+            break;
             if (!isAttacking) {
                 isAttacking = true;
                 attackTimer.Restart();
@@ -140,6 +144,7 @@ void Character::Update(float dt) {
 
     Animator* animator = (Animator*) associated.GetComponent("Animator");
     SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+    spriteRdr->SetScale(0.085, 0.085);
     
     if (hp > 0) {
         std::string animName;
@@ -159,12 +164,12 @@ void Character::Update(float dt) {
                         //     currentSprite = walkSprites[currentDirection];
                         // }else{
                             spriteRdr->Open(walkSprites[currentDirection].c_str());
-                            spriteRdr->SetFrameCount(4, 3);
+                            spriteRdr->SetFrameCount(4, 1);
                             currentSprite = walkSprites[currentDirection];
                         //}
                     } else {
                         spriteRdr->Open(idleSprites[currentDirection].c_str());
-                        spriteRdr->SetFrameCount(5, 4);
+                        spriteRdr->SetFrameCount(4, 1);
                         currentSprite = idleSprites[currentDirection];
                     }
                 }
@@ -173,24 +178,19 @@ void Character::Update(float dt) {
             animName = "walking" + std::to_string(currentDirection + 1);
 
             if (spriteRdr && currentSprite != walkSprites[currentDirection]) {
-
-                // if(currentDirection == 2){
-                //     spriteRdr->Open(walkSprites[currentDirection].c_str());
-                //     spriteRdr->SetFrameCount(4, 1);
-                //     currentSprite = walkSprites[currentDirection];
-                // }else{
                     spriteRdr->Open(walkSprites[currentDirection].c_str());
-                    spriteRdr->SetFrameCount(4, 3);
+                    spriteRdr->SetFrameCount(4, 1);
                     currentSprite = walkSprites[currentDirection];
-                //}
             }
         } else {
-            animName = "idle" + std::to_string(currentDirection + 1);
+            // TODO: ao ter o idle, mudar isso
+            animName = "walking8";
+            currentDirection = 7;
 
-            if (spriteRdr && currentSprite != idleSprites[currentDirection]) {
-                spriteRdr->Open(idleSprites[currentDirection].c_str());
-                spriteRdr->SetFrameCount(5, 4);
-                currentSprite = idleSprites[currentDirection];
+            if (spriteRdr && currentSprite != walkSprites[currentDirection]) {
+                spriteRdr->Open(walkSprites[currentDirection].c_str());
+                spriteRdr->SetFrameCount(4, 1);
+                currentSprite = walkSprites[currentDirection];
             }
         }
         animator->SetAnimation(animName);
