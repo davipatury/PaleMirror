@@ -34,6 +34,8 @@ public:
     bool lazyRender = true;
     // Do not call Update when off-screen
     bool lazyUpdate = false;
+
+    bool pauseOnOpenUI = true;
 private:
     std::vector<std::unique_ptr<Component>> components;
     bool isDead;

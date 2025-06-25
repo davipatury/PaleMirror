@@ -133,7 +133,7 @@ void StageState::Update(float dt) {
         quitRequested = true;
     }
 
-    if (InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)) {
+    if (!openUI && InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)) {
         popRequested = true;
         InputManager::GetInstance().ReleaseKey(ESCAPE_KEY);
     }
@@ -168,7 +168,7 @@ void StageState::Update(float dt) {
     }
 
     // Spawn mirror puzzle
-    if (InputManager::GetInstance().KeyPress('m')) {
+    if (!openUI && InputManager::GetInstance().KeyPress('m')) {
         GameObject* mp = new GameObject();
         mp->AddComponent(new MirrorPuzzle((*mp), std::vector<MirrorPuzzle::Piece>{
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/1.png", Vec2{0, 0}),
@@ -180,6 +180,7 @@ void StageState::Update(float dt) {
         }));
         mp->box.z = 5;
         mp->lazyRender = false;
+        mp->pauseOnOpenUI = false;
         AddObject(mp);
     }
 

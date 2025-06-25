@@ -26,6 +26,9 @@ public:
     Music titleMusic;
     int selectedOption;
 
+    Sprite button1;
+    Sprite button2;
+
     Timer blinkTimer;
     bool  blinkVisible;
     static constexpr float BLINK_INTERVAL = 0.5f;

@@ -2,7 +2,8 @@
 #include "states/StageState.h"
 #include "states/LoadState.h"
 
-TitleState::TitleState() {
+TitleState::TitleState(): button1("Recursos/img/menu/botao.png"),
+                         button2("Recursos/img/menu/botao2.png") {
     started = false;
     quitRequested = false;
     popRequested = false;
@@ -16,7 +17,7 @@ TitleState::TitleState() {
     titleMusic.Play();
 
     GameObject* bg = new GameObject();
-    SpriteRenderer* bgSprite = new SpriteRenderer((*bg), "Recursos/img/Home.jpeg", 1, 1);
+    SpriteRenderer* bgSprite = new SpriteRenderer((*bg), "Recursos/img/menu/Home.jpeg", 1, 1);
     bgSprite->SetCameraFollower(true);
     bg->AddComponent(bgSprite);
     bg->box.z = -2;
@@ -78,24 +79,60 @@ void TitleState::Update(float dt) {
 void TitleState::Render() {
     RenderArray();
 
-    SDL_Rect highlightRect;
-    if (selectedOption == 0) {
-        highlightRect.x = 38;
-        highlightRect.y = 643;
-        highlightRect.w = 545;
-        highlightRect.h = 77;
-    }
-    else {
-        highlightRect.x = 622;
-        highlightRect.y = 647;
-        highlightRect.w = 545;
-        highlightRect.h = 77;
-    }
+    //button1.Render(38, 643, 511, 168);
+    //button2.Render(38, 643, 511, 168);
 
-    if(blinkVisible){
-        SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, 255);
-        SDL_RenderDrawRect(GAME_RENDERER, &highlightRect);
+    //button2.Render(622, 647, 520, 176);
+
+    SDL_Rect highlightRect;
+
+    if(!blinkVisible){
+        button1.Open("Recursos/img/menu/botao.png");
+        button2.Open("Recursos/img/menu/botao.png");
+        button1.Render(48, 643, 511, 168);
+        button2.Render(622, 643, 511, 168);
+    }else{
+        if (selectedOption == 0) {
+            button1.Open("Recursos/img/menu/botao2.png");
+            button2.Open("Recursos/img/menu/botao.png");
+            button1.Render(48, 643, 520, 176);
+            button2.Render(622, 643, 511, 168);
+        }else{
+            button1.Open("Recursos/img/menu/botao.png");
+            button2.Open("Recursos/img/menu/botao2.png");
+            button1.Render(48, 643, 511, 168);
+            button2.Render(622, 643, 520, 176);
+        }
     }
+    static GameObject* textGO     = nullptr;
+    static Text* promptText = nullptr;
+    textGO = new GameObject();
+    textGO->box = Rect(0, 0, 0, 0);
+    const char* fontFile = "Recursos/font/PixelifySans-Regular.ttf";
+    int fontSize = 70;
+    Text::TextStyle style = Text::BLENDED;
+    std::string msg = "Novo";
+    SDL_Color color = { 0, 0, 0, 0 };
+    float flash = 0.0f;
+    promptText = new Text(*textGO, fontFile, fontSize, style, msg, color, flash);
+    textGO->AddComponent(promptText);
+    textGO->box.x = 200;
+    textGO->box.y = 685;
+    promptText->Render();
+
+
+    static GameObject* textGO2     = nullptr;
+    static Text* promptText2 = nullptr;
+    textGO2 = new GameObject();
+    textGO2->box = Rect(0, 0, 0, 0);
+    std::string msg2 = "Carregar";
+    promptText2 = new Text(*textGO2, fontFile, fontSize, style, msg2, color, flash);
+    textGO2->AddComponent(promptText);
+    textGO2->box.x = 730;
+    textGO2->box.y = 685;
+    promptText2->Render();
+
+
 
 }
 

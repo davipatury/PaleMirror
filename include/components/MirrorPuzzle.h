@@ -51,6 +51,8 @@ public:
 
     std::vector<Piece> pieces;
     int selectedPiece;
+    Sprite bg;
+    bool background=false;
 };
 
 #endif // MIRRORPUZZLE_H

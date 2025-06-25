@@ -52,7 +52,9 @@ void State::UpdateArray(float dt) {
     for (int i = 0; i < objectArray.size(); i++) {
         GameObject* go = objectArray[i].get();
         if (!go->lazyUpdate || Camera::PosRect().Collides(go->box)) {
-            go->Update(dt);
+            if (!(openUI && go->pauseOnOpenUI)) {
+                go->Update(dt);
+            }
         }
     }
 }

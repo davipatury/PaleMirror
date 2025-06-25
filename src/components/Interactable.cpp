@@ -81,7 +81,7 @@ void Interactable::Render() {
         textGO = new GameObject();
 
         textGO->box = Rect(0, 0, 0, 0);
-        const char* fontFile = "Recursos/font/neodgm.ttf";
+        const char* fontFile = "Recursos/font/PixelifySans-Regular.ttf";
         int fontSize = 45;
         Text::TextStyle style = Text::BLENDED;
         std::string key = {toupper(interactionKey)};

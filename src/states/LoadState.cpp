@@ -7,7 +7,7 @@ LoadState::LoadState() {
 
 
     GameObject* bg = new GameObject();
-    SpriteRenderer* bgSprite = new SpriteRenderer((*bg), "Recursos/img/Load.jpeg", 1, 1);
+    SpriteRenderer* bgSprite = new SpriteRenderer((*bg), "Recursos/img/menu/Load.jpeg", 1, 1);
     bgSprite->SetCameraFollower(true);
     bg->AddComponent(bgSprite);
     bg->box.z = -2;
