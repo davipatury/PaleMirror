@@ -7,6 +7,7 @@
 #include "math/Vec2.h"
 #include "entities/characters/Character.h"
 #include "utils/Text.h"
+#include "utils/DrawCircle.h"
 #include <string>
 
 void Interactable::Update(float dt) {
@@ -103,6 +104,19 @@ void Interactable::Render() {
     textGO->box.x = static_cast<int>(Camera::pos.x) + (screenW - textW) - marginX;
     textGO->box.y = static_cast<int>(Camera::pos.y) + (screenH - textH) - marginY;
     promptText->Render();
+
+    Vec2 objectcoord;
+    IsoCollider* col = (IsoCollider*) associated.GetComponent("IsoCollider");
+    if (col) objectcoord = col->box.Center().ToCart();
+    else objectcoord = associated.box.Center();
+
+    Vec2 cam = Camera::pos;
+    int cx = static_cast<int>(objectcoord.x - cam.x);
+    int cy = static_cast<int>(objectcoord.y - cam.y);
+    int radius = static_cast<int>(activationDistance);
+
+    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 255, 0, 128);
+    DrawCircle(Game::GetInstance().GetRenderer(), cx, cy, radius);
 }
 
 

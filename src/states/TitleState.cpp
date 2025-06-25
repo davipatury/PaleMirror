@@ -83,25 +83,28 @@ void TitleState::Render() {
     //button2.Render(38, 643, 511, 168);
 
     //button2.Render(622, 647, 520, 176);
+    int margin = 60;
+
+    // 1200 - margin - width
 
     SDL_Rect highlightRect;
 
     if(!blinkVisible){
         button1.Open("Recursos/img/menu/botao.png");
         button2.Open("Recursos/img/menu/botao.png");
-        button1.Render(48, 643, 511, 168);
-        button2.Render(622, 643, 511, 168);
+        button1.Render(margin, 643, 511, 168);
+        button2.Render(1200-margin-511, 643, 511, 168);
     }else{
         if (selectedOption == 0) {
             button1.Open("Recursos/img/menu/botao2.png");
             button2.Open("Recursos/img/menu/botao.png");
-            button1.Render(48, 643, 520, 176);
-            button2.Render(622, 643, 511, 168);
+            button1.Render(margin, 643, 520, 176);
+            button2.Render(1200-margin-511, 643, 511, 168);
         }else{
             button1.Open("Recursos/img/menu/botao.png");
             button2.Open("Recursos/img/menu/botao2.png");
-            button1.Render(48, 643, 511, 168);
-            button2.Render(622, 643, 520, 176);
+            button1.Render(margin, 643, 511, 168);
+            button2.Render(1200-margin-511, 643, 520, 176);
         }
     }
     static GameObject* textGO     = nullptr;
@@ -109,15 +112,15 @@ void TitleState::Render() {
     textGO = new GameObject();
     textGO->box = Rect(0, 0, 0, 0);
     const char* fontFile = "Recursos/font/PixelifySans-Regular.ttf";
-    int fontSize = 70;
+    int fontSize = 75;
     Text::TextStyle style = Text::BLENDED;
     std::string msg = "Novo";
     SDL_Color color = { 0, 0, 0, 0 };
     float flash = 0.0f;
     promptText = new Text(*textGO, fontFile, fontSize, style, msg, color, flash);
     textGO->AddComponent(promptText);
-    textGO->box.x = 200;
-    textGO->box.y = 685;
+    textGO->box.x = 225;
+    textGO->box.y = 680;
     promptText->Render();
 
 
@@ -128,8 +131,8 @@ void TitleState::Render() {
     std::string msg2 = "Carregar";
     promptText2 = new Text(*textGO2, fontFile, fontSize, style, msg2, color, flash);
     textGO2->AddComponent(promptText);
-    textGO2->box.x = 730;
-    textGO2->box.y = 685;
+    textGO2->box.x = 720;
+    textGO2->box.y = 680;
     promptText2->Render();
 
 

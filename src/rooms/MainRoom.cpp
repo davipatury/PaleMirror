@@ -32,13 +32,13 @@ void MainRoom::Build() {
 
     // Porta
     GameObject* door = createGO("[OBJ] Mirror", 2600, 1350);
-    auto it = new SpriteRenderer(*door, "Recursos/img/objetos/espelho.png");
-    it->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    auto it = new SpriteRenderer(*door, "Recursos/img/objetos/Porta.png");
     it->SetScale(1.5, 1.5);
     door->AddComponent(it);
     std::unique_ptr<Action> changeRoomAction(new ChangeRoomAction(state, "classroom"));
     Interactable* interactRoom = new Interactable(*door, std::move(changeRoomAction));
     interactRoom->SetRequireMouseOver(true);
+    interactRoom->SetActivationDistance(40);
     door->AddComponent(interactRoom);
     state->AddObject(door);
 }
