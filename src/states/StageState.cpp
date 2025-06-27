@@ -190,6 +190,7 @@ void StageState::Update(float dt) {
         fp->AddComponent(new FusePuzzle((*fp)));
         fp->box.z = 5;
         fp->lazyRender = false;
+        fp->pauseOnOpenUI = false;
         AddObject(fp);
     }
 

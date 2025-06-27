@@ -1,7 +1,7 @@
 #include "components/FusePuzzle.h"
 
-#define FUSE_PUZZLE_RECT_X 350
-#define FUSE_PUZZLE_RECT_Y 200
+#define FUSE_PUZZLE_RECT_X 260
+#define FUSE_PUZZLE_RECT_Y 210
 
 FusePuzzle::FusePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/fuse_puzzle/fuseboxbg.png"){
     for(int i=0; i<9; i++) fuses.push_back(Fuse());
@@ -33,8 +33,19 @@ void FusePuzzle::Update(float dt) {
         }
     }
 
+    if (INPUT_MANAGER.IsKeyDown(SDLK_ESCAPE)) {
+        Game::GetInstance().GetCurrentState().openUI = false;
+        associated.pauseOnOpenUI=true;
+        associated.RequestDelete();
+        std::cout << "FuzePuzzle closed" << std::endl;
+        INPUT_MANAGER.ReleaseKey(SDLK_ESCAPE);
+    }
+
     if (IsSolved()) {
         std::cout << "!!! SOLVED !!!" << std::endl;
+        Game::GetInstance().GetCurrentState().openUI = false;
+        associated.pauseOnOpenUI=true;
+        associated.RequestDelete();
     }
 }
 
@@ -42,8 +53,8 @@ void FusePuzzle::Render() {
     SDL_Rect bgRect;
     bgRect.x = FUSE_PUZZLE_RECT_X;
     bgRect.y = FUSE_PUZZLE_RECT_Y;
-    bgRect.w = 500;
-    bgRect.h = 500;
+    bgRect.w = 678;
+    bgRect.h = 480;
 
     // Background rectangle
     bg.Render(bgRect.x, bgRect.y, bgRect.w, bgRect.h);
@@ -57,8 +68,11 @@ void FusePuzzle::Render() {
 }
 
 void FusePuzzle::Start() {
+    Game::GetInstance().GetCurrentState().openUI = true;
+    associated.pauseOnOpenUI=false;
+    
     for (int i = 0; i < fuses.size(); i++) {
-        fuses[i].pos = {50 + (i%3 * 150), 50 + (i/3 * 150)};
+        fuses[i].pos = {376 + (i%3 * 96), 90 + (i/3 * 126)};
     }
 }
 
