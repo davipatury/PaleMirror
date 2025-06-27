@@ -27,16 +27,23 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
     const std::string types[] = {"Idle", "Walk", "Attack"};
 
     for (int i = 0; i < 8; i++) {
+        // 1, 2, 6, 7, 8 -> 1
+        // 3, 4, 5 -> 2 -> 2
+        if(i == 0 || i == 1 || i == 5 || i == 6 || i == 7) {
+            idleSprites.push_back(basePath + types[0] + "/" + types[0] + "1" + ".png");
+        } else {
+            idleSprites.push_back(basePath + types[0] + "/" + types[0] + "2" + ".png");
+        }
         //idleSprites.push_back(basePath + types[0] + "/Knight_" + types[0] + "_dir" + std::to_string(i+1) + ".png");
         walkSprites.push_back(basePath + types[1] + "/" + types[1] + std::to_string(i+1) + ".png");
         //attackSprites.push_back(basePath + types[2] + "/Knight_" + types[2] + "_dir" + std::to_string(i+1) + ".png");
     }
 
-    SpriteRenderer* spriteRdr = new SpriteRenderer(associated, walkSprites[7].c_str(), 4, 1);
+    SpriteRenderer* spriteRdr = new SpriteRenderer(associated, idleSprites[7].c_str(), 1, 1);
     spriteRdr->SetScale(1, 1);
     spriteRdr->SetScale(0.5, 0.5);
     associated.AddComponent(spriteRdr);
-    currentSprite = walkSprites[7];
+    currentSprite = idleSprites[7];
     currentDirection = 7;
 
     Animator* animator = new Animator(associated);
@@ -48,12 +55,27 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
         }else{
             animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.250));
         }
+
+        // 1, 2, 8 = Parado
+        // 3 e 4 = ParadoCostaLeft
+        // 5 = ParadoCostaRight
+        // 6 e 7 = ParadoRight
+        if( i+1 == 1 or i+1 == 2 or i+1 == 8){
+            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250));
+        }else if (i+1 == 3 or i+1 == 4){
+            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250, SDL_FLIP_HORIZONTAL));
+        }else if(i+1 == 5){
+            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250));
+        }else{
+            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250, SDL_FLIP_HORIZONTAL));
+        }
+
         //animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 3, 0.250));
         //animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 14, 0.1));
     }
 
     animator->AddAnimation("dead", Animation(0, 0, 0.5));
-    animator->SetAnimation("walking8");
+    animator->SetAnimation("idle1");
 
     isAttacking = false;
     deathTimer = Timer();
@@ -158,18 +180,12 @@ void Character::Update(float dt) {
                 isAttacking = false;
                 if (spriteRdr) {
                     if (moving) {
-                        // if(currentDirection == 2){
-                        //     spriteRdr->Open(walkSprites[currentDirection].c_str());
-                        //     spriteRdr->SetFrameCount(4, 1);
-                        //     currentSprite = walkSprites[currentDirection];
-                        // }else{
-                            spriteRdr->Open(walkSprites[currentDirection].c_str());
-                            spriteRdr->SetFrameCount(4, 1);
-                            currentSprite = walkSprites[currentDirection];
-                        //}
+                        spriteRdr->Open(walkSprites[currentDirection].c_str());
+                        spriteRdr->SetFrameCount(4, 1);
+                        currentSprite = walkSprites[currentDirection];
                     } else {
                         spriteRdr->Open(idleSprites[currentDirection].c_str());
-                        spriteRdr->SetFrameCount(4, 1);
+                        spriteRdr->SetFrameCount(1, 1);
                         currentSprite = idleSprites[currentDirection];
                     }
                 }
@@ -183,14 +199,12 @@ void Character::Update(float dt) {
                     currentSprite = walkSprites[currentDirection];
             }
         } else {
-            // TODO: ao ter o idle, mudar isso
-            animName = "walking8";
-            currentDirection = 7;
+            animName = "idle" + std::to_string(currentDirection + 1);
 
-            if (spriteRdr && currentSprite != walkSprites[currentDirection]) {
-                spriteRdr->Open(walkSprites[currentDirection].c_str());
-                spriteRdr->SetFrameCount(4, 1);
-                currentSprite = walkSprites[currentDirection];
+            if (spriteRdr && currentSprite != idleSprites[currentDirection]) {
+                spriteRdr->Open(idleSprites[currentDirection].c_str());
+                spriteRdr->SetFrameCount(1, 1);
+                currentSprite = idleSprites[currentDirection];
             }
         }
         animator->SetAnimation(animName);
