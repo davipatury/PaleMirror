@@ -70,10 +70,13 @@ void FusePuzzle::Render() {
 void FusePuzzle::Start() {
     Game::GetInstance().GetCurrentState().openUI = true;
     associated.pauseOnOpenUI=false;
+    bool always_on = true;
 
     for (int i = 0; i < fuses.size(); i++) {
         fuses[i].pos = {376 + (i%3 * 96), 90 + (i/3 * 126)};
         bool on = (rand() % 2);
+        always_on &= on;
+        if(i == fuses.size()-1 && always_on) on = 0;
         fuses[i].on = on;
         fuses[i].sprite.SetFrame(on);
     }
