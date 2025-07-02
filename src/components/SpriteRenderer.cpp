@@ -22,6 +22,7 @@ void SpriteRenderer::SetFrameCount(int frameCountW, int frameCountH) {
 void SpriteRenderer::Update(float dt) { }
 
 void SpriteRenderer::Render() {
+    if (!visible) return;
     sprite.Render(associated.box.x, associated.box.y, associated.box.w, associated.box.h, associated.angleDeg);
 }
 
@@ -41,6 +42,10 @@ void SpriteRenderer::SetScale(float scaleX, float scaleY) {
     associated.box.h = sprite.GetHeight();
 
     associated.box = associated.box.Add(oldCenter.Sub(associated.box.Center()));
+}
+
+void SpriteRenderer::SetVisible(bool visible) {
+    this->visible = visible;
 }
 
 bool SpriteRenderer::Is(std::string type) {

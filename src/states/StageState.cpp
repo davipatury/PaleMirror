@@ -11,92 +11,13 @@ StageState::StageState() {
     quitRequested = false;
     popRequested = false;
 
-    /*
-    // -------------------------- ClassRoom
-    GameObject* classroom = new GameObject("[BG] ClassRoom");
-    SpriteRenderer* classroomSprite = new SpriteRenderer((*classroom), "Recursos/img/rooms/ClassRoom.png", 1, 1);
-    classroomSprite->SetScale(0.50, 0.50);
-    classroom->AddComponent(classroomSprite);
-    classroom->box.x = 10000;
-    classroom->box.y = 0;
-    classroom->box.z = -2;
-    AddObject(classroom);
-
-    // Mesa e Cadeira
-    GameObject* mesacad = new GameObject("[OBJ] CadeiraMesa");
-    SpriteRenderer* mcSprite = new SpriteRenderer(*mesacad, "Recursos/img/objetos/CADEIRAeMESA.png");
-    mcSprite->SetScale(1.25, 1.25);
-    mcSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
-    mesacad->AddComponent(mcSprite);
-    mesacad->AddComponent(new IsoCollider(*mesacad, {1, 1}, {0, -35}));
-    mesacad->box.x = 10700;
-    mesacad->box.y = 550;
-    mesacad->box.z = 0;
-    AddObject(mesacad);
-
-    // Mesa e Cadeira
-    GameObject* mesacad2 = new GameObject("[OBJ] CadeiraMesa ESQ");
-    SpriteRenderer* mcSprite2 = new SpriteRenderer(*mesacad2, "Recursos/img/objetos/CADEIRAeMESA.png");
-    mcSprite2->SetScale(1.25, 1.25);
-    mcSprite2->SetFrame(0, SDL_FLIP_HORIZONTAL);
-    mesacad2->AddComponent(mcSprite2);
-    mesacad2->AddComponent(new IsoCollider(*mesacad2, {1, 1}, {0, -35}));
-    mesacad2->box.x = 10600;
-    mesacad2->box.y = 610;
-    mesacad2->box.z = 0;
-    AddObject(mesacad2);
-
-    // Cadeira
-    GameObject* cadeira = new GameObject("[OBJ] CadeiraAzul");
-    SpriteRenderer* cadeiraSprite = new SpriteRenderer(*cadeira, "Recursos/img/objetos/CADEIRAM.png");
-    cadeiraSprite->SetScale(1.25, 1.25);
-    cadeiraSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
-    cadeira->AddComponent(cadeiraSprite);
-    cadeira->AddComponent(new IsoCollider(*cadeira, {0.7, 0.7}, {0, -17}));
-    cadeira->box.x = 10700;
-    cadeira->box.y = 680;
-    cadeira->box.z = 0;
-    AddObject(cadeira);
-
-    // Mesa
-    GameObject* mesa = new GameObject("[OBJ] MesaAzul");
-    SpriteRenderer* mesaSprite = new SpriteRenderer(*mesa, "Recursos/img/objetos/MESAazul.png");
-    mesaSprite->SetScale(1.25, 1.25);
-    mesaSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
-    mesa->AddComponent(mesaSprite);
-    mesa->AddComponent(new IsoCollider(*mesa, {1, 1}, {0, -17}));
-
-    std::unique_ptr<Action> docRoomAction(new DocumentAction("Recursos/img/objetos/carteira-azul-icon.jpg"));
-    Interactable* interactdocRoom = new Interactable(*mesa, std::move(docRoomAction));
-    interactdocRoom->SetRequireMouseOver(true);
-    interactdocRoom->SetActivationDistance(60);
-    mesa->AddComponent(interactdocRoom);
-    mesa->box.x = 10713;
-    mesa->box.y = 690;
-    mesa->box.z = 0;
-    AddObject(mesa);
-
-    // Porta
-    GameObject* roomDoorBack = new GameObject("[OBJ] Porta");
-    roomDoorBack->box.x = 10765;
-    roomDoorBack->box.y = 855;
-    roomDoorBack->box.z = 0;
-    Vec2 destinoDoorBack(2606, 1480);
-    std::unique_ptr<Action> teleportDoorBackAction(new TeleportAction(destinoDoorBack));
-    Interactable* interactDoorBack = new Interactable(*roomDoorBack, std::move(teleportDoorBackAction));
-    interactDoorBack->SetRequireMouseOver(true);
-    interactDoorBack->SetActivationDistance(25);
-    roomDoorBack->AddComponent(interactDoorBack);
-    AddObject(roomDoorBack);
-    */
-
     // Player
     GameObject* character = new GameObject("[PLAYER]");
     Character* charCmp = new Character((*character), "Recursos/img/Player.png");
     character->AddComponent(new PlayerController(*character));
     character->AddComponent(charCmp);
-    character->box.x = 2500;
-    character->box.y = 1450;
+    character->box.x = 1639;
+    character->box.y = 1656;
     character->box.z = 0;
     Character::player = charCmp;
     Camera::Follow(character);
@@ -111,11 +32,23 @@ void StageState::LoadAssets() {
     MainRoom* mainRoom = new MainRoom(this);
     mainRoom->Build();
 
-    ClassroomRoom* crRoom = new ClassroomRoom(this);
-    crRoom->Build();
+    HistoryClassRoom* historyRoom = new HistoryClassRoom(this);
+    historyRoom->Build();
+
+    ArtsClassRoom* artsRoom = new ArtsClassRoom(this);
+    artsRoom->Build();
+
+    ScienceClassRoom* scienceRoom = new ScienceClassRoom(this);
+    scienceRoom->Build();
+
+    PortugueseClassRoom* portugueseRoom = new PortugueseClassRoom(this);
+    portugueseRoom->Build();
 
     rooms["main"] = mainRoom;
-    rooms["classroom"] = crRoom;
+    rooms["history"] = historyRoom;
+    rooms["arts"] = artsRoom;
+    rooms["science"] = scienceRoom;
+    rooms["portuguese"] = portugueseRoom;
 
     currentRoom = mainRoom;
     mainRoom->Enter();
@@ -147,9 +80,6 @@ void StageState::Update(float dt) {
             }
         }
     }
-
-    // Update camera
-    Camera::Update(dt);
 
     // Spawn test block
     if (InputManager::GetInstance().KeyPress(' ')) {
@@ -250,6 +180,9 @@ void StageState::Update(float dt) {
             objectArray.erase(objectArray.begin() + i);
         }
     }
+
+    // Update camera
+    Camera::Update(dt);
 
     // End game
     if (Character::player == nullptr) {

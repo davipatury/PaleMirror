@@ -13,7 +13,7 @@ class Room
 public:
     State* state;
     const char* bgFile;
-    const char* bgMusicFile;
+    const char* bgMusicFile = nullptr;
 
     GameObject* bgGO;
     Music bgMusic;
@@ -21,6 +21,8 @@ public:
 
     Vec2 basePos;
     std::vector<Vec2> entryPos;
+
+    Rect cameraLimits;
 
     Room(State* state);
 

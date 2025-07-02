@@ -21,12 +21,14 @@ public:
     void Render();
     void SetFrame(int frame, SDL_RendererFlip flip = SDL_FLIP_NONE);
     void SetCameraFollower(bool newValue);
+    void SetVisible(bool visible);
 
     void SetScale(float scaleX, float scaleY);
 
     bool Is(std::string type);
 
     Sprite sprite;
+    bool visible = true;
 };
 
 #endif // SPRITERENDERER_H

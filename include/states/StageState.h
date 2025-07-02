@@ -35,7 +35,10 @@
 #include "components/WaveSpawner.h"
 #include "entities/characters/Zombie.h"
 #include "rooms/MainRoom.h"
-#include "rooms/ClassroomRoom.h"
+#include "rooms/HistoryClassRoom.h"
+#include "rooms/ArtsClassRoom.h"
+#include "rooms/ScienceClassRoom.h"
+#include "rooms/PortugueseClassRoom.h"
 
 class StageState : public State
 {

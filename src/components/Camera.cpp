@@ -2,6 +2,7 @@
 
 Vec2 Camera::pos;
 Vec2 Camera::speed;
+Rect Camera::cameraLimits;
 GameObject* Camera::focus;
 
 void Camera::Follow(GameObject* newFocus) {
@@ -27,8 +28,22 @@ void Camera::Update(float dt) {
         pos.x += xSpeed * dt;
         pos.y += ySpeed * dt;
     }
+
+    // Camera limits
+    Vec2 tl = cameraLimits.TopLeft();
+    Vec2 br = cameraLimits.BottomRight();
+    if (cameraLimits.w > 0) {
+        if (pos.x < tl.x) pos.x = tl.x;
+        if (pos.y < tl.y) pos.y = tl.y;
+        if (pos.x > br.x - 1200) pos.x = br.x - 1200;
+        if (pos.y > br.y - 900) pos.y = br.y - 900;
+    }
 }
 
 Rect Camera::PosRect() {
     return Rect(pos.x, pos.y, 1200, 900);
+}
+
+void Camera::SetCameraLimits(Rect limits) {
+    cameraLimits = limits;
 }

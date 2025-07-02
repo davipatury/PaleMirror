@@ -16,7 +16,7 @@
 Character* Character::player = nullptr;
 
 Character::Character(GameObject& associated, const char* sprite) : Component(associated) {
-    linearSpeed = 120;
+    linearSpeed = 150;
     hp = 100;
     flip = false;
     lastMoveDirection = Vec2(1, 0);
@@ -111,7 +111,10 @@ void Character::Update(float dt) {
                     // Straighten diagonal movement (xSpeed = 2 * ySpeed)
                     // TODO: use 0.578125 instead of dividing/multiplying by 2
                     moveSpeed.x *= 1.5;
-                    moveSpeed.y *= 0.75;
+                    moveSpeed.y *= 0.8671875;
+                }
+                if (moveSpeed.x != 0 && moveSpeed.y == 0) {
+                    moveSpeed.x *= 1.1;
                 }
                 associated.box = associated.box.Add(moveSpeed);
                 moving = true;

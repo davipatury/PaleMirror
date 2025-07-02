@@ -13,7 +13,8 @@
 void Interactable::Update(float dt) {
     if (Character::player == nullptr) return;
 
-    Vec2 playercoord = Character::player->Pos();
+    IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
+    Vec2 playercoord = playerCol->box.Center().ToCart();
     IsoCollider* col = (IsoCollider*) associated.GetComponent("IsoCollider");
 
     Vec2 objectcoord;
@@ -29,7 +30,7 @@ void Interactable::Update(float dt) {
 
     canInteract = (dist2 <= activationDistance);
 
-    bool mouseOverOK = true;
+    bool mouseOverOK = false;
     if (requireMouseOver) {
         Collider* col = (Collider*) associated.GetComponent("Collider");
         if (col) {
@@ -55,6 +56,9 @@ void Interactable::Update(float dt) {
     }
     */
 
+    if (highlightSr != nullptr) {
+        highlightSr->SetVisible(can);
+    }
     if (can && InputManager::GetInstance().KeyPress(interactionKey)) {
         if(action){
             // Cria uma cópia do Action e executa

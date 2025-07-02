@@ -3,6 +3,7 @@
 Room::Room(State* state) {
     this->state = state;
     this->lockCameraOnRoom = false;
+    this->cameraLimits = Rect(0, 0, 0, 0);
 }
 
 void Room::Build() {
@@ -12,13 +13,13 @@ void Room::Build() {
     state->AddObject(bgGO);
 
     if (bgMusicFile) {
-        //bgMusic.Open(bgMusicFile);
+        bgMusic.Open(bgMusicFile);
     }
 }
 
 void Room::Enter() {
     if (bgMusic.IsOpen()) {
-        //bgMusic.Play();
+        bgMusic.Play();
     }
 
     if (lockCameraOnRoom && bgGO != nullptr) {
@@ -26,6 +27,8 @@ void Room::Enter() {
     } else if (Character::player != nullptr) {
         Camera::Follow(&Character::player->associated);
     }
+
+    Camera::SetCameraLimits(cameraLimits);
 }
 
 void Room::Leave() {

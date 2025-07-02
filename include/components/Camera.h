@@ -14,9 +14,11 @@ public:
     static void Update(float dt);
 
     static Rect PosRect();
+    static void SetCameraLimits(Rect limits);
 
     static Vec2 pos;
     static Vec2 speed;
+    static Rect cameraLimits;
 private:
     static GameObject* focus;
 };
