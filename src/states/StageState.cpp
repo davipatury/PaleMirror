@@ -22,6 +22,14 @@ StageState::StageState() {
     Character::player = charCmp;
     Camera::Follow(character);
     AddObject(character);
+
+    GameObject* zombie = new GameObject("[Monster]");
+    Zombie* zomb = new Zombie((*zombie));
+    zombie->AddComponent(zomb);
+    zombie->box.x = 1639;
+    zombie->box.y = 1656;
+    zombie->box.z = 0;
+    AddObject(zombie);
 }
 
 StageState::~StageState() {
