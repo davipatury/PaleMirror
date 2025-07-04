@@ -5,8 +5,8 @@ int Zombie::zombieCounter;
 
 Zombie::Zombie(GameObject& associated) : Component(associated) {
     hitpoints = 100;
+
     SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/monster.png", 4, 1);
-    sprite->SetScale(0.1, 0.1);
     associated.AddComponent(sprite);
 
     Animator* animator = new Animator(associated);
@@ -42,18 +42,22 @@ void Zombie::Update(float dt) {
 
     if (hitpoints > 0) {
         if (Character::player) {
-            const int speed = 75;
-            Vec2 dir = Character::player->Pos().Sub(associated.box.Center()).Normalized();
-            associated.box = associated.box.Add(dir.MulScalar(speed * dt));
+            if (Character::player->Pos().Distance(associated.box.Center()) < 1000) {
+                const int speed = 75;
+                Vec2 dir = Character::player->Pos().Sub(associated.box.Center()).Normalized();
+                associated.box = associated.box.Add(dir.MulScalar(speed * dt));
 
-            Animator* animator = static_cast<Animator*>(associated.GetComponent("Animator"));
-            bool goingLeft = dir.x < 0;
-            animator->SetAnimation(goingLeft ? "walking" : "walkingFlip");
+                Animator* animator = static_cast<Animator*>(associated.GetComponent("Animator"));
+                bool goingLeft = dir.x < 0;
+                animator->SetAnimation(goingLeft ? "walking" : "walkingFlip");
+            }
         }
     } else if (deathTimer.Get() >= 5) {
         zombieCounter--;
         associated.RequestDelete();
     }
+
+    // std::cout << "Zombie position: " << associated.box.x << ", " << associated.box.y << std::endl;
 }
 
 void Zombie::NotifyCollision(GameObject& other) {

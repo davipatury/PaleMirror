@@ -23,17 +23,8 @@ StageState::StageState() {
     Camera::Follow(character);
     AddObject(character);
 
-    GameObject* zombie = new GameObject("[Monster]");
-    Zombie* zomb = new Zombie((*zombie));
-    zombie->AddComponent(zomb);
-    zombie->box.x = 1639;
-    zombie->box.y = 1656;
-    zombie->box.z = 0;
-    AddObject(zombie);
-
     GameObject* hp = new GameObject("[HealthHUD]");
-    HealthHUD* hudhp = new HealthHUD((*hp));
-    hp->AddComponent(hudhp);
+    hp->AddComponent(new HealthHUD(*hp));
     hp->box.z = 5;
     AddObject(hp);
 }

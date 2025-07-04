@@ -4,6 +4,10 @@ HealthHUD::HealthHUD(GameObject& associated) : Component(associated), dmg1("Recu
     // HP text
     hpText = new Text(associated, "Recursos/font/neodgm.ttf", 30, Text::TextStyle::SOLID, "100/100", {255, 255, 255, 255});
     associated.AddComponent(hpText);
+
+    dmg1.SetCameraFollower(true);
+    dmg2.SetCameraFollower(true);
+    dmg3.SetCameraFollower(true);
 }
 
 HealthHUD::~HealthHUD() {}
@@ -32,7 +36,6 @@ void HealthHUD::Update(float dt) {
 
 void HealthHUD::Render() {
     if (hpBorder) {
-        std::cout<<"Rendering HealthHUD" << std::endl;
         hpBorder->Render(0, 0, 1200, 900);
     }
 }

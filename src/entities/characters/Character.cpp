@@ -239,7 +239,7 @@ void Character::NotifyCollision(GameObject& other) {
     }
     if (tookDamage || hp <= 0) return;
     if (other.GetComponent("Zombie") != nullptr && this == player) {
-        Hit(20);
+        Hit(10);
     }
 
     Bullet* bullet = (Bullet*) other.GetComponent("Bullet");
