@@ -21,6 +21,8 @@ public:
     bool Is(std::string type);
 private:
     Text* hpText;
+    Sprite dmg1, dmg2, dmg3;
+    Sprite* hpBorder;
 };
 
 #endif // HEALTHHUD_H

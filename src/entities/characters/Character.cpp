@@ -296,21 +296,7 @@ SDL_Rect Character::CalculateAttackBox(float x, float y, float angle) {
     return box;
 }
 
-void Character::Render() {
-    Sprite bg;
-    if(hp > 80){
-        return;
-    }else if(hp > 65){
-        bg.Open("Recursos/img/hud/dmg1.png");
-        bg.Render(0, 0, 1200, 900);
-    }else if(hp > 40){
-        bg.Open("Recursos/img/hud/dmg2.png");
-        bg.Render(0, 0, 1200, 900);
-    }else{
-        bg.Open("Recursos/img/hud/dmg3.png");
-        bg.Render(0, 0, 1200, 900);
-    }
-}
+void Character::Render() {}
 
 void Character::Issue(Command task) {
     taskQueue.push(task);

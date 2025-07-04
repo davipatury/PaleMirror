@@ -30,6 +30,12 @@ StageState::StageState() {
     zombie->box.y = 1656;
     zombie->box.z = 0;
     AddObject(zombie);
+
+    GameObject* hp = new GameObject("[HealthHUD]");
+    HealthHUD* hudhp = new HealthHUD((*hp));
+    hp->AddComponent(hudhp);
+    hp->box.z = 5;
+    AddObject(hp);
 }
 
 StageState::~StageState() {
@@ -116,17 +122,17 @@ void StageState::Update(float dt) {
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/5.png", Vec2{0, 290}),
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/6.png", Vec2{184, 382})
         }));
-        mp->box.z = 5;
+        mp->box.z = 10;
         mp->lazyRender = false;
         mp->pauseOnOpenUI = false;
         AddObject(mp);
     }
 
     // Spawn fuse puzzle
-    if (InputManager::GetInstance().KeyPress('f')) {
+    if (!openUI && InputManager::GetInstance().KeyPress('f')) {
         GameObject* fp = new GameObject();
         fp->AddComponent(new FusePuzzle((*fp)));
-        fp->box.z = 5;
+        fp->box.z = 10;
         fp->lazyRender = false;
         fp->pauseOnOpenUI = false;
         AddObject(fp);
