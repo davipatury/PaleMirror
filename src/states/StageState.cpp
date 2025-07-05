@@ -26,7 +26,15 @@ StageState::StageState() {
     GameObject* hp = new GameObject("[HealthHUD]");
     hp->AddComponent(new HealthHUD(*hp));
     hp->box.z = 5;
+    hp->lazyRender = false;
     AddObject(hp);
+
+    GameObject* dialogue = new GameObject("[DialogueHUD]");
+    dialogue->AddComponent(new DialogueHUD(*hp));
+    dialogue->box.z = 6;
+    dialogue->lazyRender = false;
+    dialogue->pauseOnOpenUI = false;
+    AddObject(dialogue);
 }
 
 StageState::~StageState() {
@@ -86,20 +94,9 @@ void StageState::Update(float dt) {
         }
     }
 
-    // Spawn test block
-    if (InputManager::GetInstance().KeyPress(' ')) {
-        // teste object
-        GameObject* test = new GameObject();
-        SpriteRenderer* testSprite = new SpriteRenderer((*test), "Recursos/img/torre.png", 1, 1);
-        IsoCollider* isoCol = new IsoCollider(*test, {1, 1}, {0, -23});
-        ShadowCaster* shadow = new ShadowCaster(*test, {0, -23});
-        //test->AddComponent(shadow);
-        test->AddComponent(testSprite);
-        test->AddComponent(isoCol);
-        test->box.x = InputManager::GetInstance().GetMouseX() + Camera::pos.x - (test->box.w / 2);;
-        test->box.y = InputManager::GetInstance().GetMouseY() + Camera::pos.y - (test->box.h / 2);;
-        test->box.z = 0;
-        AddObject(test);
+    // Dialogue debug
+    if (!openUI && InputManager::GetInstance().IsKeyDown('p')) {
+        DialogueHUD::RequestDialogue("test");
     }
 
     // Spawn mirror puzzle
