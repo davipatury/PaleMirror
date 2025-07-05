@@ -30,6 +30,7 @@
 #include "core/State.h"
 #include "components/HealthHUD.h"
 #include "components/DialogueHUD.h"
+#include "components/InteractableHUD.h"
 #include "utils/Text.h"
 #include "components/TileMap.h"
 #include "math/Vec2.h"

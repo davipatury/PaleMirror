@@ -15,6 +15,7 @@ InputManager::InputManager() {
 
     updateCounter = 0;
     quitRequested = false;
+    anyKeyPress = false;
     mouseX = 0;
     mouseY = 0;
 }
@@ -25,6 +26,7 @@ void InputManager::Update() {
     updateCounter++;
     SDL_GetMouseState(&mouseX, &mouseY);
     quitRequested = false;
+    anyKeyPress = false;
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -34,6 +36,7 @@ void InputManager::Update() {
                 int key = KeyToIndex(event.key.keysym.sym);
                 keyState[key] = true;
                 keyUpdate[key] = updateCounter;
+                anyKeyPress = true;
             }
             break;
         }
@@ -58,6 +61,10 @@ void InputManager::Update() {
             break;
         }
     }
+}
+
+bool InputManager::AnyKeyPress() {
+    return anyKeyPress;
 }
 
 bool InputManager::KeyPress(int key) {

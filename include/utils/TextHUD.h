@@ -25,6 +25,10 @@ public:
     void SetStyle(TextStyle style);
     void SetFontFile(const char* fontFile);
     void SetFontSize(int fontSize);
+    void SetPos(Vec2 pos);
+
+    float GetWidth();
+    float GetHeight();
 
     Vec2 pos;
     Rect rect;

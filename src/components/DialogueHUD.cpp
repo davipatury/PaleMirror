@@ -22,8 +22,8 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     helenaFeliz.SetCameraFollower(true);
     helenaNeutra.SetCameraFollower(true);
 
-    dialogueText = new TextHUD({238, 555}, "Recursos/font/PixelifySans-SemiBold.ttf", 40, TextHUD::TextStyle::SOLID, "A", {0, 0, 0, 255}, DIALOGUE_WRAP_LEN);
-    charNameText = new TextHUD({255, 480}, "Recursos/font/PixelifySans-SemiBold.ttf", 50, TextHUD::TextStyle::SOLID, "B", {255, 255, 255, 255});
+    dialogueText = new TextHUD({238, 555}, "Recursos/font/PixelifySans-SemiBold.ttf", 40, TextHUD::BLENDED, "A", {0, 0, 0, 255}, DIALOGUE_WRAP_LEN);
+    charNameText = new TextHUD({255, 480}, "Recursos/font/PixelifySans-SemiBold.ttf", 50, TextHUD::BLENDED, "B", {255, 255, 255, 255});
 
     // Cada dialogo é composto por uma chave e por uma array de falas
     // Nesse caso, o dialogo "test" tem 3 falas
@@ -59,6 +59,7 @@ void DialogueHUD::Update(float dt) {
     if (!currentDialogue.empty()) {
         Game::GetInstance().GetCurrentState().openUI = true;
         textTimer.Update(dt);
+        bool skipFirstKeyCheck = startLine;
 
         DialogueLine dialLine = dialogueLines.at(currentDialogue)[currentLine];
         if (startLine) {
@@ -68,7 +69,7 @@ void DialogueHUD::Update(float dt) {
             else if (dialLine.picture == "HelenaNeutra") pictureSprite = &helenaNeutra;
             else pictureSprite = nullptr;
 
-            if (pictureSprite != nullptr && ((startLine && currentLine == 0) || dialLine.resetPos)) picturePos.x = -pictureSprite->GetWidth();
+            if (pictureSprite && ((startLine && currentLine == 0) || dialLine.resetPos)) picturePos.x = -pictureSprite->GetWidth();
             else picturePos.x = 0;
 
             currentTextPos = 0;
@@ -88,7 +89,7 @@ void DialogueHUD::Update(float dt) {
             }
         }
 
-        if (InputManager::GetInstance().KeyPress(' ')) {
+        if (InputManager::GetInstance().AnyKeyPress() && !skipFirstKeyCheck) {
             if (picturePos.x != 0) picturePos.x = 0;
             else if (currentTextPos < dialLine.line.length()) currentTextPos = dialLine.line.length();
             else {

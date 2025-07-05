@@ -8,7 +8,6 @@
 #include "components/Camera.h"
 #include "entities/characters/Character.h"
 #include "core/Component.h"
-#include "utils/Text.h"
 
 class HealthHUD : public Component
 {
@@ -20,9 +19,7 @@ public:
     void Render();
     bool Is(std::string type);
 private:
-    Text* hpText;
     Sprite dmg1, dmg2, dmg3;
-    Sprite* hpBorder;
 };
 
 #endif // HEALTHHUD_H

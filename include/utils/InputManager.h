@@ -18,6 +18,7 @@ class InputManager
 public:
     void Update();
 
+    bool AnyKeyPress();
     bool KeyPress(int key);
     bool KeyRelease(int key);
     bool IsKeyDown(int key);
@@ -49,6 +50,8 @@ private:
 
     int mouseX;
     int mouseY;
+
+    bool anyKeyPress;
 };
 
 #endif // INPUTMANAGER_H

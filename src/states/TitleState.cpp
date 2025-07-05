@@ -2,17 +2,20 @@
 #include "states/StageState.h"
 #include "states/LoadState.h"
 
-TitleState::TitleState(): button1("Recursos/img/menu/botao.png"),
-                         button2("Recursos/img/menu/botao2.png") {
+TitleState::TitleState(): button("Recursos/img/menu/botao.png"),
+                         activeButton("Recursos/img/menu/botao_ativo.png") {
     started = false;
     quitRequested = false;
     popRequested = false;
 
     selectedOption = 0;
+}
 
-    blinkTimer.Restart();
-    blinkVisible = true;
+TitleState::~TitleState(){
+    objectArray.clear();
+}
 
+void TitleState::LoadAssets() {
     titleMusic.Open("Recursos/audio/Title.wav");
     titleMusic.Play();
 
@@ -23,13 +26,9 @@ TitleState::TitleState(): button1("Recursos/img/menu/botao.png"),
     bg->box.z = -2;
     AddObject(bg);
 
+    startButtonText = new TextHUD({225, 680}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Novo", {0, 0, 0, 0});
+    loadButtonText = new TextHUD({720, 680}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Carregar", {0, 0, 0, 0});
 }
-
-TitleState::~TitleState(){
-    objectArray.clear();
-}
-
-void TitleState::LoadAssets() {}
 
 void TitleState::Start() {
     LoadAssets();
@@ -48,30 +47,17 @@ void TitleState::Update(float dt) {
     }
 
     if (INPUT_MANAGER.KeyPress(LEFT_ARROW_KEY) or INPUT_MANAGER.KeyPress(SDLK_a)) {
-        if(selectedOption != 0) blinkTimer.Restart();
         selectedOption = 0;
     }
 
     if (INPUT_MANAGER.KeyPress(RIGHT_ARROW_KEY) or INPUT_MANAGER.KeyPress(SDLK_d)) {
-        if(selectedOption != 1) blinkTimer.Restart();
         selectedOption = 1;
     }
 
     if (INPUT_MANAGER.KeyPress(SDLK_RETURN) or INPUT_MANAGER.IsKeyDown(SDLK_SPACE)) {
-        if (selectedOption == 0) {
-            Game::GetInstance().Push(new StageState());
-        }
-        else {
-            Game::GetInstance().Push(new LoadState());
-        }
+        if (selectedOption == 0) Game::GetInstance().Push(new StageState());
+        else Game::GetInstance().Push(new LoadState());
     }
-
-    if(blinkTimer.Get() >= BLINK_INTERVAL){
-        blinkTimer.Restart();
-        blinkVisible = !blinkVisible;
-    }
-
-    blinkTimer.Update(dt);
 
     UpdateArray(dt);
 }
@@ -79,69 +65,27 @@ void TitleState::Update(float dt) {
 void TitleState::Render() {
     RenderArray();
 
-    //button1.Render(38, 643, 511, 168);
-    //button2.Render(38, 643, 511, 168);
-
-    //button2.Render(622, 647, 520, 176);
     int margin = 60;
-
-    // 1200 - margin - width
-
-    SDL_Rect highlightRect;
-
-    if(!blinkVisible){
-        button1.Open("Recursos/img/menu/botao.png");
-        button2.Open("Recursos/img/menu/botao.png");
-        button1.Render(margin, 643, 511, 168);
-        button2.Render(1200-margin-511, 643, 511, 168);
-    }else{
-        if (selectedOption == 0) {
-            button1.Open("Recursos/img/menu/botao2.png");
-            button2.Open("Recursos/img/menu/botao.png");
-            button1.Render(margin, 643, 520, 176);
-            button2.Render(1200-margin-511, 643, 511, 168);
-        }else{
-            button1.Open("Recursos/img/menu/botao.png");
-            button2.Open("Recursos/img/menu/botao2.png");
-            button1.Render(margin, 643, 511, 168);
-            button2.Render(1200-margin-511, 643, 520, 176);
-        }
+    if (selectedOption == 0) {
+        // Novo
+        activeButton.Render(margin, 643, activeButton.GetWidth(), activeButton.GetHeight());
+        // Carregar
+        button.Render(1200 - margin - button.GetWidth(), 643, button.GetWidth(), button.GetHeight());
+    } else {
+        // Novo
+        button.Render(margin, 643, button.GetWidth(), button.GetHeight());
+        // Carregar
+        activeButton.Render(1200 - margin - button.GetWidth(), 643, activeButton.GetWidth(), activeButton.GetHeight());
     }
-    static GameObject* textGO     = nullptr;
-    static Text* promptText = nullptr;
-    textGO = new GameObject();
-    textGO->box = Rect(0, 0, 0, 0);
-    const char* fontFile = "Recursos/font/PixelifySans-Regular.ttf";
-    int fontSize = 75;
-    Text::TextStyle style = Text::BLENDED;
-    std::string msg = "Novo";
-    SDL_Color color = { 0, 0, 0, 0 };
-    float flash = 0.0f;
-    promptText = new Text(*textGO, fontFile, fontSize, style, msg, color, flash);
-    textGO->AddComponent(promptText);
-    textGO->box.x = 225;
-    textGO->box.y = 680;
-    promptText->Render();
 
-
-    static GameObject* textGO2     = nullptr;
-    static Text* promptText2 = nullptr;
-    textGO2 = new GameObject();
-    textGO2->box = Rect(0, 0, 0, 0);
-    std::string msg2 = "Carregar";
-    promptText2 = new Text(*textGO2, fontFile, fontSize, style, msg2, color, flash);
-    textGO2->AddComponent(promptText);
-    textGO2->box.x = 720;
-    textGO2->box.y = 680;
-    promptText2->Render();
-
-
-
+    startButtonText->Render();
+    loadButtonText->Render();
 }
 
 void TitleState::Pause() {
     titleMusic.Stop();
 }
+
 void TitleState::Resume() {
     Camera::Unfollow();
     Camera::pos.x = 0;

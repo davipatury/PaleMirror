@@ -5,7 +5,7 @@
 #include "core/GameObject.h"
 #include "components/SpriteRenderer.h"
 #include "core/State.h"
-#include "utils/Text.h"
+#include "utils/TextHUD.h"
 #include "core/Music.h"
 #include "utils/Timer.h"
 
@@ -26,12 +26,11 @@ public:
     Music titleMusic;
     int selectedOption;
 
-    Sprite button1;
-    Sprite button2;
+    Sprite button;
+    Sprite activeButton;
 
-    Timer blinkTimer;
-    bool  blinkVisible;
-    static constexpr float BLINK_INTERVAL = 0.5f;
+    TextHUD* startButtonText;
+    TextHUD* loadButtonText;
 };
 
 #endif // TITLESTATE_H

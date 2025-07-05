@@ -10,7 +10,16 @@ StageState::StageState() {
     started = false;
     quitRequested = false;
     popRequested = false;
+}
 
+StageState::~StageState() {
+    objectArray.clear();
+}
+
+void StageState::LoadAssets() {
+    /*
+     * Game Objects
+     */
     // Player
     GameObject* character = new GameObject("[PLAYER]");
     Character* charCmp = new Character((*character), "Recursos/img/Player.png");
@@ -23,6 +32,7 @@ StageState::StageState() {
     Camera::Follow(character);
     AddObject(character);
 
+    // HUD
     GameObject* hp = new GameObject("[HealthHUD]");
     hp->AddComponent(new HealthHUD(*hp));
     hp->box.z = 5;
@@ -31,29 +41,28 @@ StageState::StageState() {
 
     GameObject* dialogue = new GameObject("[DialogueHUD]");
     dialogue->AddComponent(new DialogueHUD(*hp));
-    dialogue->box.z = 6;
+    dialogue->box.z = 10;
     dialogue->lazyRender = false;
     dialogue->pauseOnOpenUI = false;
     AddObject(dialogue);
-}
 
-StageState::~StageState() {
-    objectArray.clear();
-}
+    GameObject* intHUD = new GameObject("[InteractableHUD]");
+    intHUD->AddComponent(new InteractableHUD(*hp));
+    intHUD->box.z = 6;
+    intHUD->lazyRender = false;
+    AddObject(intHUD);
 
-void StageState::LoadAssets() {
+    /*
+     * Rooms
+     */
     MainRoom* mainRoom = new MainRoom(this);
     mainRoom->Build();
-
     HistoryClassRoom* historyRoom = new HistoryClassRoom(this);
     historyRoom->Build();
-
     ArtsClassRoom* artsRoom = new ArtsClassRoom(this);
     artsRoom->Build();
-
     ScienceClassRoom* scienceRoom = new ScienceClassRoom(this);
     scienceRoom->Build();
-
     PortugueseClassRoom* portugueseRoom = new PortugueseClassRoom(this);
     portugueseRoom->Build();
 
@@ -84,8 +93,8 @@ void StageState::Update(float dt) {
         InputManager::GetInstance().ReleaseKey(ESCAPE_KEY);
     }
 
-    // Debug
-    if (InputManager::GetInstance().IsKeyDown(SDLK_1)) {
+    // Debug delete monsters
+    if (InputManager::GetInstance().IsKeyDown(SDLK_DELETE)) {
         for (int i = 0; i < objectArray.size(); i++) {
             GameObject* go = objectArray[i].get();
             if (go->GetComponent("Zombie") != nullptr || go->GetComponent("AIController") != nullptr) {
@@ -110,7 +119,7 @@ void StageState::Update(float dt) {
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/5.png", Vec2{0, 290}),
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/6.png", Vec2{184, 382})
         }));
-        mp->box.z = 10;
+        mp->box.z = 7;
         mp->lazyRender = false;
         mp->pauseOnOpenUI = false;
         AddObject(mp);
@@ -120,7 +129,7 @@ void StageState::Update(float dt) {
     if (!openUI && InputManager::GetInstance().KeyPress('f')) {
         GameObject* fp = new GameObject();
         fp->AddComponent(new FusePuzzle((*fp)));
-        fp->box.z = 10;
+        fp->box.z = 7;
         fp->lazyRender = false;
         fp->pauseOnOpenUI = false;
         AddObject(fp);
@@ -248,25 +257,11 @@ void StageState::Pause() {
 
 }
 void StageState::Resume() {
-    Camera::Unfollow();
-    Camera::pos.x = 0;
-    Camera::pos.y = 0;
-
-    GameObject* character = new GameObject();
-    Character* charCmp = new Character((*character), "Recursos/img/Player.png");
-    character->AddComponent(charCmp);
-    PlayerController* playerController = new PlayerController(*character);
-    character->AddComponent(playerController);
-    character->box.x = pauseX;
-    character->box.y = pauseY;
-    character->box.z = 0;
-    Character::player = charCmp;
-    Camera::Follow(character);
-    AddObject(character);
+    Camera::Follow(&Character::player->associated);
 }
 
 void StageState::ChangeRoom(std::string room) {
-    currentRoom->Leave();
+    if (currentRoom != nullptr) currentRoom->Leave();
     currentRoom = rooms[room];
     currentRoom->Enter();
 }

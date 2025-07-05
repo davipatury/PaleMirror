@@ -50,7 +50,10 @@ void TextHUD::Render() {
 
 void TextHUD::RemakeTexture() {
     if (texture != nullptr) SDL_DestroyTexture(texture);
-    if (text.empty()) return;
+    if (text.empty()) {
+        SDL_DestroyTexture(texture);
+        return;
+    }
 
     SDL_Surface* surface;
     switch (style) {
@@ -94,4 +97,16 @@ void TextHUD::SetStyle(TextStyle style) {
 void TextHUD::SetText(std::string text) {
     this->text = text;
     RemakeTexture();
+}
+
+void TextHUD::SetPos(Vec2 pos) {
+    this->pos = pos;
+}
+
+float TextHUD::GetWidth() {
+    return rect.w;
+}
+
+float TextHUD::GetHeight() {
+    return rect.h;
 }
