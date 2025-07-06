@@ -73,7 +73,7 @@ void DialogueHUD::Update(float dt) {
             else picturePos.x = 0;
 
             currentTextPos = 0;
-            dialogueText->SetText("");
+            dialogueText->SetHiding(true);
             charNameText->SetColor(dialLine.charNameColor);
             charNameText->SetText(dialLine.charName);
             startLine = false;
@@ -82,6 +82,7 @@ void DialogueHUD::Update(float dt) {
         if (picturePos.x != 0) {
             picturePos.x = std::min(picturePos.x + PICTURE_SPEED * dt, 0.0f);
         } else {
+            dialogueText->SetHiding(false);
             if (currentTextPos == 0 || (textTimer.Get() > TEXT_COOLDOWN && currentTextPos <= dialLine.line.length())) {
                 dialogueText->SetText(dialLine.line.substr(0, currentTextPos));
                 textTimer.Restart();

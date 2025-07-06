@@ -26,6 +26,7 @@ public:
     void SetFontFile(const char* fontFile);
     void SetFontSize(int fontSize);
     void SetPos(Vec2 pos);
+    void SetHiding(bool hiding);
 
     float GetWidth();
     float GetHeight();

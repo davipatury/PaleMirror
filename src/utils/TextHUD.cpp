@@ -110,3 +110,7 @@ float TextHUD::GetWidth() {
 float TextHUD::GetHeight() {
     return rect.h;
 }
+
+void TextHUD::SetHiding(bool hiding) {
+    this->hiding = hiding;
+}
