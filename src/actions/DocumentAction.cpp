@@ -18,7 +18,7 @@ void DocumentAction::Execute() {
         imageObject->box.y = Camera::pos.y + (Camera::PosRect().h/2) - (imgSprite->associated.box.h/2);
         imageObject->box.z = 5;
 
-        Game::GetInstance().GetCurrentState().AddObject(imageObject);
+        CURRENT_STATE.AddObject(imageObject);
     } else {
         if (imageObject) {
             imageObject->RequestDelete();

@@ -28,13 +28,13 @@ void LoadState::Start() {
 }
 
 void LoadState::Update(float dt) {
-    if (InputManager::GetInstance().QuitRequested()) {
+    if (INPUT_MANAGER.QuitRequested()) {
         quitRequested = true;
     }
 
-    if (InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)) {
+    if (INPUT_MANAGER.IsKeyDown(ESCAPE_KEY)) {
         popRequested = true;
-        InputManager::GetInstance().ReleaseKey(ESCAPE_KEY);
+        INPUT_MANAGER.ReleaseKey(ESCAPE_KEY);
     }
     UpdateArray(dt);
 }

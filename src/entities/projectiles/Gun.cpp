@@ -91,7 +91,7 @@ void Gun::Shoot(Vec2 target) {
     bulletGO->box.y = associated.box.Center().y + offset.y;
     bulletGO->box.z = 2;
     bulletGO->angleDeg = angle * 180 / M_PI + 90;
-    Game::GetInstance().GetCurrentState().AddObject(bulletGO);
+    CURRENT_STATE.AddObject(bulletGO);
 }
 
 bool Gun::Is(std::string type) {

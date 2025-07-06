@@ -2,6 +2,7 @@
 #define GAME_H
 
 #define GAME_RENDERER Game::GetInstance().GetRenderer()
+#define CURRENT_STATE Game::GetInstance().GetCurrentState()
 
 #include "SDL.h"
 #include "SDL_image.h"

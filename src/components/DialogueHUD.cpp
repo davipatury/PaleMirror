@@ -57,7 +57,7 @@ DialogueHUD::~DialogueHUD() {}
 
 void DialogueHUD::Update(float dt) {
     if (!currentDialogue.empty()) {
-        Game::GetInstance().GetCurrentState().openUI = true;
+        CURRENT_STATE.openUI = true;
         textTimer.Update(dt);
         bool skipFirstKeyCheck = startLine;
 
@@ -90,14 +90,14 @@ void DialogueHUD::Update(float dt) {
             }
         }
 
-        if (InputManager::GetInstance().AnyKeyPress() && !skipFirstKeyCheck) {
+        if (INPUT_MANAGER.AnyKeyPress() && !skipFirstKeyCheck) {
             if (picturePos.x != 0) picturePos.x = 0;
             else if (currentTextPos < dialLine.line.length()) currentTextPos = dialLine.line.length();
             else {
                 currentLine++;
                 if (currentLine >= dialogueLines.at(currentDialogue).size()) {
                     currentDialogue = "";
-                    Game::GetInstance().GetCurrentState().openUI = false;
+                    CURRENT_STATE.openUI = false;
                 } else startLine = true;
             }
         }

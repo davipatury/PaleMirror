@@ -12,11 +12,11 @@ void PlayerController::Update(float dt) {
 
     float moveX = 0;
     float moveY = 0;
-    if (InputManager::GetInstance().IsKeyDown(SDLK_w)) moveY--;
-    if (InputManager::GetInstance().IsKeyDown(SDLK_a)) moveX--;
-    if (InputManager::GetInstance().IsKeyDown(SDLK_s)) moveY++;
-    if (InputManager::GetInstance().IsKeyDown(SDLK_d)) moveX++;
-    if (InputManager::GetInstance().KeyPress('c')) {
+    if (INPUT_MANAGER.IsKeyDown(SDLK_w)) moveY--;
+    if (INPUT_MANAGER.IsKeyDown(SDLK_a)) moveX--;
+    if (INPUT_MANAGER.IsKeyDown(SDLK_s)) moveY++;
+    if (INPUT_MANAGER.IsKeyDown(SDLK_d)) moveX++;
+    if (INPUT_MANAGER.KeyPress('c')) {
         chr->Issue(Character::Command(Character::Command::ATTACK, 0, 0));
     }
     if (moveX != 0 || moveY != 0) {

@@ -1,12 +1,11 @@
 #include "physics/Collider.h"
 
-#define DEBUG
-#ifdef DEBUG
+#define DEBUG_COLLIDER
+
 #include <math.h>
 #include "SDL_image.h"
 #include "components/Camera.h"
 #include "core/Game.h"
-#endif
 
 Collider::Collider(GameObject& associated, Vec2 scale, Vec2 offset) : Component(associated) {
     this->scale = scale;
@@ -21,7 +20,7 @@ void Collider::Update(float dt) {
 }
 
 void Collider::Render() {
-#ifdef DEBUG
+#ifdef DEBUG_COLLIDER
     Vec2 center( box.Center() );
     SDL_Point points[5];
 
@@ -42,8 +41,8 @@ void Collider::Render() {
             + center - Camera::pos;
     points[3] = {(int)point.x, (int)point.y};
 
-    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLines(Game::GetInstance().GetRenderer(), points, 5);
+    SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawLines(GAME_RENDERER, points, 5);
 #endif // DEBUG
 }
 

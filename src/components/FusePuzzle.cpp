@@ -34,7 +34,7 @@ void FusePuzzle::Update(float dt) {
     }
 
     if (INPUT_MANAGER.IsKeyDown(SDLK_ESCAPE)) {
-        Game::GetInstance().GetCurrentState().openUI = false;
+        CURRENT_STATE.openUI = false;
         associated.pauseOnOpenUI=true;
         associated.RequestDelete();
         std::cout << "FuzePuzzle closed" << std::endl;
@@ -43,7 +43,7 @@ void FusePuzzle::Update(float dt) {
 
     if (IsSolved()) {
         std::cout << "!!! SOLVED !!!" << std::endl;
-        Game::GetInstance().GetCurrentState().openUI = false;
+        CURRENT_STATE.openUI = false;
         associated.pauseOnOpenUI=true;
         associated.RequestDelete();
     }
@@ -68,7 +68,7 @@ void FusePuzzle::Render() {
 }
 
 void FusePuzzle::Start() {
-    Game::GetInstance().GetCurrentState().openUI = true;
+    CURRENT_STATE.openUI = true;
     associated.pauseOnOpenUI=false;
     bool always_on = true;
 

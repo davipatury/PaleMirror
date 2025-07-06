@@ -43,7 +43,7 @@ void Text::Render() {
     dstrect.y = associated.box.y - Camera::pos.y;
     dstrect.w = associated.box.w;
     dstrect.h = associated.box.h;
-    SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &srcrect, &dstrect, associated.angleDeg, nullptr, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(GAME_RENDERER, texture, &srcrect, &dstrect, associated.angleDeg, nullptr, SDL_FLIP_NONE);
 }
 
 void Text::RemakeTexture() {
@@ -62,7 +62,7 @@ void Text::RemakeTexture() {
         break;
     }
 
-    texture = SDL_CreateTextureFromSurface(Game::GetInstance().GetRenderer(), surface);
+    texture = SDL_CreateTextureFromSurface(GAME_RENDERER, surface);
     associated.box.w = surface->w;
     associated.box.h = surface->h;
     SDL_FreeSurface(surface);

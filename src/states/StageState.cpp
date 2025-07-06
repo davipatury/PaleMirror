@@ -84,17 +84,17 @@ void StageState::Start() {
 
 void StageState::Update(float dt) {
     // Quit requested
-    if (InputManager::GetInstance().QuitRequested()) {
+    if (INPUT_MANAGER.QuitRequested()) {
         quitRequested = true;
     }
 
-    if (!openUI && InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)) {
+    if (!openUI && INPUT_MANAGER.IsKeyDown(ESCAPE_KEY)) {
         popRequested = true;
-        InputManager::GetInstance().ReleaseKey(ESCAPE_KEY);
+        INPUT_MANAGER.ReleaseKey(ESCAPE_KEY);
     }
 
     // Debug delete monsters
-    if (InputManager::GetInstance().IsKeyDown(SDLK_DELETE)) {
+    if (INPUT_MANAGER.IsKeyDown(SDLK_DELETE)) {
         for (int i = 0; i < objectArray.size(); i++) {
             GameObject* go = objectArray[i].get();
             if (go->GetComponent("Zombie") != nullptr || go->GetComponent("AIController") != nullptr) {
@@ -104,12 +104,12 @@ void StageState::Update(float dt) {
     }
 
     // Dialogue debug
-    if (!openUI && InputManager::GetInstance().IsKeyDown('p')) {
+    if (!openUI && INPUT_MANAGER.IsKeyDown('p')) {
         DialogueHUD::RequestDialogue("test");
     }
 
     // Spawn mirror puzzle
-    if (!openUI && InputManager::GetInstance().KeyPress('m')) {
+    if (!openUI && INPUT_MANAGER.KeyPress('m')) {
         GameObject* mp = new GameObject();
         mp->AddComponent(new MirrorPuzzle((*mp), std::vector<MirrorPuzzle::Piece>{
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/1.png", Vec2{0, 0}),
@@ -126,7 +126,7 @@ void StageState::Update(float dt) {
     }
 
     // Spawn fuse puzzle
-    if (!openUI && InputManager::GetInstance().KeyPress('f')) {
+    if (!openUI && INPUT_MANAGER.KeyPress('f')) {
         GameObject* fp = new GameObject();
         fp->AddComponent(new FusePuzzle((*fp)));
         fp->box.z = 7;
@@ -227,7 +227,7 @@ void StageState::Render() {
     SDL_RenderCopy(GAME_RENDERER, backlight, &screenRect, &screenRect);
 
     // Flashlight
-    Vec2 mousePos = Vec2(InputManager::GetInstance().GetMouseX(), InputManager::GetInstance().GetMouseY());
+    Vec2 mousePos = Vec2(INPUT_MANAGER.GetMouseX(), INPUT_MANAGER.GetMouseY());
     float mouseAngle = mousePos.Angle(origin) + M_PI * 0.5;
     int flashlightSize = 600;
     float flashlightAngle = M_PI / 8;

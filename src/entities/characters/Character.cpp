@@ -150,7 +150,7 @@ void Character::Update(float dt) {
                 HitAttack* hitAttack = new HitAttack(*attackGO, 20, 1);
                 attackGO->AddComponent(hitAttack);
                 
-                Game::GetInstance().GetCurrentState().AddObject(attackGO);
+                CURRENT_STATE.AddObject(attackGO);
             }
             break;
         }

@@ -45,7 +45,7 @@ void Sprite::Render(int x, int y, int w, int h, float angle) {
     }
     dstrect.w = w;
     dstrect.h = h;
-    SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect, angle, nullptr, flip);
+    SDL_RenderCopyEx(GAME_RENDERER, texture, &clipRect, &dstrect, angle, nullptr, flip);
 }
 
 void Sprite::SetFrame(int frame) {

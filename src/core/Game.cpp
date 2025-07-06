@@ -123,7 +123,7 @@ void Game::Run() {
         if (!stateStack.empty()) {
             CalculateDeltaTime();
             SDL_RenderClear(renderer);
-            InputManager::GetInstance().Update();
+            INPUT_MANAGER.Update();
             stateStack.top()->Update(dt);
             stateStack.top()->Render();
             SDL_RenderPresent(renderer);

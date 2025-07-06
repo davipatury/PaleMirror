@@ -8,7 +8,7 @@ std::unordered_map<std::string, TTF_Font*> Resources::fontTable;
 
 SDL_Texture* Resources::GetImage(const char* file) {
     if (Resources::imageTable.find(file) == Resources::imageTable.end()) {
-        SDL_Texture* texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file);
+        SDL_Texture* texture = IMG_LoadTexture(GAME_RENDERER, file);
         if (texture == nullptr) {
             std::cout << "Erro ao carregar textura: ";
             std::cout << IMG_GetError() << std::endl;

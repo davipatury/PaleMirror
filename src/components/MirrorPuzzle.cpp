@@ -30,7 +30,7 @@ void MirrorPuzzle::Update(float dt) {
     }
 
     if (INPUT_MANAGER.IsKeyDown(SDLK_ESCAPE)) {
-        Game::GetInstance().GetCurrentState().openUI = false;
+        CURRENT_STATE.openUI = false;
         associated.pauseOnOpenUI=true;
         associated.RequestDelete();
         std::cout << "MirrorPuzzle closed" << std::endl;
@@ -42,7 +42,7 @@ void MirrorPuzzle::Update(float dt) {
         pieces[selectedPiece].pos.y = INPUT_MANAGER.GetMouseY() - pieces[selectedPiece].GetHeight() / 2 - MIRROR_PUZZLE_RECT_Y;
     } else if (IsSolved()) {
         std::cout << "!!! SOLVED !!!" << std::endl;
-        Game::GetInstance().GetCurrentState().openUI = false;
+        CURRENT_STATE.openUI = false;
         associated.pauseOnOpenUI=true;
         associated.RequestDelete();
     }
@@ -80,7 +80,7 @@ void MirrorPuzzle::Render() {
 }
 
 void MirrorPuzzle::Start() {
-    Game::GetInstance().GetCurrentState().openUI = true;
+    CURRENT_STATE.openUI = true;
     associated.pauseOnOpenUI=false;
 
     for (int i = 0; i < pieces.size(); i++) {

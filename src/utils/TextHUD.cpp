@@ -45,7 +45,7 @@ void TextHUD::Render() {
     dstrect.y = pos.y;
     dstrect.w = rect.w;
     dstrect.h = rect.h;
-    SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &srcrect, &dstrect, 0, nullptr, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(GAME_RENDERER, texture, &srcrect, &dstrect, 0, nullptr, SDL_FLIP_NONE);
 }
 
 void TextHUD::RemakeTexture() {
@@ -68,7 +68,7 @@ void TextHUD::RemakeTexture() {
         break;
     }
 
-    texture = SDL_CreateTextureFromSurface(Game::GetInstance().GetRenderer(), surface);
+    texture = SDL_CreateTextureFromSurface(GAME_RENDERER, surface);
     rect.w = surface->w;
     rect.h = surface->h;
     SDL_FreeSurface(surface);

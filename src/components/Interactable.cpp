@@ -41,7 +41,7 @@ void Interactable::Update(float dt) {
 
     if (canInteract) {
         InteractableHUD::RecordInteractable();
-        if(InputManager::GetInstance().KeyPress(interactionKey) && action){
+        if(INPUT_MANAGER.KeyPress(interactionKey) && action){
             // Cria uma cópia do Action e executa
             //std::unique_ptr<Action> actionCopy = action->Clone();
             action->Execute();
@@ -63,8 +63,8 @@ void Interactable::Render() {
     int cy = static_cast<int>(objectCoord.y - cam.y);
     int radius = static_cast<int>(activationDistance);
 
-    SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 255, 0, 128);
-    DrawCircle(Game::GetInstance().GetRenderer(), cx, cy, radius);
+    SDL_SetRenderDrawColor(GAME_RENDERER, 255, 255, 0, 128);
+    DrawCircle(GAME_RENDERER, cx, cy, radius);
 #endif
 }
 

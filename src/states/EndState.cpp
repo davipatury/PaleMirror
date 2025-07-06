@@ -38,12 +38,12 @@ void EndState::Start() {
 
 void EndState::Update(float dt) {
     // Quit requested
-    if (InputManager::GetInstance().IsKeyDown(ESCAPE_KEY) || InputManager::GetInstance().QuitRequested()) {
+    if (INPUT_MANAGER.IsKeyDown(ESCAPE_KEY) || INPUT_MANAGER.QuitRequested()) {
         quitRequested = true;
     }
 
     // Start
-    if (InputManager::GetInstance().IsKeyDown(SDLK_SPACE)) {
+    if (INPUT_MANAGER.IsKeyDown(SDLK_SPACE)) {
         popRequested = true;
     }
 

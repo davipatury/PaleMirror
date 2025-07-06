@@ -30,7 +30,7 @@ void WaveSpawner::Update(float dt) {
             zombie->box.x = outOfScreenPos.x;
             zombie->box.y = outOfScreenPos.y;
             zombie->box.z = 0;
-            Game::GetInstance().GetCurrentState().AddObject(zombie);
+            CURRENT_STATE.AddObject(zombie);
         }
     }
 
@@ -48,7 +48,7 @@ void WaveSpawner::Update(float dt) {
             npc->box.x = outOfScreenPos.x;
             npc->box.y = outOfScreenPos.y;
             npc->box.z = 0;
-            Game::GetInstance().GetCurrentState().AddObject(npc);
+            CURRENT_STATE.AddObject(npc);
         }
     }
 
