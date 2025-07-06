@@ -24,7 +24,7 @@ void FusePuzzle::FusePressed(int idx){
 
 void FusePuzzle::Update(float dt) {
     if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
-        Vec2 mousePos = {INPUT_MANAGER.GetMouseX(), INPUT_MANAGER.GetMouseY()};
+        Vec2 mousePos = {(float) INPUT_MANAGER.GetMouseX(), (float) INPUT_MANAGER.GetMouseY()};
         for (int i = 0; i < fuses.size(); i++) {
             Rect fuseRect = fuses[i].GetRect().Add(Vec2{FUSE_PUZZLE_RECT_X, FUSE_PUZZLE_RECT_Y});
             if (fuseRect.Contains(mousePos)) {
@@ -73,7 +73,7 @@ void FusePuzzle::Start() {
     bool always_on = true;
 
     for (int i = 0; i < fuses.size(); i++) {
-        fuses[i].pos = {376 + (i%3 * 96), 90 + (i/3 * 126)};
+        fuses[i].pos = {(float) (376 + (i%3 * 96)), (float) (90 + (i/3 * 126))};
         bool on = (rand() % 2);
         always_on &= on;
         if(i == fuses.size()-1 && always_on) on = 0;

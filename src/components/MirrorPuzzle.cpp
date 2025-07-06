@@ -14,7 +14,7 @@ MirrorPuzzle::MirrorPuzzle(GameObject& associated, std::vector<Piece> pieces) : 
 void MirrorPuzzle::Update(float dt) {
     if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
         if (selectedPiece == -1) {
-            Vec2 mousePos = {INPUT_MANAGER.GetMouseX(), INPUT_MANAGER.GetMouseY()};
+            Vec2 mousePos = {(float) INPUT_MANAGER.GetMouseX(), (float) INPUT_MANAGER.GetMouseY()};
             for (int i = 0; i < pieces.size(); i++) {
                 Rect pieceRect = pieces[i].GetRect().Add(Vec2{MIRROR_PUZZLE_RECT_X, MIRROR_PUZZLE_RECT_Y});
                 if (pieceRect.Contains(mousePos)) {
@@ -87,7 +87,7 @@ void MirrorPuzzle::Start() {
         // Min x = 150
         int randomOffset = std::rand() % 900;
         std::cout << "rand " << randomOffset << std::endl;
-        pieces[i].pos = {(randomOffset) - 325, 525};
+        pieces[i].pos = {(float) ((randomOffset) - 325), 525};
     }
 }
 

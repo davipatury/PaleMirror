@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.16)
 
 project(PaleMirror LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+list(APPEND CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS}")
 include_directories(include C:/SDL-2.30.8/include/SDL2)
 link_directories(C:/SDL-2.30.8/lib)
 link_libraries(Mingw32 SDL2main SDL2_image SDL2_ttf SDL2_mixer SDL2)
