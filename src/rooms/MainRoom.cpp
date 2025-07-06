@@ -2,7 +2,7 @@
 
 MainRoom::MainRoom(State* state) : Room(state) {
     bgFile = "Recursos/img/objetos/bg.png";
-    bgMusicFile = "Recursos/audio/Mapa.wav";
+    bgMusicFile = "Recursos/audio/Mapa.mp3";
     lockCameraOnRoom = false;
     basePos = Vec2{0, 0};
 

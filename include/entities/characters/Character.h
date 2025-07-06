@@ -62,6 +62,7 @@ private:
     Timer deathTimer;
     Timer damageTimer;
     Timer attackTimer;
+    //Timer recoveryTimer;
     bool flip;
     bool tookDamage;
     bool isAttacking;

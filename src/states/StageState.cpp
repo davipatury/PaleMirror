@@ -139,6 +139,8 @@ void StageState::Update(float dt) {
     UpdateArray(dt);
 
     // Collision
+
+    /*
     for (int i = 0; i < objectArray.size(); i++) {
         GameObject* go = objectArray[i].get();
         Collider* colliderA = (Collider*) go->GetComponent("Collider");
@@ -160,6 +162,7 @@ void StageState::Update(float dt) {
             }
         }
     }
+    */
 
     // Iso collision
     for (int i = 0; i < objectArray.size(); i++) {

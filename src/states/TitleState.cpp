@@ -16,7 +16,7 @@ TitleState::~TitleState(){
 }
 
 void TitleState::LoadAssets() {
-    titleMusic.Open("Recursos/audio/Title.wav");
+    titleMusic.Open("Recursos/audio/Title.mp3");
     titleMusic.Play();
 
     GameObject* bg = new GameObject();

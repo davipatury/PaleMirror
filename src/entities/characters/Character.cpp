@@ -81,6 +81,7 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
     deathTimer = Timer();
     damageTimer = Timer();
     attackTimer = Timer();
+    //recoveryTimer = Timer();
 }
 
 Character::~Character() {
@@ -167,6 +168,8 @@ void Character::Update(float dt) {
     damageTimer.Update(dt);
     attackTimer.Update(dt);
 
+    //recoveryTimer.Update(dt);
+
     Animator* animator = (Animator*) associated.GetComponent("Animator");
     SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
     spriteRdr->SetScale(0.085, 0.085);
@@ -223,12 +226,24 @@ void Character::Update(float dt) {
         tookDamage = false;
     }
 
+    /*
+    if(recoveryTimer.Get() > 20){
+        hp += 25;
+        hp = std::min(hp, 100);
+        recoveryTimer.Restart();
+    }
+    */
+
     // std::cout << "Player position: " << associated.box.x << ", " << associated.box.y << std::endl;
 }
 
 void Character::NotifyCollision(GameObject& other) {
     IsoCollider* colB = (IsoCollider*) other.GetComponent("IsoCollider");
     if (colB != nullptr && !colB->passable) {
+        if (other.GetComponent("Zombie") != nullptr && this == player) {
+            Hit(10);
+            return;
+        }
         IsoCollider* colA = (IsoCollider*) associated.GetComponent("IsoCollider");
         Rect before = colA->box;
         Rect after = Collision::Solve(colA->box, colB->box, colA->prevBox);
@@ -236,12 +251,11 @@ void Character::NotifyCollision(GameObject& other) {
 
         colA->box = after;
         associated.box = associated.box.Add(diff);
+        
+
     }
     if (tookDamage || hp <= 0) return;
-    if (other.GetComponent("Zombie") != nullptr && this == player) {
-        Hit(10);
-    }
-
+    
     Bullet* bullet = (Bullet*) other.GetComponent("Bullet");
     if (bullet != nullptr) {
         if ((this == player && bullet->targetsPlayer) || (this != player && !bullet->targetsPlayer)) {
@@ -253,6 +267,7 @@ void Character::NotifyCollision(GameObject& other) {
 void Character::Hit(int damage) {
     if (hp <= 0) return;
 
+    if(damageTimer.Get() < 1) return;
     hp -= damage;
     if (hp <= 0) {
         deathTimer.Restart();

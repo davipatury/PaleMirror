@@ -20,6 +20,9 @@ public:
     bool Is(std::string type);
 private:
     Sprite dmg1, dmg2, dmg3;
+    int selToolbar;
+    Sprite toolbar;
+    Sprite toolbarselect;
 };
 
 #endif // HEALTHHUD_H
