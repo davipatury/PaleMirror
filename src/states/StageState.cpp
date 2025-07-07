@@ -32,6 +32,13 @@ void StageState::LoadAssets() {
     Camera::Follow(character);
     AddObject(character);
 
+    // Shadows
+    GameObject* scc = new GameObject("[ShadowCasterController");
+    scc->AddComponent(new ShadowCaster::Controller(*scc));
+    scc->box.z = 1;
+    scc->lazyRender = false;
+    AddObject(scc);
+
     // HUD
     GameObject* hp = new GameObject("[HealthHUD]");
     hp->AddComponent(new HealthHUD(*hp));

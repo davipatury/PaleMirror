@@ -1,6 +1,6 @@
 #include "physics/Collider.h"
 
-#define DEBUG_COLLIDER
+//#define DEBUG_COLLIDER
 
 #include <math.h>
 #include "SDL_image.h"

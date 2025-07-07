@@ -22,6 +22,8 @@ public:
     void SetScale(Vec2 scale);
     void SetOffset(Vec2 offset);
 
+    void UpdateBox();
+
     Rect prevBox;
     Rect box;
     bool passable;

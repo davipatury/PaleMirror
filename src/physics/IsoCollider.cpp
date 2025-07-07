@@ -1,6 +1,6 @@
 #include "physics/IsoCollider.h"
 
-#define DEBUG_ISO_COLLIDER
+//#define DEBUG_ISO_COLLIDER
 #include <math.h>
 #include "SDL_image.h"
 #include "components/Camera.h"
@@ -10,12 +10,16 @@ IsoCollider::IsoCollider(GameObject& associated, Vec2 scale, Vec2 offset, bool p
     this->scale = scale;
     this->offset = offset;
     this->passable = passable;
+    UpdateBox();
 }
 
 void IsoCollider::Update(float dt) {
+    UpdateBox();
+}
+
+void IsoCollider::UpdateBox() {
     Vec2 bli = (associated.box.BottomLeft() + offset).ToIso();
     Vec2 tl = bli.Add({0, -associated.box.w});
-
     prevBox = box;
     box = Rect(tl.x, tl.y, associated.box.w * scale.x, associated.box.w * scale.y);
 }

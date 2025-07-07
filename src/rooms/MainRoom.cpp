@@ -78,6 +78,8 @@ void MainRoom::Build() {
     GameObject* crblock2 = createGO("[OBJ] ClassRoomBlock2", 1771, 1337);
     crblock2->AddComponent(new SpriteRenderer(*crblock2, "Recursos/img/objetos/classroom_block.png"));
     crblock2->AddComponent(new IsoCollider(*crblock2, {1.1, 0.54}, {-185, -160}));
+    //crblock2->AddComponent(new ShadowCaster(*crblock2, std::vector<Vec2>{{262, 335}, {758, 613}, {517, 751}, {23, 473}}));
+    crblock2->AddComponent(new ShadowCaster(*crblock2));
     state->AddObject(crblock2);
 
     // Bloco de salas 2 - Porta 1

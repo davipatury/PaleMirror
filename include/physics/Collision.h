@@ -35,12 +35,12 @@ public:
         for (auto& axis : axes) {
             float P[4];
 
-            for (int i = 0; i < 4; ++i) P[i] = Dot(A[i], axis);
+            for (int i = 0; i < 4; ++i) P[i] = A[i].Dot(axis);
 
             float minA = *std::min_element(P, P + 4);
             float maxA = *std::max_element(P, P + 4);
 
-            for (int i = 0; i < 4; ++i) P[i] = Dot(B[i], axis);
+            for (int i = 0; i < 4; ++i) P[i] = B[i].Dot(axis);
 
             float minB = *std::min_element(P, P + 4);
             float maxB = *std::max_element(P, P + 4);
@@ -71,11 +71,6 @@ public:
             a.y = abs(a.y + a.h - b.y) <= abs(b.y + b.h - a.y) ? b.y - a.h : b.y + b.h;
         }
         return a;
-    }
-
-private:
-    static inline float Dot(const Vec2& a, const Vec2& b) {
-        return a.x * b.x + a.y * b.y;
     }
 };
 

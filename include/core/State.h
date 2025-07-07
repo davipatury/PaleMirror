@@ -31,6 +31,7 @@ public:
     bool QuitRequested();
 
     bool openUI = false;
+    std::vector<std::shared_ptr<GameObject>> objectArray;
 protected:
     void StartArray();
     virtual void UpdateArray(float dt);
@@ -41,7 +42,6 @@ protected:
     bool popRequested;
     bool quitRequested;
     bool started;
-    std::vector<std::shared_ptr<GameObject>> objectArray;
 };
 
 #endif // STATE_H

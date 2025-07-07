@@ -2,6 +2,7 @@
 #define VEC2_H
 
 #include <math.h>
+#include <string>
 
 const long double EPS = 1e-9;
 
@@ -15,16 +16,16 @@ public:
 
     Vec2 Add(Vec2 vec);
     Vec2 operator+(Vec2 const& vec);
-    Vec2 Sub(Vec2 vec);
+    Vec2 Sub(Vec2 vec) const;
     Vec2 operator-(Vec2 const& vec);
     Vec2 MulScalar(float scalar);
     Vec2 operator*(float const scalar);
 
     float Magnitude();
     Vec2 Normalized();
-    float Distance(Vec2 vec);
-    float Angle();
-    float Angle(Vec2 vec);
+    float Distance(Vec2 vec) const;
+    float Angle() const;
+    float Angle(Vec2 vec) const;
     Vec2 Rotate(float angle);
 
     float operator^(Vec2 const& vec);
@@ -32,6 +33,11 @@ public:
 
     Vec2 ToIso();
     Vec2 ToCart();
+
+    float Dot(Vec2 b) const;
+    float Cross(Vec2 b) const;
+
+    std::string ToStr();
 
     float x;
     float y;

@@ -18,17 +18,29 @@ class ShadowCaster : public Component
 {
 public:
     ShadowCaster(GameObject& associated, Vec2 offset = {0, 0});
-    ShadowCaster(GameObject& associated, Vec2 offset, std::vector<Vec2> vertices);
+    ShadowCaster(GameObject& associated, std::vector<Vec2> offsetVectors);
 
     void Update(float dt);
     void Render();
     bool Is(std::string type);
 
+    void RenderShadow(Vec2 origin);
+
     std::vector<Vec2> vertices;
     Vec2 offset;
+
+    class Controller : public Component {
+    public:
+        Controller(GameObject& associated);
+        void Update(float dt);
+        void Render();
+        bool Is(std::string type);
+    };
+
 private:
     std::vector<Line> GenerateEdges(std::vector<Vec2> vertices);
-    Vec2 GetVerticesCenter();
+    bool fixedVertices;
+    std::vector<Vec2> offsetVectors;
 };
 
 #endif // SHADOWCASTER_H

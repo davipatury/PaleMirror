@@ -19,7 +19,7 @@ Vec2 Vec2::operator+(Vec2 const& vec) {
     return Add(vec);
 }
 
-Vec2 Vec2::Sub(Vec2 vec) {
+Vec2 Vec2::Sub(Vec2 vec) const {
     return Vec2(x - vec.x, y - vec.y);
 }
 
@@ -44,16 +44,16 @@ Vec2 Vec2::Normalized() {
     return MulScalar(1 / mag);
 }
 
-float Vec2::Distance(Vec2 vec) {
+float Vec2::Distance(Vec2 vec) const {
     Vec2 sub = Sub(vec);
     return sub.Magnitude();
 }
 
-float Vec2::Angle() {
+float Vec2::Angle() const {
     return atan2(y, x);
 }
 
-float Vec2::Angle(Vec2 vec) {
+float Vec2::Angle(Vec2 vec) const {
     Vec2 sub = Sub(vec);
     return sub.Angle();
 }
@@ -84,4 +84,16 @@ int Vec2::PointLine(Line l){
     Vec2 b = Sub(l.destination);
     float tmp = a ^ b;
     return (tmp > EPS) - (tmp < EPS);
+}
+
+std::string Vec2::ToStr() {
+    return "{" + std::to_string(x) + ", " + std::to_string(y) + "}";
+}
+
+float Vec2::Dot(Vec2 b) const {
+    return x * b.x + y * b.y;
+}
+
+float Vec2::Cross(Vec2 b) const {
+    return x * b.x - y * b.y;
 }
