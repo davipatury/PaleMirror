@@ -41,7 +41,7 @@ void Interactable::Update(float dt) {
 
     if (canInteract) {
         InteractableHUD::RecordInteractable();
-        if(INPUT_MANAGER.KeyPress(interactionKey) && action){
+        if(action && (INPUT_MANAGER.KeyPress(interactionKey) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A))){
             // Cria uma cópia do Action e executa
             //std::unique_ptr<Action> actionCopy = action->Clone();
             action->Execute();

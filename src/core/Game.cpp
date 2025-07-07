@@ -24,7 +24,7 @@ Game::Game(const char* title, int width, int height) {
     srand(time(NULL));
 
     // Inicializar SDL
-    int init_error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER);
+    int init_error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER);
     if (init_error) {
         std::cout << "Erro ao inicializar SDL: ";
         std::cout << SDL_GetError()  << std::endl;

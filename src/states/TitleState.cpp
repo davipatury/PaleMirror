@@ -42,19 +42,22 @@ void TitleState::Update(float dt) {
         quitRequested = true;
     }
 
-    if (INPUT_MANAGER.IsKeyDown(SDLK_SPACE)) {
-        Game::GetInstance().Push(new StageState());
+    bool leftPressed = INPUT_MANAGER.KeyPress(LEFT_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_a) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+    bool rightPressed = INPUT_MANAGER.KeyPress(RIGHT_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_d) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+    if (INPUT_MANAGER.HasController()) {
+        Vec2 leftAxis = INPUT_MANAGER.ControllerAxis(LEFT_JOYSTICK);
+        leftPressed = leftPressed || leftAxis.x < 0;
+        rightPressed = rightPressed || leftAxis.x > 0;
     }
 
-    if (INPUT_MANAGER.KeyPress(LEFT_ARROW_KEY) or INPUT_MANAGER.KeyPress(SDLK_a)) {
+    if (leftPressed) {
         selectedOption = 0;
     }
-
-    if (INPUT_MANAGER.KeyPress(RIGHT_ARROW_KEY) or INPUT_MANAGER.KeyPress(SDLK_d)) {
+    if (rightPressed) {
         selectedOption = 1;
     }
 
-    if (INPUT_MANAGER.KeyPress(SDLK_RETURN) or INPUT_MANAGER.IsKeyDown(SDLK_SPACE)) {
+    if (INPUT_MANAGER.KeyPress(SDLK_RETURN) || INPUT_MANAGER.IsKeyDown(SDLK_SPACE) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A)) {
         if (selectedOption == 0) Game::GetInstance().Push(new StageState());
         else Game::GetInstance().Push(new LoadState());
     }

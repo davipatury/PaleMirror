@@ -1,17 +1,28 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
+// Keyboard keys
 #define LEFT_ARROW_KEY SDLK_LEFT
 #define RIGHT_ARROW_KEY SDLK_RIGHT
 #define UP_ARROW_KEY SDLK_UP
 #define DOWN_ARROW_KEY SDLK_DOWN
 #define ESCAPE_KEY SDLK_ESCAPE
 #define SPACE_KEY SDLK_SPACE
+
+// Mouse buttons
 #define LEFT_MOUSE_BUTTON SDL_BUTTON_LEFT
+#define RIGHT_MOUSE_BUTTON SDL_BUTTON_RIGHT
+
+// Controller
+#define LEFT_JOYSTICK 0
+#define RIGHT_JOYSTICK 1
+#define JOYSTICK_MAX_VALUE 32767.0f
+#define JOYSTICK_DEADZONE 2000
 
 #define INPUT_MANAGER InputManager::GetInstance()
 
 #include "SDL.h"
+#include "math/Vec2.h"
 
 class InputManager
 {
@@ -28,6 +39,12 @@ public:
     bool MouseRelease(int button);
     bool IsMouseDown(int button);
 
+    bool HasController();
+    bool CButtonPress(int button);
+    bool CButtonRelease(int button);
+    bool IsCButtonDown(int button);
+
+    Vec2 ControllerAxis(int joystick);
 
     int GetMouseX();
     int GetMouseY();
@@ -39,11 +56,14 @@ private:
     ~InputManager();
 
     int KeyToIndex(int key);
+    float ParseAxis(int value);
 
     bool mouseState[6];
     int mouseUpdate[6];
     bool keyState[416];
     int keyUpdate[416];
+    bool controllerState[SDL_CONTROLLER_BUTTON_MAX];
+    int controllerUpdate[SDL_CONTROLLER_BUTTON_MAX];
 
     bool quitRequested;
     int updateCounter;
@@ -51,6 +71,7 @@ private:
     int mouseX;
     int mouseY;
 
+    SDL_GameController* controller;
     bool anyKeyPress;
 };
 

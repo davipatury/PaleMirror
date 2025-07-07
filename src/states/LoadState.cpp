@@ -32,7 +32,7 @@ void LoadState::Update(float dt) {
         quitRequested = true;
     }
 
-    if (INPUT_MANAGER.IsKeyDown(ESCAPE_KEY)) {
+    if (INPUT_MANAGER.IsKeyDown(ESCAPE_KEY) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_B) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_START)) {
         popRequested = true;
         INPUT_MANAGER.ReleaseKey(ESCAPE_KEY);
     }
