@@ -53,21 +53,28 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 255, SDL_ALPHA_OPAQUE);
 #endif
     std::vector<Line> edges = GenerateEdges(relativeVertices);
-    /*Vec2 startVector;
+
+    IsoCollider* col = (IsoCollider*) associated.GetComponent("IsoCollider");
+    Vec2 screenPos = col->box.Center().ToCart() - Camera::pos;
     float relativeAngle = screenPos.Angle(origin);
+
+    // invert = invert atan2 params (y, x) or (x, y)
+    // angleMul = -y, -x or y, x
+    bool invert = false;
+    float angleMul = 1;
     if (relativeAngle < 3*M_PI/4 && M_PI/4 < relativeAngle) {
         // Baixo = entre 3pi/4 e pi/4
-        startVector = {600, 0};
+        invert = true;
     } else if (3*M_PI/4 < relativeAngle || relativeAngle < -3*M_PI/4) {
         // Esquerda = >3pi/4 ou <-3pi/4
-        startVector = {1200, 450};
+        angleMul = -1;
     } else if (-3*M_PI/4 < relativeAngle && relativeAngle < -M_PI/4) {
         // Cima = entre -3*M_PI/4 e -pi/4
-        startVector = {600, 900};
+        angleMul = -1;
+        invert = true;
     } else {
         // Direita = >-pi/4 ou <pi/4
-        startVector = {0, 450};
-    }*/
+    }
 
     // Screen vertices and edges
     relativeVertices.push_back({0, 900});
@@ -103,12 +110,18 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
 #endif
     }
 
+    auto angle = [angleMul, invert](Vec2 a, Vec2 b) {
+        Vec2 diff = a.Sub(b);
+        if (invert) return atan2(diff.x * angleMul, diff.y * angleMul);
+        return atan2(diff.y * angleMul, diff.x * angleMul);
+    };
+
     // Radial sort
-    std::sort(renderVertices.begin(), renderVertices.end(), [origin](SDL_Vertex a, SDL_Vertex b) {
+    std::sort(renderVertices.begin(), renderVertices.end(), [origin, angle](SDL_Vertex a, SDL_Vertex b) {
         Vec2 aVec = Vec2(a.position.x, a.position.y);
         Vec2 bVec = Vec2(b.position.x, b.position.y);
-        float angleA = aVec.Angle(origin);
-        float angleB = bVec.Angle(origin);
+        float angleA = angle(aVec, origin); //aVec.Angle(origin);
+        float angleB = angle(bVec, origin); //bVec.Angle(origin);
         if (abs(angleA - angleB) < 0.0001f) return aVec.Distance(origin) < bVec.Distance(origin);
         return angleA < angleB;
     });
