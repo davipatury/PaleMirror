@@ -22,7 +22,7 @@ Ray::Intersection Ray::GetIntersection(Line ray, Line line) {
     if (T1 < 0) {
         return Intersection(Vec2(0, 0), 1, false);
     }
-    if (T2 < 0 || T2 > 1) {
+    if (T2 < 0 || 1 < T2) {
         return Intersection(Vec2(0, 0), 2, false);
     }
 
@@ -30,29 +30,21 @@ Ray::Intersection Ray::GetIntersection(Line ray, Line line) {
 }
 
 Ray::Intersection Ray::ClosestIntersection(Line ray, std::vector<Line> lines) {
-    float closest = -1;
-    Intersection closestInter = Intersection(Vec2(0, 0), 0, false);
-    for (int i = 0; i < lines.size(); i++) {
-        Line line = lines[i];
-        Intersection inter = GetIntersection(ray, line);
-        if (inter.exists && (closest == -1 || inter.param < closest)) {
-            closest = inter.param;
-            closestInter = inter;
-        }
-    }
-    return closestInter;
+    std::vector<Intersection> allInters = AllIntersections(ray, lines);
+    if (allInters.size() > 0) return allInters[0];
+    return Intersection(Vec2(0, 0), 0, false);
 }
 
 std::vector<Ray::Intersection> Ray::AllIntersections(Line ray, std::vector<Line> lines) {
-    std::vector<Intersection> intersections;
+    std::vector<Intersection> inters;
     for (int i = 0; i < lines.size(); i++) {
         Line line = lines[i];
         Intersection inter = GetIntersection(ray, line);
         if (inter.exists) {
-            intersections.push_back(inter);
+            inters.insert(std::upper_bound(inters.begin(), inters.end(), inter), inter);
         }
     }
-    return intersections;
+    return inters;
 }
 
 Ray::Intersection::Intersection(Vec2 pos, float param, bool exists) {

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <algorithm>
 
 #include "math/Line.h"
 #include "math/Vec2.h"
@@ -14,6 +15,9 @@ public:
     class Intersection {
     public:
         Intersection(Vec2 pos, float param, bool exists);
+        bool operator< (const Intersection &other) const {
+            return param < other.param;
+        }
         Vec2 pos;
         float param;
         bool exists;

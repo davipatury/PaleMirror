@@ -55,7 +55,7 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     std::vector<Line> edges = GenerateEdges(relativeVertices);
 
     IsoCollider* col = (IsoCollider*) associated.GetComponent("IsoCollider");
-    Vec2 screenPos = col->box.Center().ToCart() - Camera::pos;
+    Vec2 screenPos = (col ? col->box.Center().ToCart() : associated.box.Center()) - Camera::pos;
     float relativeAngle = screenPos.Angle(origin);
 
     // invert = invert atan2 params (y, x) or (x, y)
@@ -91,18 +91,15 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     };
 
     std::vector<SDL_Vertex> renderVertices;
-    //std::cout << "Vertices " << relativeVertices.size() << std::endl;
+    //std::cout << std::endl << "Vertices " << relativeVertices.size() << std::endl;
     for (int i = 0; i < relativeVertices.size(); i++) {
-        //std::cout << "RV: " << relativeVertices[i].x << ", " << relativeVertices[i].y << std::endl;
+        //std::cout << "RV: " << relativeVertices[i].ToStr() << std::endl;
         std::vector<Ray::Intersection> intersections = Ray::AllIntersections(Line(origin, relativeVertices[i]), edges);
         if (i >= relativeVertices.size() - 4) { intersections.pop_back(); }
         if (intersections.size() > 1) {
-            std::sort(intersections.begin(), intersections.end(), [](Ray::Intersection r1, Ray::Intersection r2) {
-                return r1.param < r2.param;
-            });
             for (int j = intersections.size() - 2; j < intersections.size(); j++) {
                 renderVertices.push_back(gen_vertex(intersections[j].pos));
-                //std::cout << intersections[j].pos.x << ", " << intersections[j].pos.y << std::endl;
+                //std::cout << "Intersection " << j << ": " << intersections[j].pos.ToStr() << std::endl;
             }
         }
 #ifdef DEBUG_SHADOW
@@ -134,6 +131,7 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     }
 #endif
 
+    // Create triangle index map ({0, 1, 2}, {1, 2, 3}, {...})
     std::vector<int> indices;
     for (int i = 2; i < renderVertices.size(); i++) {
 #ifdef DEBUG_SHADOW
@@ -149,7 +147,7 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_BLEND);
     SDL_SetRenderTarget(GAME_RENDERER, shadow);
 
-    // Draw shadow
+    // Draw shadow triangles
 #ifndef DEBUG_SHADOW
     SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderGeometry(GAME_RENDERER, nullptr, renderVertices.data(), renderVertices.size(), indices.data(), indices.size());
