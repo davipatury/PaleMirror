@@ -40,24 +40,15 @@ void StageState::LoadAssets() {
     AddObject(scc);
 
     // HUD
-    GameObject* hp = new GameObject("[HealthHUD]");
-    hp->AddComponent(new HealthHUD(*hp));
-    hp->box.z = 5;
-    hp->lazyRender = false;
-    AddObject(hp);
-
-    GameObject* dialogue = new GameObject("[DialogueHUD]");
-    dialogue->AddComponent(new DialogueHUD(*hp));
-    dialogue->box.z = 10;
-    dialogue->lazyRender = false;
-    dialogue->pauseOnOpenUI = false;
-    AddObject(dialogue);
-
-    GameObject* intHUD = new GameObject("[InteractableHUD]");
-    intHUD->AddComponent(new InteractableHUD(*hp));
-    intHUD->box.z = 6;
-    intHUD->lazyRender = false;
-    AddObject(intHUD);
+    GameObject* hud = new GameObject("[HUD]");
+    hud->AddComponent(new FlashlightHUD(*hud));
+    hud->AddComponent(new HealthHUD(*hud));
+    hud->AddComponent(new InteractableHUD(*hud));
+    hud->AddComponent(new DialogueHUD(*hud));
+    hud->box.z = 5;
+    hud->lazyRender = false;
+    hud->pauseOnOpenUI = false;
+    AddObject(hud);
 
     /*
      * Rooms
@@ -219,46 +210,6 @@ void StageState::Update(float dt) {
 
 void StageState::Render() {
     RenderArray();
-/*
-
-    Vec2 origin = IsoRect(Character::player->associated.box).Center() - Camera::pos;
-
-    // Darkness
-    SDL_Texture* light = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 1200, 900);
-    SDL_SetRenderTarget(GAME_RENDERER, light);
-    SDL_SetTextureBlendMode(light, SDL_BLENDMODE_BLEND);
-
-    SDL_Rect screenRect;
-    screenRect.x = screenRect.y = 0;
-    screenRect.w = 1200;
-    screenRect.h = 900;
-
-    SDL_Texture* backlight = Resources::GetImage("Recursos/img/backlight.png");
-    SDL_RenderCopy(GAME_RENDERER, backlight, &screenRect, &screenRect);
-
-    // Flashlight
-    Vec2 mousePos = Vec2(INPUT_MANAGER.GetMouseX(), INPUT_MANAGER.GetMouseY());
-    float mouseAngle = mousePos.Angle(origin) + M_PI * 0.5;
-    int flashlightSize = 600;
-    float flashlightAngle = M_PI / 8;
-    Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(mouseAngle - flashlightAngle), origin.y - flashlightSize * cos(mouseAngle - flashlightAngle));
-    Vec2 flRight = Vec2(origin.x + flashlightSize * sin(mouseAngle + flashlightAngle), origin.y - flashlightSize * cos(mouseAngle + flashlightAngle));
-
-    std::vector<SDL_Vertex> lightVertices = {
-        SDL_Vertex {SDL_FPoint {origin.x, origin.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 0.5, 0.5 } },
-        SDL_Vertex {SDL_FPoint {flLeft.x, flLeft.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 1, 0.3 } },
-        SDL_Vertex {SDL_FPoint {flRight.x, flRight.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 1, 0.7 } }
-    };
-    SDL_BlendMode bm;
-    SDL_GetRenderDrawBlendMode(GAME_RENDERER, &bm);
-    SDL_Texture* flashlight = Resources::GetImage("Recursos/img/flashlight.png");
-    SDL_BlendMode blendMode = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDOPERATION_MAXIMUM, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_MINIMUM);
-    SDL_SetTextureBlendMode(flashlight, blendMode);
-    int r = SDL_RenderGeometry(GAME_RENDERER, flashlight, lightVertices.data(), lightVertices.size(), nullptr, 0);
-
-    SDL_SetRenderTarget(GAME_RENDERER, nullptr);
-    SDL_RenderCopy(GAME_RENDERER, light, &screenRect, &screenRect);
-*/
 }
 
 void StageState::Pause() {

@@ -51,7 +51,7 @@ void EndState::Update(float dt) {
     }
 
     // Start
-    if (INPUT_MANAGER.IsKeyDown(SDLK_SPACE)) {
+    if (INPUT_MANAGER.IsKeyDown(SDLK_SPACE) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A)) {
         popRequested = true;
     }
 

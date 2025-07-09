@@ -1,4 +1,4 @@
-#include "components/InteractableHUD.h"
+#include "hud/InteractableHUD.h"
 
 #define INT_TEXT_MARGIN_X 10
 #define INT_TEXT_MARGIN_Y 10

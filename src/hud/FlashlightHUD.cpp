@@ -1,0 +1,105 @@
+#include "hud/FlashlightHUD.h"
+#include "core/Game.h"
+
+FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), backlight("Recursos/img/lighting/backlight.png") {
+    isDark = true;
+    flashlightOn = true;
+    angle = 0;
+
+    backlight.SetCameraFollower(true);
+    SDL_BlendMode bm = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDOPERATION_MAXIMUM, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_MINIMUM);
+    SDL_SetTextureBlendMode(backlight.texture, bm);
+
+    texture = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 1200, 900);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+}
+
+FlashlightHUD::~FlashlightHUD() {}
+
+void FlashlightHUD::Update(float dt) {
+    if (Character::player == nullptr) return;
+    if (!isDark) return;
+
+    if (INPUT_MANAGER.MousePress(RIGHT_MOUSE_BUTTON) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_Y)) ToggleFlashlight();
+
+    if (!flashlightOn) return;
+    if (INPUT_MANAGER.HasController()) {
+        Vec2 rightJoy = INPUT_MANAGER.ControllerAxis(RIGHT_JOYSTICK);
+        if (rightJoy.x != 0 || rightJoy.y != 0) angle = rightJoy.Angle() + M_PI * 0.5;
+    } else {
+        Vec2 origin = Character::player->associated.box.Center() - Camera::pos;
+        Vec2 mousePos = Vec2(INPUT_MANAGER.GetMouseX(), INPUT_MANAGER.GetMouseY());
+        angle = mousePos.Angle(origin) + M_PI * 0.5;
+    }
+}
+
+void FlashlightHUD::Render() {
+    if (Character::player == nullptr) return;
+    if (!isDark) return;
+
+    Vec2 origin = Character::player->associated.box.Center() - Camera::pos;
+    int BLoffsetX = backlight.GetWidth() * 0.5;
+    int BLoffsetY = backlight.GetHeight() * 0.5;
+
+    // Custom texture
+    SDL_SetRenderTarget(GAME_RENDERER, texture);
+
+    SDL_Rect screenRect;
+    screenRect.x = 0;
+    screenRect.y = 0;
+    screenRect.w = 1200;
+    screenRect.h = 900;
+
+    // Draw all screen black rectangle
+    SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderFillRect(GAME_RENDERER, &screenRect);
+
+    // Backlight
+    backlight.Render(origin.x - BLoffsetX, origin.y - BLoffsetY, backlight.GetWidth(), backlight.GetHeight());
+
+    // Flashlight cone
+    if (flashlightOn) {
+        int flashlightSize = 600;
+        float flashlightAngle = M_PI / 8;
+        Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(angle - flashlightAngle), origin.y - flashlightSize * cos(angle - flashlightAngle));
+        Vec2 flRight = Vec2(origin.x + flashlightSize * sin(angle + flashlightAngle), origin.y - flashlightSize * cos(angle + flashlightAngle));
+        std::vector<SDL_Vertex> lightVertices = {
+            SDL_Vertex {SDL_FPoint {origin.x, origin.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 0.5, 0.5 } },
+            SDL_Vertex {SDL_FPoint {flLeft.x, flLeft.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 1, 0.3 } },
+            SDL_Vertex {SDL_FPoint {flRight.x, flRight.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 1, 0.7 } }
+        };
+        SDL_RenderGeometry(GAME_RENDERER, backlight.texture, lightVertices.data(), lightVertices.size(), nullptr, 0);
+    }
+
+    // Render custom lighting layer
+    SDL_SetRenderTarget(GAME_RENDERER, nullptr);
+    SDL_RenderCopy(GAME_RENDERER, texture, &screenRect, &screenRect);
+}
+
+bool FlashlightHUD::Is(std::string type) {
+    return type == "FlashlightHUD";
+}
+
+bool FlashlightHUD::IsDark() {
+    return isDark;
+}
+
+bool FlashlightHUD::IsFlashlightOn() {
+    return flashlightOn;
+}
+
+void FlashlightHUD::SetDark(bool b) {
+    isDark = b;
+}
+
+void FlashlightHUD::SetFlashlight(bool b) {
+    flashlightOn = b;
+}
+
+void FlashlightHUD::ToggleDarkMode() {
+    isDark = !isDark;
+}
+
+void FlashlightHUD::ToggleFlashlight() {
+    flashlightOn = !flashlightOn;
+}

@@ -22,6 +22,7 @@ file(GLOB_RECURSE SOURCES
     "include/entities/projectiles/*.h"
     "include/components/*.h"
     "include/utils/*.h"
+    "include/hud/*.h"
     "src/core/*.cpp"
     "src/physics/*.cpp"
     "src/math/*.cpp"
@@ -33,6 +34,7 @@ file(GLOB_RECURSE SOURCES
     "src/entities/projectiles/*.cpp"
     "src/components/*.cpp"
     "src/utils/*.cpp"
+    "src/hud/*.cpp"
     "src/main.cpp"
 )
 

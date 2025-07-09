@@ -1,4 +1,4 @@
-#include "components/DialogueHUD.h"
+#include "hud/DialogueHUD.h"
 #include "core/Game.h"
 
 #define DIALOGUE_WRAP_LEN 910

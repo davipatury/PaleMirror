@@ -4,7 +4,7 @@
 #include "utils/InputManager.h"
 #include "physics/Collider.h"
 #include "components/Camera.h"
-#include "components/InteractableHUD.h"
+#include "hud/InteractableHUD.h"
 #include "math/Vec2.h"
 #include "entities/characters/Character.h"
 #include "utils/Text.h"
