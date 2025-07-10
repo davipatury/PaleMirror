@@ -56,7 +56,7 @@ void MainRoom::Build() {
     GameObject* door11 = createGO("[OBJ] Porta1-1", crblock1->box.x + 181, crblock1->box.y + 421);
     auto door11sr = new SpriteRenderer(*door11, "Recursos/img/objetos/porta_highlight.png");
     door11->AddComponent(door11sr);
-    door11->AddComponent(new IsoCollider(*door11, {0.5, 0.4}, {-20, -20}));
+    door11->AddComponent(new IsoCollider(*door11, {0.5, 0.4}, {-20, -22}));
     std::unique_ptr<Action> changeRoomDoor11(new ChangeRoomAction(state, "portuguese"));
     Interactable* interactDoor11 = new Interactable(*door11, std::move(changeRoomDoor11), door11sr);
     interactDoor11->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
@@ -86,7 +86,7 @@ void MainRoom::Build() {
     GameObject* door21 = createGO("[OBJ] Porta2-1", crblock2->box.x + 181, crblock2->box.y + 421);
     auto door21sr = new SpriteRenderer(*door21, "Recursos/img/objetos/porta_highlight.png");
     door21->AddComponent(door21sr);
-    door21->AddComponent(new IsoCollider(*door21, {0.5, 0.4}, {-20, -20}));
+    door21->AddComponent(new IsoCollider(*door21, {0.5, 0.4}, {-20, -22}));
     std::unique_ptr<Action> changeRoomDoor21(new ChangeRoomAction(state, "history"));
     Interactable* interactDoor21 = new Interactable(*door21, std::move(changeRoomDoor21), door21sr);
     interactDoor21->SetActivationDistance(DOOR_INTERACTION_DISTANCE);

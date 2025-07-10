@@ -15,12 +15,9 @@ class Collider;
 class Interactable : public Component {
     public:
         float activationDistance = 100.0f;
-        char interactionKey = 'e';
-        bool requireMouseOver = false;
         bool canInteract = false;
     private:
         std::unique_ptr<Action> action;
-        bool isHighlighted = false;
         SpriteRenderer* highlightSr = nullptr;
 
     public:
@@ -31,8 +28,6 @@ class Interactable : public Component {
         bool Is(std::string type) override;
 
         void SetActivationDistance(float d) { activationDistance = d; }
-        void SetInteractionKey(char key) { interactionKey = key; }
-        void SetRequireMouseOver(bool r) { requireMouseOver = r; }
     };
 
 #endif

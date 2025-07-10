@@ -18,11 +18,11 @@ InputManager::InputManager() {
         controllerUpdate[i] = 0;
     }
 
-    std::cout << "[INPUTMANAGER] Total joysticks found: " << SDL_NumJoysticks() << std::endl;
+    std::cout << "[InputManager] Total joysticks found: " << SDL_NumJoysticks() << std::endl;
     for (int i = 0; i < SDL_NumJoysticks(); i++) {
         if (SDL_IsGameController(i)) {
             controller = SDL_GameControllerOpen(i);
-            std::cout << "[INPUTMANAGER] Controller index used: " << i << std::endl;
+            std::cout << "[InputManager] Controller index used: " << i << std::endl;
             break;
         }
     }
@@ -135,6 +135,10 @@ int InputManager::GetMouseX() {
 
 int InputManager::GetMouseY() {
     return mouseY;
+}
+
+Vec2 InputManager::GetMousePos() {
+    return Vec2(mouseX, mouseY);
 }
 
 /*

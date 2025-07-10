@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <stdlib.h>
+#include <functional>
 
 #include "components/Camera.h"
 #include "entities/characters/Character.h"
@@ -22,7 +23,7 @@ public:
     void Render();
     bool Is(std::string type);
 
-    static void RequestDialogue(std::string dialogueKey);
+    static void RequestDialogue(std::string dialogueKey, std::function<void ()> func = nullptr);
 private:
     class DialogueLine {
     public:
@@ -40,6 +41,16 @@ private:
         bool resetPos;
     };
 
+    class DialogueQuery {
+    public:
+        DialogueQuery(std::string dialogueKey, std::function<void ()> func = nullptr) {
+            this->dialogueKey = dialogueKey;
+            this->dialogueEndFunc = func;
+        }
+        std::string dialogueKey;
+        std::function<void ()> dialogueEndFunc;
+    };
+
     int currentTextPos;
     Timer textTimer;
 
@@ -53,9 +64,11 @@ private:
 
     std::unordered_map<std::string, std::vector<DialogueLine>> dialogueLines;
 
-    static std::string currentDialogue;
-    static int currentLine;
-    static bool startLine;
+    std::string currentDialogue;
+    std::function<void ()> dialogueEndFunc;
+    int currentLine;
+    bool startLine;
+    static std::queue<DialogueHUD::DialogueQuery> dialogueQueue;
 };
 
 #endif // DIALOGUEHUD_H

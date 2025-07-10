@@ -86,19 +86,15 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     edges.push_back({{1200, 900}, {1200, 0}});
     edges.push_back({{0, 0}, {1200, 0}});
 
-    auto gen_vertex = [](Vec2 pos) {
-        return SDL_Vertex {SDL_FPoint {pos.x, pos.y}, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0, 0 } };
-    };
-
     std::vector<SDL_Vertex> renderVertices;
     //std::cout << std::endl << "Vertices " << relativeVertices.size() << std::endl;
     for (int i = 0; i < relativeVertices.size(); i++) {
         //std::cout << "RV: " << relativeVertices[i].ToStr() << std::endl;
         std::vector<Ray::Intersection> intersections = Ray::AllIntersections(Line(origin, relativeVertices[i]), edges);
-        if (i >= relativeVertices.size() - 4) { intersections.pop_back(); }
+        if (i >= relativeVertices.size() - 4) intersections.pop_back();
         if (intersections.size() > 1) {
             for (int j = intersections.size() - 2; j < intersections.size(); j++) {
-                renderVertices.push_back(gen_vertex(intersections[j].pos));
+                renderVertices.push_back(intersections[j].pos.ToSDLVertex());
                 //std::cout << "Intersection " << j << ": " << intersections[j].pos.ToStr() << std::endl;
             }
         }
@@ -117,8 +113,8 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     std::sort(renderVertices.begin(), renderVertices.end(), [origin, angle](SDL_Vertex a, SDL_Vertex b) {
         Vec2 aVec = Vec2(a.position.x, a.position.y);
         Vec2 bVec = Vec2(b.position.x, b.position.y);
-        float angleA = angle(aVec, origin); //aVec.Angle(origin);
-        float angleB = angle(bVec, origin); //bVec.Angle(origin);
+        float angleA = angle(aVec, origin);
+        float angleB = angle(bVec, origin);
         if (abs(angleA - angleB) < 0.0001f) return aVec.Distance(origin) < bVec.Distance(origin);
         return angleA < angleB;
     });

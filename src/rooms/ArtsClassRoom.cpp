@@ -77,7 +77,6 @@ void ArtsClassRoom::Build() {
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
     std::unique_ptr<Action> backRoomAction(new ChangeRoomAction(state, "main", 3));
     Interactable* interactDoorBack = new Interactable(*roomDoorBack, std::move(backRoomAction));
-    interactDoorBack->SetRequireMouseOver(true);
     interactDoorBack->SetActivationDistance(30);
     roomDoorBack->AddComponent(interactDoorBack);
     state->AddObject(roomDoorBack);

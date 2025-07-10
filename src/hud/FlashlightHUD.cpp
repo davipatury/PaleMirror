@@ -19,6 +19,7 @@ FlashlightHUD::~FlashlightHUD() {}
 void FlashlightHUD::Update(float dt) {
     if (Character::player == nullptr) return;
     if (!isDark) return;
+    if (CURRENT_STATE.openUI) return;
 
     if (INPUT_MANAGER.MousePress(RIGHT_MOUSE_BUTTON) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_Y)) ToggleFlashlight();
 
@@ -44,13 +45,8 @@ void FlashlightHUD::Render() {
     // Custom texture
     SDL_SetRenderTarget(GAME_RENDERER, texture);
 
-    SDL_Rect screenRect;
-    screenRect.x = 0;
-    screenRect.y = 0;
-    screenRect.w = 1200;
-    screenRect.h = 900;
-
     // Draw all screen black rectangle
+    SDL_Rect screenRect = {0, 0, 1200, 900};
     SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(GAME_RENDERER, &screenRect);
 
@@ -64,9 +60,9 @@ void FlashlightHUD::Render() {
         Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(angle - flashlightAngle), origin.y - flashlightSize * cos(angle - flashlightAngle));
         Vec2 flRight = Vec2(origin.x + flashlightSize * sin(angle + flashlightAngle), origin.y - flashlightSize * cos(angle + flashlightAngle));
         std::vector<SDL_Vertex> lightVertices = {
-            SDL_Vertex {SDL_FPoint {origin.x, origin.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 0.5, 0.5 } },
-            SDL_Vertex {SDL_FPoint {flLeft.x, flLeft.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 1, 0.3 } },
-            SDL_Vertex {SDL_FPoint {flRight.x, flRight.y}, SDL_Color{ 255, 255, 255, 255 }, SDL_FPoint{ 1, 0.7 } }
+            origin.ToSDLVertex({255, 255, 255, 255}, {0.5, 0.5}),
+            flLeft.ToSDLVertex({255, 255, 255, 255}, {1, 0.3}),
+            flRight.ToSDLVertex({255, 255, 255, 255}, {1, 0.7})
         };
         SDL_RenderGeometry(GAME_RENDERER, backlight.texture, lightVertices.data(), lightVertices.size(), nullptr, 0);
     }

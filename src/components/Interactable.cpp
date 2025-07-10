@@ -11,38 +11,35 @@
 #include "utils/DrawCircle.h"
 #include <string>
 
-#define DEBUG_INTERACT_RANGE
+//#define DEBUG_INTERACT_RANGE
+#define INTERACTION_KEY 'e'
+#define INTERACTION_CBUTTON SDL_CONTROLLER_BUTTON_A
 
 void Interactable::Update(float dt) {
     if (Character::player == nullptr) return;
+    if (action == nullptr) return;
 
+    // Player center coordinates
     IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
     Vec2 playerCoord = playerCol->box.Center().ToCart();
 
+    // Object center coordinates
     IsoCollider* objCol = (IsoCollider*) associated.GetComponent("IsoCollider");
     Vec2 objectCoord;
     if (objCol) objectCoord = objCol->box.Center().ToCart();
     else objectCoord = associated.box.Center();
-    float dist2 = playerCoord.Distance(objectCoord);
 
-    canInteract = (dist2 <= activationDistance);
+    // Set canInteract
+    canInteract = (playerCoord.Distance(objectCoord) <= activationDistance);
 
-    if (requireMouseOver) {
-        /*
-        if (!mouseInsideObject) {
-            canInteract = false;
-        }
-        */
-    }
-
+    // Highlight sprite renderer
     if (highlightSr != nullptr) {
         highlightSr->SetVisible(canInteract);
     }
 
     if (canInteract) {
         InteractableHUD::RecordInteractable();
-        if(action && (INPUT_MANAGER.KeyPress(interactionKey) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A))){
-            // Cria uma cópia do Action e executa
+        if(INPUT_MANAGER.KeyPress(INTERACTION_KEY) || INPUT_MANAGER.CButtonPress(INTERACTION_CBUTTON)){
             //std::unique_ptr<Action> actionCopy = action->Clone();
             action->Execute();
         }

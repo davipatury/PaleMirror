@@ -48,6 +48,8 @@ public:
 
     int GetMouseX();
     int GetMouseY();
+    Vec2 GetMousePos();
+
     bool QuitRequested();
 
     static InputManager& GetInstance();

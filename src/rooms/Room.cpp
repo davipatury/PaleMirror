@@ -3,7 +3,7 @@
 Room::Room(State* state) {
     this->state = state;
     this->lockCameraOnRoom = false;
-    this->cameraLimits = Rect(0, 0, 0, 0);
+    this->cameraLimits = EMPTY_RECT;
 }
 
 void Room::Build() {

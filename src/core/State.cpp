@@ -72,7 +72,8 @@ bool dependsOn(GameObject* A, GameObject* B) {
     IsoCollider* colliderA = (IsoCollider*) A->GetComponent("IsoCollider");
     IsoCollider* colliderB = (IsoCollider*) B->GetComponent("IsoCollider");
     if (colliderA != nullptr && colliderB != nullptr) {
-        return !(colliderA->box.TopLeft().y < colliderB->box.BottomLeft().y && colliderA->box.TopLeft().x < colliderB->box.TopRight().x);
+        //return !(colliderA->box.TopLeft().y < colliderB->box.BottomLeft().y && colliderA->box.TopLeft().x < colliderB->box.TopRight().x);
+        return !(colliderA->box.TopLeft().y - colliderB->box.BottomLeft().y < -0.01f && colliderA->box.TopLeft().x - colliderB->box.TopRight().x < -0.01f);
     }
     return !(A->box.BottomLeft().y) < (B->box.BottomLeft().y);
 }
@@ -94,28 +95,26 @@ std::vector<GameObject*> State::RenderSort() {
         zlist[objs[i]->box.z].push_back(i);
         for(int j=i+1; j<objs.size(); j++){
             if(objs[i]->box.z != objs[j]->box.z) continue;
-            SpriteRenderer* ca = (SpriteRenderer*) objs[i]->GetComponent("SpriteRenderer");
-            SpriteRenderer* cb = (SpriteRenderer*) objs[j]->GetComponent("SpriteRenderer");
-            if(ca and cb){
-                float angle1 = objs[i]->box.Center().Angle(objs[j]->box.Center());
-                float angle2 = objs[j]->box.Center().Angle(objs[i]->box.Center());
-                if (Collision::IsColliding(ca->associated.box, cb->associated.box, 0, 0)) {
-                    /*
+            //SpriteRenderer* ca = (SpriteRenderer*) objs[i]->GetComponent("SpriteRenderer");
+            //SpriteRenderer* cb = (SpriteRenderer*) objs[j]->GetComponent("SpriteRenderer");
+            //float angle1 = objs[i]->box.Center().Angle(objs[j]->box.Center());
+            //float angle2 = objs[j]->box.Center().Angle(objs[i]->box.Center());
+            if (Collision::IsColliding(objs[i]->box, objs[j]->box, 0, 0)) {
+                /*
                     std::cout << "Colisão detectada entre: " << std::endl;
                     std::cout << "Objeto 1: " << (objs[i]->name.empty() ? "Sem nome" : objs[i]->name) << std::endl;
                     std::cout << "Objeto 2: " << (objs[j]->name.empty() ? "Sem nome" : objs[j]->name) << std::endl;
                     */
-                    if(dependsOn(objs[i], objs[j])){
-                        //std::cout << "Dependência: " << objs[i]->name << " depende de " << objs[j]->name << std::endl;
-                        adj[j].push_back(i);
-                        inDegree[i]++;
-                    }else{
-                        //std::cout << "Dependência: " << objs[j]->name << " depende de " << objs[i]->name << std::endl;
-                        adj[i].push_back(j);
-                        inDegree[j]++;
-                    }
-                    //std::cout << "------------------------" << std::endl;
+                if(dependsOn(objs[i], objs[j])){
+                    //std::cout << "Dependência: " << objs[i]->name << " depende de " << objs[j]->name << std::endl;
+                    adj[j].push_back(i);
+                    inDegree[i]++;
+                }else{
+                    //std::cout << "Dependência: " << objs[j]->name << " depende de " << objs[i]->name << std::endl;
+                    adj[i].push_back(j);
+                    inDegree[j]++;
                 }
+                //std::cout << "------------------------" << std::endl;
             }
         }
     }

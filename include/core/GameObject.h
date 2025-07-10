@@ -36,9 +36,9 @@ public:
     bool lazyUpdate = false;
 
     bool pauseOnOpenUI = true;
+    bool isDead;
 private:
     std::vector<std::unique_ptr<Component>> components;
-    bool isDead;
     bool started;
 };
 

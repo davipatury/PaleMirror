@@ -11,6 +11,7 @@
 #include "math/Rect.h"
 #include "core/Sprite.h"
 #include "math/Vec2.h"
+#include "hud/DialogueHUD.h"
 
 class FusePuzzle : public Component
 {
@@ -54,6 +55,7 @@ public:
 
     std::vector<Fuse> fuses;
     int selectedPiece;
+    bool solvedDialogue = false;
 
     Sprite bg;
 };

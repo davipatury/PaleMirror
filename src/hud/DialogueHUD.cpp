@@ -1,13 +1,13 @@
 #include "hud/DialogueHUD.h"
 #include "core/Game.h"
 
+#define DEBUG_DIALOGUE
+
 #define DIALOGUE_WRAP_LEN 910
 #define TEXT_COOLDOWN 0.005
 #define PICTURE_SPEED 500
 
-std::string DialogueHUD::currentDialogue;
-int DialogueHUD::currentLine;
-bool DialogueHUD::startLine;
+std::queue<DialogueHUD::DialogueQuery> DialogueHUD::dialogueQueue;
 
 DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     caixaDialogo("Recursos/img/hud/caixa_dialogo.png"),
@@ -41,12 +41,39 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "*estatica* *estatica* *estatica*"
         }
     };
+
+    // Paint puzzle lines
+    dialogueLines["paintPuzzle_corErrada"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+        "errei familia fui mlk"
+        }
+    };
+    dialogueLines["paintPuzzle_solved"] = {
+        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+        "acertei porra"
+        }
+    };
+
+    // Mirror puzzle
+    dialogueLines["mirrorPuzzle_solved"] = {
+        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+            "ta arrumado o espelho"
+        }
+    };
+
+    // Fuse puzzle
+    dialogueLines["fusePuzzle_solved"] = {
+        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+            "ta arrumado a caixa de fusivel"
+        }
+    };
     // Para adicionar um novo dialogo é só repetir a estrutura acima mudando o que for necessário e para chamar o dialogo é só usar DialogueHUD::RequestDialogue("nova_chave");
 
     textTimer = Timer();
     currentTextPos = 1;
 
     currentDialogue = "";
+    dialogueEndFunc = nullptr;
     currentLine = 0;
     startLine = false;
 
@@ -56,6 +83,27 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
 DialogueHUD::~DialogueHUD() {}
 
 void DialogueHUD::Update(float dt) {
+    if (!dialogueQueue.empty() && currentDialogue.empty()) {
+        DialogueQuery dq = dialogueQueue.front();
+#ifdef DEBUG_DIALOGUE
+        std::cout << "[DialogueHUD] Dequeued dialogue: " << dq.dialogueKey << std::endl;
+#endif
+        if (dialogueLines.find(dq.dialogueKey) == dialogueLines.end()) {
+#ifdef DEBUG_DIALOGUE
+            std::cout << "[DialogueHUD] Could not find dialogue: " << dq.dialogueKey << std::endl;
+#endif
+        } else {
+            currentDialogue = dq.dialogueKey;
+            dialogueEndFunc = dq.dialogueEndFunc;
+            currentLine = 0;
+            startLine = true;
+#ifdef DEBUG_DIALOGUE
+            std::cout << "[DialogueHUD] Starting dialogue: " << dq.dialogueKey << std::endl;
+#endif
+        }
+        dialogueQueue.pop();
+    }
+
     if (!currentDialogue.empty()) {
         CURRENT_STATE.openUI = true;
         textTimer.Update(dt);
@@ -63,6 +111,9 @@ void DialogueHUD::Update(float dt) {
 
         DialogueLine dialLine = dialogueLines.at(currentDialogue)[currentLine];
         if (startLine) {
+#ifdef DEBUG_DIALOGUE
+            std::cout << "[DialogueHUD] [" << currentDialogue << "] Starting line " << currentLine << std::endl;
+#endif
             if (dialLine.picture == "HelenaAssustada") pictureSprite = &helenaAssustada;
             else if (dialLine.picture == "HelenaBrava") pictureSprite = &helenaBrava;
             else if (dialLine.picture == "HelenaFeliz") pictureSprite = &helenaFeliz;
@@ -90,14 +141,15 @@ void DialogueHUD::Update(float dt) {
             }
         }
 
-        if (INPUT_MANAGER.AnyKeyPress() && !skipFirstKeyCheck) {
+        if ((INPUT_MANAGER.KeyPress(SDLK_RETURN) || INPUT_MANAGER.IsKeyDown(SDLK_SPACE) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A)) && !skipFirstKeyCheck) {
             if (picturePos.x != 0) picturePos.x = 0;
             else if (currentTextPos < dialLine.line.length()) currentTextPos = dialLine.line.length();
             else {
                 currentLine++;
                 if (currentLine >= dialogueLines.at(currentDialogue).size()) {
-                    currentDialogue = "";
                     CURRENT_STATE.openUI = false;
+                    currentDialogue = "";
+                    if (dialogueEndFunc != nullptr) dialogueEndFunc();
                 } else startLine = true;
             }
         }
@@ -106,6 +158,11 @@ void DialogueHUD::Update(float dt) {
 
 void DialogueHUD::Render() {
     if (!currentDialogue.empty()) {
+        SDL_Rect screenRect = {0, 0, 1200, 900};
+        SDL_SetRenderDrawBlendMode(GAME_RENDERER, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, 127);
+        SDL_RenderFillRect(GAME_RENDERER, &screenRect);
+
         if (pictureSprite != nullptr) {
             pictureSprite->Render(picturePos.x, picturePos.y, pictureSprite->GetWidth(), pictureSprite->GetHeight());
         }
@@ -119,8 +176,9 @@ bool DialogueHUD::Is(std::string type) {
     return type == "DialogueHUD";
 }
 
-void DialogueHUD::RequestDialogue(std::string dialogueKey) {
-    currentDialogue = dialogueKey;
-    currentLine = 0;
-    startLine = true;
+void DialogueHUD::RequestDialogue(std::string dialogueKey, std::function<void ()> func) {
+#ifdef DEBUG_DIALOGUE
+    std::cout << "[DialogueHUD] Requesting dialogue: " << dialogueKey << std::endl;
+#endif
+    dialogueQueue.push(DialogueQuery(dialogueKey, func));
 }

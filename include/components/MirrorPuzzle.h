@@ -11,6 +11,7 @@
 #include "math/Rect.h"
 #include "core/Sprite.h"
 #include "math/Vec2.h"
+#include "hud/DialogueHUD.h"
 
 class MirrorPuzzle : public Component
 {
@@ -49,10 +50,11 @@ public:
 
     bool IsSolved();
 
+    bool solvedDialogue = false;
     std::vector<Piece> pieces;
     int selectedPiece;
     Sprite bg;
-    bool background=false;
+    bool background = false;
 };
 
 #endif // MIRRORPUZZLE_H

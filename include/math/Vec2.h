@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <string>
+#include <SDL_image.h>
 
 const long double EPS = 1e-9;
 
@@ -38,6 +39,7 @@ public:
     float Cross(Vec2 b) const;
 
     std::string ToStr();
+    SDL_Vertex ToSDLVertex(SDL_Color color = {0, 0, 0, 255}, SDL_FPoint tex_coord = {0, 0});
 
     float x;
     float y;

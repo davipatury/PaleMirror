@@ -4,7 +4,12 @@
 #include "components/Interactable.h"
 #include <memory>
 #include "math.h"
-//#define DEBUG_VISIBILITY
+
+#define OBJECT_LAYER 0
+#define SHADOW_LAYER 1
+#define HUD_LAYER 5
+#define PUZZLE_LAYER 6
+#define DIALOGUE_LAYER 7
 
 StageState::StageState() {
     started = false;
@@ -27,7 +32,7 @@ void StageState::LoadAssets() {
     character->AddComponent(charCmp);
     character->box.x = 1639;
     character->box.y = 1656;
-    character->box.z = 0;
+    character->box.z = OBJECT_LAYER;
     Character::player = charCmp;
     Camera::Follow(character);
     AddObject(character);
@@ -35,7 +40,7 @@ void StageState::LoadAssets() {
     // Shadows
     GameObject* scc = new GameObject("[ShadowCasterController");
     scc->AddComponent(new ShadowCaster::Controller(*scc));
-    scc->box.z = 1;
+    scc->box.z = SHADOW_LAYER;
     scc->lazyRender = false;
     AddObject(scc);
 
@@ -44,11 +49,17 @@ void StageState::LoadAssets() {
     hud->AddComponent(new FlashlightHUD(*hud));
     hud->AddComponent(new HealthHUD(*hud));
     hud->AddComponent(new InteractableHUD(*hud));
-    hud->AddComponent(new DialogueHUD(*hud));
-    hud->box.z = 5;
+    hud->box.z = HUD_LAYER;
     hud->lazyRender = false;
     hud->pauseOnOpenUI = false;
     AddObject(hud);
+
+    GameObject* dHud = new GameObject("[DialogueHUD]");
+    dHud->AddComponent(new DialogueHUD(*dHud));
+    dHud->box.z = DIALOGUE_LAYER;
+    dHud->lazyRender = false;
+    dHud->pauseOnOpenUI = false;
+    AddObject(dHud);
 
     /*
      * Rooms
@@ -102,7 +113,7 @@ void StageState::Update(float dt) {
     }
 
     // Dialogue debug
-    if (!openUI && INPUT_MANAGER.IsKeyDown('p')) {
+    if (!openUI && INPUT_MANAGER.IsKeyDown('o')) {
         DialogueHUD::RequestDialogue("test");
     }
 
@@ -117,7 +128,7 @@ void StageState::Update(float dt) {
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/5.png", Vec2{0, 290}),
             MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/6.png", Vec2{184, 382})
         }));
-        mp->box.z = 7;
+        mp->box.z = PUZZLE_LAYER;
         mp->lazyRender = false;
         mp->pauseOnOpenUI = false;
         AddObject(mp);
@@ -126,11 +137,21 @@ void StageState::Update(float dt) {
     // Spawn fuse puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('f')) {
         GameObject* fp = new GameObject();
-        fp->AddComponent(new FusePuzzle((*fp)));
-        fp->box.z = 7;
+        fp->AddComponent(new FusePuzzle(*fp));
+        fp->box.z = PUZZLE_LAYER;
         fp->lazyRender = false;
         fp->pauseOnOpenUI = false;
         AddObject(fp);
+    }
+
+    // Spawn paint puzzle
+    if (!openUI && INPUT_MANAGER.KeyPress('p')) {
+        GameObject* pp = new GameObject();
+        pp->AddComponent(new PaintPuzzle(*pp, PaintPuzzle::AMARELO_ALARANJADO));
+        pp->box.z = PUZZLE_LAYER;
+        pp->lazyRender = false;
+        pp->pauseOnOpenUI = false;
+        AddObject(pp);
     }
 
     // Update game objects

@@ -90,6 +90,10 @@ std::string Vec2::ToStr() {
     return "{" + std::to_string(x) + ", " + std::to_string(y) + "}";
 }
 
+SDL_Vertex Vec2::ToSDLVertex(SDL_Color color, SDL_FPoint tex_coord) {
+    return SDL_Vertex {SDL_FPoint {x, y}, color, tex_coord };
+}
+
 float Vec2::Dot(Vec2 b) const {
     return x * b.x + y * b.y;
 }

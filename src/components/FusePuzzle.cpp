@@ -6,7 +6,6 @@
 FusePuzzle::FusePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/fuse_puzzle/fuseboxbg.png"){
     for(int i=0; i<9; i++) fuses.push_back(Fuse());
     bg.SetCameraFollower(true);
-    std::cout << "FusePuzzle()\n";
 }
 
 void FusePuzzle::FusePressed(int idx){
@@ -37,15 +36,15 @@ void FusePuzzle::Update(float dt) {
         CURRENT_STATE.openUI = false;
         associated.pauseOnOpenUI=true;
         associated.RequestDelete();
-        std::cout << "FuzePuzzle closed" << std::endl;
         INPUT_MANAGER.ReleaseKey(SDLK_ESCAPE);
     }
 
-    if (IsSolved()) {
-        std::cout << "!!! SOLVED !!!" << std::endl;
-        CURRENT_STATE.openUI = false;
-        associated.pauseOnOpenUI=true;
-        associated.RequestDelete();
+    if (IsSolved() && !solvedDialogue) {
+        DialogueHUD::RequestDialogue("fusePuzzle_solved", [this]() {
+            associated.RequestDelete();
+            CURRENT_STATE.openUI = false;
+        });
+        solvedDialogue = true;
     }
 }
 
