@@ -13,7 +13,7 @@
 class IsoCollider : public Component
 {
 public:
-    IsoCollider(GameObject& associated, Vec2 scale = {1, 1}, Vec2 offset = {0, 0}, bool passable = false);
+    IsoCollider(GameObject& associated, Vec2 scale = {1, 1}, Vec2 offset = {0, 0}, bool passable = false, bool blockLight = false);
 
     void Update(float dt);
     void Render();
@@ -27,6 +27,7 @@ public:
     Rect prevBox;
     Rect box;
     bool passable;
+    bool blockLight;
 private:
     Vec2 scale;
     Vec2 offset;

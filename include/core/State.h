@@ -32,12 +32,13 @@ public:
 
     bool openUI = false;
     std::vector<std::shared_ptr<GameObject>> objectArray;
+
+    bool dependsOn(GameObject* A, GameObject* B);
+    std::vector<GameObject*> RenderSort(int z = -1);
 protected:
     void StartArray();
     virtual void UpdateArray(float dt);
     virtual void RenderArray();
-
-    std::vector<GameObject*> RenderSort();
 
     bool popRequested;
     bool quitRequested;

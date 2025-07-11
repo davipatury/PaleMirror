@@ -6,10 +6,11 @@
 #include "components/Camera.h"
 #include "core/Game.h"
 
-IsoCollider::IsoCollider(GameObject& associated, Vec2 scale, Vec2 offset, bool passable) : Component(associated) {
+IsoCollider::IsoCollider(GameObject& associated, Vec2 scale, Vec2 offset, bool passable, bool blockLight) : Component(associated) {
     this->scale = scale;
     this->offset = offset;
     this->passable = passable;
+    this->blockLight = blockLight;
     UpdateBox();
 }
 

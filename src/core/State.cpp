@@ -67,7 +67,7 @@ void State::RenderArray() {
     }
 }
 
-bool dependsOn(GameObject* A, GameObject* B) {
+bool State::dependsOn(GameObject* A, GameObject* B) {
     // Iso sorting
     IsoCollider* colliderA = (IsoCollider*) A->GetComponent("IsoCollider");
     IsoCollider* colliderB = (IsoCollider*) B->GetComponent("IsoCollider");
@@ -78,11 +78,11 @@ bool dependsOn(GameObject* A, GameObject* B) {
     return !(A->box.BottomLeft().y) < (B->box.BottomLeft().y);
 }
 
-std::vector<GameObject*> State::RenderSort() {
+std::vector<GameObject*> State::RenderSort(int z) {
     std::vector<GameObject*> objs;
     for (int i = 0; i < objectArray.size(); i++) {
         GameObject* go = objectArray[i].get();
-        if (!go->lazyRender || Camera::PosRect().Collides(go->box)) {
+        if ((z == -1 || go->box.z == z) && (!go->lazyRender || Camera::PosRect().Collides(go->box))) {
             objs.push_back(go);
         }
     }

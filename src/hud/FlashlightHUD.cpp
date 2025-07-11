@@ -1,6 +1,8 @@
 #include "hud/FlashlightHUD.h"
 #include "core/Game.h"
 
+//#define DEBUG_FLASHLIGHT
+
 FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), backlight("Recursos/img/lighting/backlight.png") {
     isDark = true;
     flashlightOn = true;
@@ -50,9 +52,6 @@ void FlashlightHUD::Render() {
     SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(GAME_RENDERER, &screenRect);
 
-    // Backlight
-    backlight.Render(origin.x - BLoffsetX, origin.y - BLoffsetY, backlight.GetWidth(), backlight.GetHeight());
-
     // Flashlight cone
     if (flashlightOn) {
         int flashlightSize = 600;
@@ -65,7 +64,48 @@ void FlashlightHUD::Render() {
             flRight.ToSDLVertex({255, 255, 255, 255}, {1, 0.7})
         };
         SDL_RenderGeometry(GAME_RENDERER, backlight.texture, lightVertices.data(), lightVertices.size(), nullptr, 0);
+
+        // Render objects above flashlight
+        std::vector<GameObject*> objArray = CURRENT_STATE.RenderSort(0);
+        for (int i = 0; i < objArray.size(); i++) {
+            GameObject* obj = objArray[i];
+            if (obj->box.z == 0) {
+                if (!CURRENT_STATE.dependsOn(&Character::player->associated, obj)) {
+                    // Player is behind this obj
+#ifdef DEBUG_FLASHLIGHT
+                    std::cout << "[Flashlight] Player is behind " << obj->name << std::endl;
+#endif
+                    IsoCollider* objCol = (IsoCollider*) obj->GetComponent("IsoCollider");
+                    SpriteRenderer* objSR = (SpriteRenderer*) obj->GetComponent("SpriteRenderer");
+                    if (objSR && objCol && objCol->blockLight) {
+                        IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
+                        float diffX = abs(playerCol->box.TopLeft().x - objCol->box.TopRight().x);
+                        float diffY = abs(playerCol->box.TopLeft().y - objCol->box.BottomLeft().y);
+                        float minDiff = std::min(diffX, diffY);
+
+                        int newAlpha = std::min(minDiff / 100, 1.0f) * 255;
+
+                        // Save old values
+                        Uint8 r, g, b, a;
+                        SDL_GetTextureColorMod(objSR->sprite.texture, &r, &g, &b);
+                        SDL_GetTextureAlphaMod(objSR->sprite.texture, &a);
+
+                        // Render all black sprite
+                        SDL_SetTextureColorMod(objSR->sprite.texture, 0, 0, 0);
+                        SDL_SetTextureAlphaMod(objSR->sprite.texture, newAlpha);
+                        objSR->Render();
+
+                        // Restore old values
+                        SDL_SetTextureColorMod(objSR->sprite.texture, r, g, b);
+                        SDL_SetTextureAlphaMod(objSR->sprite.texture, a);
+                    }
+                }
+            }
+        }
     }
+
+    // Backlight
+    backlight.Render(origin.x - BLoffsetX, origin.y - BLoffsetY, backlight.GetWidth(), backlight.GetHeight());
 
     // Render custom lighting layer
     SDL_SetRenderTarget(GAME_RENDERER, nullptr);
