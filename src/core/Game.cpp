@@ -7,6 +7,9 @@
 
 #include <bits/stdc++.h>
 
+#define TARGET_FRAMERATE 60
+#define FRAME_INTERVAL 1000 / TARGET_FRAMERATE
+
 Game* Game::instance;
 Game& Game::GetInstance() {
     if (Game::instance == nullptr) {
@@ -127,7 +130,9 @@ void Game::Run() {
             stateStack.top()->Update(dt);
             stateStack.top()->Render();
             SDL_RenderPresent(renderer);
-            SDL_Delay(33);
+            // Time remaining to next frame
+            int32_t frameDiff = std::max(int32_t(0), int32_t(FRAME_INTERVAL - (SDL_GetTicks() - frameStart)));
+            SDL_Delay(frameDiff);
         }
     }
 
