@@ -10,7 +10,8 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
 
     backlight.SetCameraFollower(true);
     SDL_BlendMode bm = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDOPERATION_MAXIMUM, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_MINIMUM);
-    SDL_SetTextureBlendMode(backlight.texture, bm);
+    int bmRet = SDL_SetTextureBlendMode(backlight.texture, bm);
+    if (bmRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode: " << SDL_GetError() << std::endl;
 
     texture = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 1200, 900);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
@@ -87,12 +88,16 @@ void FlashlightHUD::Render() {
 
                         // Save old values
                         Uint8 r, g, b, a;
-                        SDL_GetTextureColorMod(objSR->sprite.texture, &r, &g, &b);
-                        SDL_GetTextureAlphaMod(objSR->sprite.texture, &a);
+                        int getCMRet = SDL_GetTextureColorMod(objSR->sprite.texture, &r, &g, &b);
+                        if (getCMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureColorMod: " << SDL_GetError() << std::endl;
+                        int getAMRet = SDL_GetTextureAlphaMod(objSR->sprite.texture, &a);
+                        if (getAMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureAlphaMod: " << SDL_GetError() << std::endl;
 
                         // Render all black sprite
-                        SDL_SetTextureColorMod(objSR->sprite.texture, 0, 0, 0);
-                        SDL_SetTextureAlphaMod(objSR->sprite.texture, newAlpha);
+                        int setCMRet = SDL_SetTextureColorMod(objSR->sprite.texture, 0, 0, 0);
+                        if (setCMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureColorMod: " << SDL_GetError() << std::endl;
+                        int setAMRet = SDL_SetTextureAlphaMod(objSR->sprite.texture, newAlpha);
+                        if (setAMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureAlphaMod: " << SDL_GetError() << std::endl;
                         objSR->Render();
 
                         // Restore old values
