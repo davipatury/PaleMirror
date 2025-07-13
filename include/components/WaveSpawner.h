@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "components/AIController.h"
 #include "entities/characters/Character.h"
 #include "core/Component.h"
 #include "core/GameObject.h"
