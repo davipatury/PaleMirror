@@ -170,10 +170,6 @@ void Zombie::NotifyCollision(GameObject& other) {
         associated.box = associated.box.Add(diff);
     }
 
-    if (auto* bullet =
-            static_cast<Bullet*>(other.GetComponent("Bullet"))) {
-        Damage(bullet->GetDamage());
-    }
     if (auto* hitAttack = static_cast<HitAttack*>(other.GetComponent("HitAttack"))) {
         Damage(hitAttack->GetDamage());
     }

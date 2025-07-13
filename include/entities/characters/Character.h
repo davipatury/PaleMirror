@@ -12,7 +12,6 @@
 #include "physics/Collider.h"
 #include "physics/Collision.h"
 #include "core/Component.h"
-#include "entities/projectiles/Gun.h"
 #include "physics/IsoCollider.h"
 #include "components/SpriteRenderer.h"
 #include "components/Sound.h"

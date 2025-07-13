@@ -6,7 +6,6 @@
 
 #include "utils/Animation.h"
 #include "components/Animator.h"
-#include "entities/projectiles/Bullet.h"
 #include "components/Camera.h"
 #include "physics/Collider.h"
 #include "core/Component.h"
