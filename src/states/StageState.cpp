@@ -155,6 +155,16 @@ void StageState::Update(float dt) {
         AddObject(pp);
     }
 
+    // Spawn pipe puzzle
+    if (!openUI && INPUT_MANAGER.KeyPress('i')) {
+        GameObject* pip = new GameObject();
+        pip->AddComponent(new PipePuzzle(*pip));
+        pip->box.z = PUZZLE_LAYER;
+        pip->lazyRender = false;
+        pip->pauseOnOpenUI = false;
+        AddObject(pip);
+    }
+
     // Update game objects
     UpdateArray(dt);
 

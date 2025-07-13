@@ -22,6 +22,7 @@
 #include "components/MirrorPuzzle.h"
 #include "components/FusePuzzle.h"
 #include "components/PaintPuzzle.h"
+#include "components/PipePuzzle.h"
 #include "core/Music.h"
 #include "components/PlayerController.h"
 #include "math/Ray.h"

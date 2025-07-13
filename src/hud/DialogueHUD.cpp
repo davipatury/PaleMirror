@@ -67,6 +67,14 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
             "ta arrumado a caixa de fusivel"
         }
     };
+
+    // Pipe puzzle
+    dialogueLines["pipePuzzle_solved"] = {
+        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+            "ta arrumado os canos (que cano o.O)"
+        }
+    };
+
     // Para adicionar um novo dialogo é só repetir a estrutura acima mudando o que for necessário e para chamar o dialogo é só usar DialogueHUD::RequestDialogue("nova_chave");
 
     textTimer = Timer();
