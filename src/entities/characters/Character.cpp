@@ -268,12 +268,6 @@ void Character::NotifyCollision(GameObject& other) {
     }
     if (tookDamage || hp <= 0) return;
     
-    Bullet* bullet = (Bullet*) other.GetComponent("Bullet");
-    if (bullet != nullptr) {
-        if ((this == player && bullet->targetsPlayer) || (this != player && !bullet->targetsPlayer)) {
-            Hit(bullet->GetDamage() * (bullet->targetsPlayer ? 0.7 : 1));
-        }
-    }
 }
 
 void Character::Hit(int damage) {

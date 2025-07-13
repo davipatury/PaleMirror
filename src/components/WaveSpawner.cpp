@@ -40,31 +40,9 @@ void WaveSpawner::Update(float dt) {
             npcCounter++;
             npcCooldownTimer.Restart();
 
-            GameObject* npc = new GameObject();
-            Character* charCmp = new Character(*npc, "Recursos/img/NPC.png");
-            npc->AddComponent(charCmp);
-            AIController* npcCmp = new AIController(*npc);
-            npc->AddComponent(npcCmp);
-            npc->box.x = outOfScreenPos.x;
-            npc->box.y = outOfScreenPos.y;
-            npc->box.z = 0;
-            CURRENT_STATE.AddObject(npc);
         }
     }
 
-    if (zombieCounter >= waves[currentWave].zombies &&
-        npcCounter >= waves[currentWave].npcs &&
-        Zombie::zombieCounter <= 0 &&
-        AIController::npcCounter <= 0
-    ) {
-        currentWave++;
-        zombieCounter = 0;
-        npcCounter = 0;
-        if (currentWave >= waves.size()) {
-            allWavesEnded = true;
-            associated.RequestDelete();
-        }
-    }
 
 }
 

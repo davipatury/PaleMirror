@@ -35,7 +35,6 @@
 #include "hud/InteractableHUD.h"
 #include "hud/FlashlightHUD.h"
 #include "utils/Text.h"
-#include "components/TileMap.h"
 #include "math/Vec2.h"
 #include "components/WaveSpawner.h"
 #include "entities/characters/Zombie.h"
