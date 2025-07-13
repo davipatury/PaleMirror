@@ -34,8 +34,8 @@ public:
     static int zombieCounter;
 private:
     int hitpoints;
-    Sound* deathSound;
-    Sound* hitSound;
+    Sound deathSound;
+    Sound hitSound;
     Timer deathTimer;
     Timer hitTimer;
     bool hit;

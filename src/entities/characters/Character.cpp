@@ -29,6 +29,14 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
     for (int i = 0; i < 8; i++) {
         // 1, 2, 6, 7, 8 -> 1
         // 3, 4, 5 -> 2 -> 2
+
+        if(i == 1 || i == 5){
+            attackSprites.push_back(basePath + types[2] + "/" + types[2] + "26" + ".png");
+        }else if(i == 0 || i == 6 || i == 7){
+            attackSprites.push_back(basePath + types[2] + "/" + types[2] + "178" + ".png");
+        }else{
+            attackSprites.push_back(basePath + types[2] + "/" + types[2] + "345" + ".png");
+        }
         if(i == 0 || i == 1 || i == 5 || i == 6 || i == 7) {
             idleSprites.push_back(basePath + types[0] + "/" + types[0] + "1" + ".png");
         } else {
@@ -63,11 +71,17 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
         if( i+1 == 1 or i+1 == 2 or i+1 == 8){
             animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250));
         }else if (i+1 == 3 or i+1 == 4){
-            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250, SDL_FLIP_HORIZONTAL));
+            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.100, SDL_FLIP_HORIZONTAL));
         }else if(i+1 == 5){
             animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250));
         }else{
             animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250, SDL_FLIP_HORIZONTAL));
+        }
+
+        if(i+1 == 7 || i+1 == 6 || i+1 == 3 || i+1 == 4){
+            animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 5, 0.150, SDL_FLIP_HORIZONTAL));
+        }else{
+            animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 5, 0.150));
         }
 
         //animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 3, 0.250));
@@ -126,21 +140,13 @@ void Character::Update(float dt) {
             break;
         }
         case Command::ATTACK: {
-            // TODO: Ao adicionar ataque, mudar isso.
-            break;
             if (!isAttacking) {
                 isAttacking = true;
                 attackTimer.Restart();
-                SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
-                if (spriteRdr) {
-                    spriteRdr->Open(attackSprites[currentDirection].c_str());
-                    spriteRdr->SetFrameCount(4, 4);
-                }
-
                 float angle = atan2(lastMoveDirection.y, lastMoveDirection.x);
                 int centerX = (int)(associated.box.x + associated.box.w/2);
                 int centerY = (int)(associated.box.y + associated.box.h/2);
-                SDL_Rect attackBox = CalculateAttackBox(centerX, centerY, angle);
+                attackBox = CalculateAttackBox(centerX, centerY, angle);
                 
                 GameObject* attackGO = new GameObject();
                 attackGO->box.x = attackBox.x;
@@ -148,7 +154,7 @@ void Character::Update(float dt) {
                 attackGO->box.w = attackBox.w;
                 attackGO->box.h = attackBox.h;
                 
-                HitAttack* hitAttack = new HitAttack(*attackGO, 20, 1);
+                HitAttack* hitAttack = new HitAttack(*attackGO, 35, 1);
                 attackGO->AddComponent(hitAttack);
                 
                 CURRENT_STATE.AddObject(attackGO);
@@ -194,6 +200,12 @@ void Character::Update(float dt) {
                         spriteRdr->SetFrameCount(1, 1);
                         currentSprite = idleSprites[currentDirection];
                     }
+                }
+            }else{
+                if (spriteRdr && currentSprite != attackSprites[currentDirection]) {
+                    spriteRdr->Open(attackSprites[currentDirection].c_str());
+                    spriteRdr->SetFrameCount(6, 1);
+                    currentSprite = attackSprites[currentDirection];
                 }
             }
         } else if (moving) {
@@ -311,7 +323,19 @@ SDL_Rect Character::CalculateAttackBox(float x, float y, float angle) {
     return box;
 }
 
-void Character::Render() {}
+void Character::Render() {
+    if (isAttacking && attackBox.w > 0 && attackBox.h > 0) {
+        SDL_Rect destRect = {
+            static_cast<int>(attackBox.x - Camera::pos.x),
+            static_cast<int>(attackBox.y - Camera::pos.y),
+            attackBox.w,
+            attackBox.h
+        };
+        
+        SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderDrawRect(GAME_RENDERER, &destRect);
+    }
+}
 
 void Character::Issue(Command task) {
     taskQueue.push(task);

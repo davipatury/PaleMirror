@@ -69,11 +69,13 @@ private:
     Sound* deathSound;
     Sound* hitSound;
 
-    std::vector<std::string> idleSprites;    // 17 frames, 142ms por frame
-    std::vector<std::string> walkSprites;    // 11 frames, 100ms por frame
-    std::vector<std::string> attackSprites;  // 15 frames, 100ms por frame
+    std::vector<std::string> idleSprites;
+    std::vector<std::string> walkSprites;
+    std::vector<std::string> attackSprites;
     std::string currentSprite;
-    int currentDirection; // Índice da direção atual (0-7)
+    int currentDirection;
+
+    SDL_Rect attackBox;
 };
 
 #endif // CHARACTER_H

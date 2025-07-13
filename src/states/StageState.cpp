@@ -3,6 +3,7 @@
 #include "actions/DocumentAction.h"
 #include "components/Interactable.h"
 #include <memory>
+#include "entities/projectiles/HitAttack.h"
 #include "math.h"
 
 #define OBJECT_LAYER 0
@@ -159,7 +160,6 @@ void StageState::Update(float dt) {
 
     // Collision
 
-    /*
     for (int i = 0; i < objectArray.size(); i++) {
         GameObject* go = objectArray[i].get();
         Collider* colliderA = (Collider*) go->GetComponent("Collider");
@@ -167,7 +167,10 @@ void StageState::Update(float dt) {
             for (int j = i + 1; j < objectArray.size(); j++) {
                 GameObject* go2 = objectArray[j].get();
                 Collider* colliderB = (Collider*) go2->GetComponent("Collider");
-                if (colliderB != nullptr) {
+
+                HitAttack* hitA = (HitAttack*) go->GetComponent("HitAttack");
+                HitAttack* hitB = (HitAttack*) go2->GetComponent("HitAttack");
+                if (colliderB != nullptr && (hitA != nullptr || hitB != nullptr)) {
                     if (Collision::IsColliding(
                             colliderA->box,
                             colliderB->box,
@@ -181,7 +184,7 @@ void StageState::Update(float dt) {
             }
         }
     }
-    */
+    
 
     // Iso collision
     for (int i = 0; i < objectArray.size(); i++) {

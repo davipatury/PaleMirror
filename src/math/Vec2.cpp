@@ -1,5 +1,6 @@
 #include "math/Vec2.h"
 #include "math/Line.h"
+#include <iostream>
 
 Vec2::Vec2() {
     x = 0;

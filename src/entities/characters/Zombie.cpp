@@ -4,7 +4,7 @@
 
 int Zombie::zombieCounter;
 
-Zombie::Zombie(GameObject& associated) : Component(associated) {
+Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/Hit0.wav"){
     hitpoints = 100;
 
     SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/monster.png", 4, 1);
@@ -30,11 +30,11 @@ void Zombie::Damage(int damage) {
     if (hitpoints <= 0) return;
     hitpoints -= damage;
     if (hitpoints <= 0) {
-        deathSound->Play(1);
-        associated.RemoveComponent(associated.GetComponent("Collider"));
+        deathSound.Play(1);
+        //associated.RemoveComponent(associated.GetComponent("Collider"));
         deathTimer.Restart();
     } else {
-        hitSound->Play(1);
+        hitSound.Play(1);
     }
 }
 
@@ -131,7 +131,6 @@ std::vector<Vec2> Zombie::computePath(const Vec2& target) {
             if (checkCollision(nxt.x, nxt.y)) continue;
             visited.insert(k);
             parent[k] = cur;
-            IsoCollider* col = (IsoCollider*) associated.GetComponent("IsoCollider");
             if (nxt.Distance(target) < 2*searchStep) {
                 found = true;
                 goalQuant = nxt;
@@ -175,8 +174,7 @@ void Zombie::NotifyCollision(GameObject& other) {
             static_cast<Bullet*>(other.GetComponent("Bullet"))) {
         Damage(bullet->GetDamage());
     }
-    if (auto* hitAttack =
-            static_cast<HitAttack*>(other.GetComponent("HitAttack"))) {
+    if (auto* hitAttack = static_cast<HitAttack*>(other.GetComponent("HitAttack"))) {
         Damage(hitAttack->GetDamage());
     }
 }
