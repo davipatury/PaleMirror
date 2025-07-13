@@ -182,36 +182,7 @@ void Zombie::NotifyCollision(GameObject& other) {
 }
 
 void Zombie::Render() {
-    SDL_Point points[5];
-
-    Vec2 point = isoB.TopLeft().ToCart() - Camera::pos;
-    points[0] = {(int) point.x, (int) point.y};
-    points[4] = {(int) point.x, (int) point.y};
-
-    point = isoB.TopRight().ToCart() - Camera::pos;
-    points[1] = {(int) point.x, (int) point.y};
-
-    point = isoB.BottomRight().ToCart() - Camera::pos;
-    points[2] = {(int) point.x, (int) point.y};
-
-    // Left
-    point = isoB.BottomLeft().ToCart() - Camera::pos;
-    points[3] = {(int) point.x, (int) point.y};
-
-    SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLines(GAME_RENDERER, points, 5);
-    SDL_SetRenderDrawColor(GAME_RENDERER, 0, 255, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawPoints(GAME_RENDERER, points, 5);
-
-    // Center
-    point = isoB.Center() - Camera::pos;
-    SDL_RenderDrawPoint(GAME_RENDERER, point.x, point.y);
-
-    Vec2 pointleft = isoB.BottomLeft().ToCart() - Camera::pos;
-    Vec2 pointright = isoB.TopRight().ToCart() - Camera::pos;
-
-    SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(GAME_RENDERER, pointleft.x, pointleft.y, pointright.x, pointright.y);
+    
 }
 
 bool Zombie::Is(std::string type) {
