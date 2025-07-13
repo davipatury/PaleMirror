@@ -9,7 +9,7 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
     angle = 0;
 
     backlight.SetCameraFollower(true);
-    SDL_BlendMode bm = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDFACTOR_SRC_COLOR, SDL_BLENDOPERATION_MAXIMUM, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_MINIMUM);
+    SDL_BlendMode bm = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD);
     int bmRet = SDL_SetTextureBlendMode(backlight.texture, bm);
     if (bmRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode: " << SDL_GetError() << std::endl;
 
@@ -61,6 +61,9 @@ void FlashlightHUD::Render() {
     SDL_Rect screenRect = {0, 0, 1200, 900};
     SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(GAME_RENDERER, &screenRect);
+
+    // Backlight
+    backlight.Render(origin.x - BLoffsetX, origin.y - BLoffsetY, backlight.GetWidth(), backlight.GetHeight());
 
     // Flashlight cone
     if (flashlightOn) {
@@ -117,9 +120,6 @@ void FlashlightHUD::Render() {
             }
         }
     }
-
-    // Backlight
-    backlight.Render(origin.x - BLoffsetX, origin.y - BLoffsetY, backlight.GetWidth(), backlight.GetHeight());
 
     // Render custom lighting layer
     SDL_SetRenderTarget(GAME_RENDERER, nullptr);
