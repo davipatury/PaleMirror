@@ -24,6 +24,10 @@ MainRoom::MainRoom(State* state) : Room(state) {
 void MainRoom::Build() {
     Room::Build();
 
+    GameObject* zombie = createGO("[Monster]", 1000, 1300);
+    zombie->AddComponent(new Zombie(*zombie));
+    state->AddObject(zombie);
+
     // Arvores
     GameObject* tree1 = createGO("[OBJ] Tree1", 571, 1299);
     tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/objetos/tree.png"));

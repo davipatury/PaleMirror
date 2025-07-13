@@ -15,6 +15,7 @@
 #include "components/SpriteRenderer.h"
 #include "components/Sound.h"
 #include "utils/Timer.h"
+#include <unordered_set>
 
 class Zombie : public Component
 {
@@ -39,6 +40,16 @@ private:
     Timer hitTimer;
     bool hit;
     bool walkingLeft;
+    float chaseRadius = 500.f;
+    std::vector<Vec2> path;
+    int pathIndex = 0;
+    const float speed = 75.f;
+    const float searchStep = 64.f;
+
+    Rect isoB;
+
+    std::vector<Vec2> computePath(const Vec2& target);
+    bool checkCollision(float x, float y);
 };
 
 #endif // ZOMBIE_H

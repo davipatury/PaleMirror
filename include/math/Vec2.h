@@ -17,6 +17,8 @@ public:
 
     Vec2 Add(Vec2 vec);
     Vec2 operator+(Vec2 const& vec);
+    bool operator==(Vec2 const& o);
+    bool operator!=(Vec2 const& o);
     Vec2 Sub(Vec2 vec) const;
     Vec2 operator-(Vec2 const& vec);
     Vec2 MulScalar(float scalar);

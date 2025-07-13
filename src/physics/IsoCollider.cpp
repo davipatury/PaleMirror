@@ -1,6 +1,6 @@
 #include "physics/IsoCollider.h"
 
-//#define DEBUG_ISO_COLLIDER
+#define DEBUG_ISO_COLLIDER
 #include <math.h>
 #include "SDL_image.h"
 #include "components/Camera.h"
@@ -23,6 +23,13 @@ void IsoCollider::UpdateBox() {
     Vec2 tl = bli.Add({0, -associated.box.w});
     prevBox = box;
     box = Rect(tl.x, tl.y, associated.box.w * scale.x, associated.box.w * scale.y);
+}
+
+Rect IsoCollider::MakeIsoBoxForPoint(float x, float y){
+    Rect rec = {x, y, associated.box.w, associated.box.h};
+    Vec2 bli = (rec.BottomLeft() + offset).ToIso();
+    Vec2 tl  = bli.Add({0, -associated.box.w});
+    return Rect(tl.x, tl.y, associated.box.w * scale.x, associated.box.w * scale.y);
 }
 
 void IsoCollider::Render() {

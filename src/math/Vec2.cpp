@@ -19,6 +19,13 @@ Vec2 Vec2::operator+(Vec2 const& vec) {
     return Add(vec);
 }
 
+bool Vec2::operator==(Vec2 const& o){
+    return x == o.x && y == o.y;
+}
+bool Vec2::operator!=(Vec2 const& o){
+    return !(*this == o);
+}
+
 Vec2 Vec2::Sub(Vec2 vec) const {
     return Vec2(x - vec.x, y - vec.y);
 }
