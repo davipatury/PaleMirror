@@ -14,7 +14,7 @@ class Sprite
 {
 public:
     Sprite();
-    Sprite(const char* file, int frameCountW = 1, int frameCountH = 1);
+    Sprite(const char* file, int frameCountW = 1, int frameCountH = 1, bool cameraFollower = false);
     ~Sprite();
 
     void Open(const char* file);

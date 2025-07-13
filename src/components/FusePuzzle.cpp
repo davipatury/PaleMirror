@@ -3,9 +3,8 @@
 #define FUSE_PUZZLE_RECT_X 260
 #define FUSE_PUZZLE_RECT_Y 210
 
-FusePuzzle::FusePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/fuse_puzzle/fuseboxbg.png"){
+FusePuzzle::FusePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/fuse_puzzle/fuseboxbg.png", 1, 1, true){
     for(int i=0; i<9; i++) fuses.push_back(Fuse());
-    bg.SetCameraFollower(true);
 }
 
 void FusePuzzle::FusePressed(int idx){

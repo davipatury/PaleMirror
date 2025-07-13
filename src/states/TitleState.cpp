@@ -2,8 +2,8 @@
 #include "states/StageState.h"
 #include "states/LoadState.h"
 
-TitleState::TitleState(): button("Recursos/img/menu/botao.png"),
-                         activeButton("Recursos/img/menu/botao_ativo.png") {
+TitleState::TitleState(): button("Recursos/img/menu/butao-sombreado.png"),
+                         activeButton("Recursos/img/menu/butao-mais-destacado.png") {
     started = false;
     quitRequested = false;
     popRequested = false;
@@ -26,8 +26,8 @@ void TitleState::LoadAssets() {
     bg->box.z = -2;
     AddObject(bg);
 
-    startButtonText = new TextHUD({225, 680}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Novo", {0, 0, 0, 0});
-    loadButtonText = new TextHUD({720, 680}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Carregar", {0, 0, 0, 0});
+    startButtonText = new TextHUD({225, 700}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Novo", {0, 0, 0, 0});
+    loadButtonText = new TextHUD({704, 700}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Carregar", {0, 0, 0, 0});
 }
 
 void TitleState::Start() {
@@ -68,17 +68,19 @@ void TitleState::Update(float dt) {
 void TitleState::Render() {
     RenderArray();
 
-    int margin = 60;
+    int margin = 100;
+    int activeMarginX = -12;
+    int activeMarginY = -8;
     if (selectedOption == 0) {
         // Novo
-        activeButton.Render(margin, 643, activeButton.GetWidth(), activeButton.GetHeight());
+        activeButton.Render(margin + activeMarginX, 646 + activeMarginY, activeButton.GetWidth(), activeButton.GetHeight());
         // Carregar
-        button.Render(1200 - margin - button.GetWidth(), 643, button.GetWidth(), button.GetHeight());
+        button.Render(1200 - margin - button.GetWidth(), 646, button.GetWidth(), button.GetHeight());
     } else {
         // Novo
-        button.Render(margin, 643, button.GetWidth(), button.GetHeight());
+        button.Render(margin, 646, button.GetWidth(), button.GetHeight());
         // Carregar
-        activeButton.Render(1200 - margin - button.GetWidth(), 643, activeButton.GetWidth(), activeButton.GetHeight());
+        activeButton.Render(1200 - margin - button.GetWidth() + activeMarginX, 646 + activeMarginY, activeButton.GetWidth(), activeButton.GetHeight());
     }
 
     startButtonText->Render();

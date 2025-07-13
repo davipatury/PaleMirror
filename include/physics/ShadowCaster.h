@@ -41,7 +41,6 @@ private:
     std::vector<Line> GenerateEdges(std::vector<Vec2> vertices);
     bool fixedVertices;
     std::vector<Vec2> offsetVectors;
-    SDL_Texture* shadow;
 };
 
 #endif // SHADOWCASTER_H

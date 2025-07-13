@@ -1,13 +1,13 @@
 #include "hud/HealthHUD.h"
 
-HealthHUD::HealthHUD(GameObject& associated) : Component(associated), dmg1("Recursos/img/hud/dmg1.png"), dmg2("Recursos/img/hud/dmg2.png"), dmg3("Recursos/img/hud/dmg3.png"), 
-    toolbar("Recursos/img/hud/toolbar.png"), toolbarselect("Recursos/img/hud/toolbar-selector.png") {
+HealthHUD::HealthHUD(GameObject& associated) : Component(associated),
+    dmg1("Recursos/img/hud/dmg1.png", 1, 1, true),
+    dmg2("Recursos/img/hud/dmg2.png", 1, 1, true),
+    dmg3("Recursos/img/hud/dmg3.png", 1, 1, true),
+    toolbar("Recursos/img/hud/toolbar.png", 1, 1, true),
+    toolbarselect("Recursos/img/hud/toolbar-selector.png", 1, 1, true)
+{
     selToolbar = 0;
-    dmg1.SetCameraFollower(true);
-    dmg2.SetCameraFollower(true);
-    dmg3.SetCameraFollower(true);
-    toolbar.SetCameraFollower(true);
-    toolbarselect.SetCameraFollower(true);
 }
 
 HealthHUD::~HealthHUD() {}

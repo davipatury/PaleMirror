@@ -3,12 +3,11 @@
 
 //#define DEBUG_FLASHLIGHT
 
-FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), backlight("Recursos/img/lighting/backlight.png") {
+FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), backlight("Recursos/img/lighting/backlight.png", 1, 1, true) {
     isDark = true;
     flashlightOn = true;
     angle = 0;
 
-    backlight.SetCameraFollower(true);
     SDL_BlendMode bm = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD);
     int bmRet = SDL_SetTextureBlendMode(backlight.texture, bm);
     if (bmRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode: " << SDL_GetError() << std::endl;

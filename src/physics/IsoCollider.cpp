@@ -1,6 +1,6 @@
 #include "physics/IsoCollider.h"
 
-#define DEBUG_ISO_COLLIDER
+//#define DEBUG_ISO_COLLIDER
 #include <math.h>
 #include "SDL_image.h"
 #include "components/Camera.h"

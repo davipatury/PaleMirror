@@ -3,9 +3,8 @@
 #define PIPE_PUZZLE_RECT_X 50
 #define PIPE_PUZZLE_RECT_Y 50
 
-PipePuzzle::PipePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/pipe_puzzle/pipebg.png"){
+PipePuzzle::PipePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/pipe_puzzle/pipebg.png", 1, 1, true) {
     for(int i=0; i<16; i++) pipes.push_back(Pipe()), rotated.push_back(0);
-    bg.SetCameraFollower(true);
 }
 
 void PipePuzzle::PipePressed(int idx){

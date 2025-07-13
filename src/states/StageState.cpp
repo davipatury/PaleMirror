@@ -43,6 +43,7 @@ void StageState::LoadAssets() {
     scc->AddComponent(new ShadowCaster::Controller(*scc));
     scc->box.z = SHADOW_LAYER;
     scc->lazyRender = false;
+    scc->pauseOnOpenUI = false;
     AddObject(scc);
 
     // HUD

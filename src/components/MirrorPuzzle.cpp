@@ -7,9 +7,8 @@
 #define MIRROR_PUZZLE_RECT_Y 100
 #define DISTANCE_THRESHOLD 20
 
-MirrorPuzzle::MirrorPuzzle(GameObject& associated, std::vector<Piece> pieces) : Component(associated), bg("Recursos/img/mirror_puzzle/Azulejos.png") {
+MirrorPuzzle::MirrorPuzzle(GameObject& associated, std::vector<Piece> pieces) : Component(associated), bg("Recursos/img/mirror_puzzle/Azulejos.png", 1, 1, true) {
     this->pieces = pieces;
-    bg.SetCameraFollower(true);
     selectedPiece = -1;
 }
 

@@ -5,23 +5,20 @@
 
 #define DIALOGUE_WRAP_LEN 910
 #define TEXT_COOLDOWN 0.005
-#define PICTURE_SPEED 500
+#define PICTURE_SPEED 750
 
 std::queue<DialogueHUD::DialogueQuery> DialogueHUD::dialogueQueue;
 
 DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
-    caixaDialogo("Recursos/img/hud/caixa_dialogo.png"),
-    helenaAssustada("Recursos/img/hud/helena-assustada.png"),
-    helenaBrava("Recursos/img/hud/helena-brava.png"),
-    helenaFeliz("Recursos/img/hud/helena-feliz.png"),
-    helenaNeutra("Recursos/img/hud/helena-neutra.png")
+    caixaDialogo("Recursos/img/hud/caixa_dialogo.png", 1, 1, true),
+    helenaAssustada("Recursos/img/hud/helena-assustada.png", 1, 1, true),
+    helenaBrava("Recursos/img/hud/helena-brava.png", 1, 1, true),
+    helenaFeliz("Recursos/img/hud/helena-feliz.png", 1, 1, true),
+    helenaNeutra("Recursos/img/hud/helena-neutra.png", 1, 1, true),
+    madu("Recursos/img/hud/madu.png", 1, 1, true),
+    maju("Recursos/img/hud/maju.png", 1, 1, true),
+    malu("Recursos/img/hud/malu.png", 1, 1, true)
 {
-    caixaDialogo.SetCameraFollower(true);
-    helenaAssustada.SetCameraFollower(true);
-    helenaBrava.SetCameraFollower(true);
-    helenaFeliz.SetCameraFollower(true);
-    helenaNeutra.SetCameraFollower(true);
-
     dialogueText = new TextHUD({238, 555}, "Recursos/font/PixelifySans-SemiBold.ttf", 40, TextHUD::BLENDED, "A", {0, 0, 0, 255}, DIALOGUE_WRAP_LEN);
     charNameText = new TextHUD({255, 480}, "Recursos/font/PixelifySans-SemiBold.ttf", 50, TextHUD::BLENDED, "B", {255, 255, 255, 255});
 
@@ -37,9 +34,12 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
         "Aliquam efficitur nulla ipsum, eget consectetur diam lacinia ac. Sed id nunc nisl. Pellentesque interdum massa nec risus imperdiet, in pulvinar odio rutrum."
         },
-        {"", "Radio", {0, 0, 0, 255},
+        /*{"", "Radio", {0, 0, 0, 255},
         "*estatica* *estatica* *estatica*"
-        }
+        },*/
+        {"Madu", "Madu", {167, 8, 8, 255}, "madu"},
+        {"Maju", "Maju", {118, 191, 27, 255}, "maju"},
+        {"Malu", "Malu", {223, 197, 62, 255}, "malu"},
     };
 
     // Paint puzzle lines
@@ -126,6 +126,9 @@ void DialogueHUD::Update(float dt) {
             else if (dialLine.picture == "HelenaBrava") pictureSprite = &helenaBrava;
             else if (dialLine.picture == "HelenaFeliz") pictureSprite = &helenaFeliz;
             else if (dialLine.picture == "HelenaNeutra") pictureSprite = &helenaNeutra;
+            else if (dialLine.picture == "Madu") pictureSprite = &madu;
+            else if (dialLine.picture == "Maju") pictureSprite = &maju;
+            else if (dialLine.picture == "Malu") pictureSprite = &malu;
             else pictureSprite = nullptr;
 
             if (pictureSprite && ((startLine && currentLine == 0) || dialLine.resetPos)) picturePos.x = -pictureSprite->GetWidth();

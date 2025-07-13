@@ -10,17 +10,17 @@ Sprite::Sprite() {
     flip = SDL_FLIP_NONE;
 }
 
-Sprite::Sprite(const char* file, int frameCountW, int frameCountH) {
+Sprite::Sprite(const char* file, int frameCountW, int frameCountH, bool cameraFollower) {
     texture = nullptr;
     this->frameCountW = frameCountW;
     this->frameCountH = frameCountH;
-    cameraFollower = false;
+    this->cameraFollower = cameraFollower;
     SetScale(1, 1);
     flip = SDL_FLIP_NONE;
     Open(file);
 }
 
-Sprite::~Sprite() { }
+Sprite::~Sprite() {}
 
 void Sprite::Open(const char* file) {
     texture = Resources::GetImage(file);

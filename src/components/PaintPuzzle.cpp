@@ -12,7 +12,10 @@
 #define RECT_AMARELO Rect(449, 506, 108, 79)
 #define RECT_LIMPAR Rect(773, 183, 47, 148)
 
-PaintPuzzle::PaintPuzzle(GameObject& associated, PaintColor corCerta) : Component(associated), bg("Recursos/img/paint_puzzle/cavalete.png"), tinta("Recursos/img/paint_puzzle/paint.png") {
+PaintPuzzle::PaintPuzzle(GameObject& associated, PaintColor corCerta) : Component(associated),
+    bg("Recursos/img/paint_puzzle/cavalete.png", 1, 1, true),
+    tinta("Recursos/img/paint_puzzle/paint.png", 1, 1, true)
+{
     this->corCerta = corCerta;
     corAtual = COR_VAZIA;
     estadoAtual = QUADRO_VAZIO;
