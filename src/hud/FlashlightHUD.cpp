@@ -15,6 +15,15 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
 
     texture = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 1200, 900);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+    SDL_RendererInfo rendererInfo;
+    SDL_GetRendererInfo(GAME_RENDERER, &rendererInfo);
+    std::cout << "[Flashlight] " << rendererInfo.name << " | " << rendererInfo.flags << std::endl;
+    std::cout << "[Flashlight] Texture formats: ";
+    for (int i = 0; i <= rendererInfo.num_texture_formats; i++) {
+        std::cout << rendererInfo.texture_formats[i] << "; ";
+    }
+    std::cout << std::endl;
 }
 
 FlashlightHUD::~FlashlightHUD() {}
