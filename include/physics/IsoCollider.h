@@ -28,6 +28,8 @@ public:
     Rect box;
     bool passable;
     bool blockLight;
+
+    Rect MakeIsoBoxForPoint(float x, float y);
 private:
     Vec2 scale;
     Vec2 offset;

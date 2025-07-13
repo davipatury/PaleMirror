@@ -1,5 +1,6 @@
 #include "entities/characters/Zombie.h"
 #include "entities/projectiles/HitAttack.h"
+#include "core/Game.h"
 
 int Zombie::zombieCounter;
 
@@ -42,14 +43,31 @@ void Zombie::Update(float dt) {
 
     if (hitpoints > 0) {
         if (Character::player) {
-            if (Character::player->Pos().Distance(associated.box.Center()) < 1000) {
-                const int speed = 75;
-                Vec2 dir = Character::player->Pos().Sub(associated.box.Center()).Normalized();
-                associated.box = associated.box.Add(dir.MulScalar(speed * dt));
+            Vec2 playerPos = Character::player->Pos();
+            Vec2 selfPos = associated.box.Center();
+            float dist = playerPos.Distance(selfPos);
 
-                Animator* animator = static_cast<Animator*>(associated.GetComponent("Animator"));
-                bool goingLeft = dir.x < 0;
-                animator->SetAnimation(goingLeft ? "walking" : "walkingFlip");
+            if (dist > chaseRadius) return;
+
+            // calcula ou atualiza caminho
+            std::vector<Vec2> maybePath = computePath(playerPos);
+
+            if (!maybePath.size()) return;
+            if (maybePath.size() != path.size() || (path.size() > 0 && maybePath[0] != path[0])) {
+                swap(path, maybePath);
+                pathIndex = 0;
+            }
+
+            // segue próximo ponto do caminho
+            if (pathIndex < path.size()) {
+                Vec2 target = path[pathIndex];
+                Vec2 dir = target.Sub(selfPos).Normalized();
+                associated.box = associated.box.Add(dir.MulScalar(speed * dt));
+                if (associated.box.Center().Distance(target) < speed * dt * 0.5f) pathIndex++;
+
+                Animator* anim = static_cast<Animator*>(associated.GetComponent("Animator"));
+                bool left = dir.x < 0;
+                anim->SetAnimation(left ? "walking" : "walkingFlip");
             }
         }
     } else if (deathTimer.Get() >= 5) {
@@ -58,6 +76,87 @@ void Zombie::Update(float dt) {
     }
 
     // std::cout << "Zombie position: " << associated.box.x << ", " << associated.box.y << std::endl;
+}
+
+static inline int64_t pointKey(const Vec2& v, float step) {
+    int ix = int(std::floor(v.x / step));
+    int iy = int(std::floor(v.y / step));
+    return (int64_t(ix) << 32) | uint32_t(iy);
+}
+
+bool Zombie::checkCollision(float x, float y) {
+    auto oA = CURRENT_STATE.objectArray;
+    IsoCollider* colliderB = (IsoCollider*) associated.GetComponent("IsoCollider");
+    // x e y é o centro
+    auto isoBox = colliderB->MakeIsoBoxForPoint(x - associated.box.w/2, y - associated.box.h/2);
+    isoB = isoBox;
+    
+    for (int i = 0; i < oA.size(); i++) {
+        GameObject* go = oA[i].get();
+        if (go == &associated) continue;
+        IsoCollider* colliderA = (IsoCollider*) go->GetComponent("IsoCollider");
+        if(colliderA != nullptr and colliderA->box.Collides(isoBox) and (go->GetComponent("Character") == nullptr)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::vector<Vec2> Zombie::computePath(const Vec2& target) {
+    Vec2 start = associated.box.Center();
+
+    std::queue<Vec2> q;
+    std::unordered_map<int64_t, Vec2> parent;
+    std::unordered_set<int64_t> visited;
+    
+    int64_t startKey = pointKey(start, searchStep);
+    q.push(start);
+    visited.insert(startKey);
+    parent[startKey] = start;
+
+    const Vec2 dirs[8] = {Vec2(1,1), Vec2(1,-1), Vec2(-1,1), Vec2(-1,-1),Vec2(1,0), Vec2(-1,0), Vec2(0,1), Vec2(0,-1)};
+
+    bool found = false;
+    Vec2 goalQuant;
+
+    while (!q.empty() && !found) {
+        Vec2 cur = q.front(); q.pop();
+        for (auto d : dirs) {
+            Vec2 nxt = cur.Add(d.Normalized().MulScalar(searchStep));
+            // limite pelo raio de busca
+            if (nxt.Distance(start) > chaseRadius) continue;
+            int64_t k = pointKey(nxt, searchStep);
+            if (visited.count(k)) continue;
+            // teste de colisão em coord real
+            if (checkCollision(nxt.x, nxt.y)) continue;
+            visited.insert(k);
+            parent[k] = cur;
+            IsoCollider* col = (IsoCollider*) associated.GetComponent("IsoCollider");
+            if (nxt.Distance(target) < 2*searchStep) {
+                found = true;
+                goalQuant = nxt;
+                parent[pointKey(goalQuant, searchStep)] = cur;
+                break;
+            }
+            q.push(nxt);
+        }
+    }
+    if (!found) return {};
+
+    // reconstrói caminho de goalQuant → start
+    std::vector<Vec2> rev;
+    int64_t curKey = pointKey(goalQuant, searchStep);
+    int64_t startKey2 = startKey;
+    while (curKey != startKey2) {
+        Vec2 v = parent[curKey];
+        curKey = pointKey(v, searchStep);
+        if(curKey != startKey2) rev.push_back(v);
+    }
+    std::reverse(rev.begin(), rev.end());
+
+    // adiciona target exato ao fim
+    rev.push_back(target);
+    return rev;
 }
 
 void Zombie::NotifyCollision(GameObject& other) {
@@ -82,7 +181,9 @@ void Zombie::NotifyCollision(GameObject& other) {
     }
 }
 
-void Zombie::Render() {}
+void Zombie::Render() {
+    
+}
 
 bool Zombie::Is(std::string type) {
     return type == "Zombie";
