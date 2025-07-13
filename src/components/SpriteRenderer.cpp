@@ -48,6 +48,12 @@ void SpriteRenderer::SetVisible(bool visible) {
     this->visible = visible;
 }
 
+void SpriteRenderer::SetColorMod(Uint8 r, Uint8 g, Uint8 b) {
+    if (this->sprite.texture != nullptr) {
+        SDL_SetTextureColorMod(this->sprite.texture, r, g, b);
+    }
+}
+
 bool SpriteRenderer::Is(std::string type) {
     return type == "SpriteRenderer";
 }

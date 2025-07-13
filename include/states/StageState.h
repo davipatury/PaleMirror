@@ -44,6 +44,8 @@
 #include "rooms/ArtsClassRoom.h"
 #include "rooms/ScienceClassRoom.h"
 #include "rooms/PortugueseClassRoom.h"
+#include "rooms/BanheiroFemininoRoom.h"
+#include "rooms/BanheiroMasculinoRoom.h"
 
 class StageState : public State
 {

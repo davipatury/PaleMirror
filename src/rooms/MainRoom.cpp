@@ -19,6 +19,10 @@ MainRoom::MainRoom(State* state) : Room(state) {
     // Entry CRB 3
     entryPos.push_back(Vec2{2902, 1262});
     entryPos.push_back(Vec2{3157, 1410});
+
+    // Entry bathroom block
+    entryPos.push_back(Vec2{1336, 1549});
+    entryPos.push_back(Vec2{1579, 1403});
 }
 
 void MainRoom::Build() {
@@ -29,7 +33,7 @@ void MainRoom::Build() {
     state->AddObject(zombie);
 
     // Arvores
-    GameObject* tree1 = createGO("[OBJ] Tree1", 571, 1299);
+    GameObject* tree1 = createGO("[OBJ] Tree1", 540, 1299);
     tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/objetos/tree.png"));
     tree1->AddComponent(new IsoCollider(*tree1, {0.6, 0.8}, {-37, -51}));
     state->AddObject(tree1);
@@ -115,4 +119,35 @@ void MainRoom::Build() {
     crblock3->AddComponent(new IsoCollider(*crblock3, {1.1, 0.54}, {-185, -160}, false, true));
     crblock3->AddComponent(new ShadowCaster(*crblock3));
     state->AddObject(crblock3);
+
+    // Bloco de banheiros
+    GameObject* bathblock = createGO("[OBJ] BathRoomBlock", 1055, 908);
+    bathblock->AddComponent(new SpriteRenderer(*bathblock, "Recursos/img/objetos/bathroom_block.png"));
+    bathblock->AddComponent(new IsoCollider(*bathblock, {0.54, 1.1}, {71, -166}, false, true));
+    bathblock->AddComponent(new ShadowCaster(*bathblock));
+    state->AddObject(bathblock);
+
+    // Bloco de banheiros - Porta feminina
+    GameObject* doorBanFem = createGO("[OBJ] PortaBanheiroFem", bathblock->box.x + 293, bathblock->box.y + 561);
+    auto doorBanFemSR = new SpriteRenderer(*doorBanFem, "Recursos/img/objetos/porta_highlight.png");
+    doorBanFemSR->sprite.SetFlip(SDL_FLIP_HORIZONTAL);
+    doorBanFem->AddComponent(doorBanFemSR);
+    doorBanFem->AddComponent(new IsoCollider(*doorBanFem, {0.5, 0.4}, {-12, -18}));
+    std::unique_ptr<Action> changeRoomdoorBanFem(new ChangeRoomAction(state, "banheiroFem"));
+    Interactable* interactdoorBanFem = new Interactable(*doorBanFem, std::move(changeRoomdoorBanFem), doorBanFemSR);
+    interactdoorBanFem->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
+    doorBanFem->AddComponent(interactdoorBanFem);
+    state->AddObject(doorBanFem);
+
+    // Bloco de banheiros - Porta masculino
+    GameObject* doorBanMasc = createGO("[OBJ] PortaBanheiroMasc", bathblock->box.x + 536, bathblock->box.y + 420);
+    auto doorBanMascSR = new SpriteRenderer(*doorBanMasc, "Recursos/img/objetos/porta_highlight.png");
+    doorBanMascSR->sprite.SetFlip(SDL_FLIP_HORIZONTAL);
+    doorBanMasc->AddComponent(doorBanMascSR);
+    doorBanMasc->AddComponent(new IsoCollider(*doorBanMasc, {0.5, 0.4}, {-12, -18}));
+    std::unique_ptr<Action> changeRoomdoorBanMasc(new ChangeRoomAction(state, "banheiroMasc"));
+    Interactable* interactdoorBanMasc = new Interactable(*doorBanMasc, std::move(changeRoomdoorBanMasc), doorBanMascSR);
+    interactdoorBanMasc->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
+    doorBanMasc->AddComponent(interactdoorBanMasc);
+    state->AddObject(doorBanMasc);
 }

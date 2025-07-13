@@ -11,7 +11,7 @@
 #include "utils/DrawCircle.h"
 #include <string>
 
-//#define DEBUG_INTERACT_RANGE
+#define DEBUG_INTERACT_RANGE
 #define INTERACTION_KEY 'e'
 #define INTERACTION_CBUTTON SDL_CONTROLLER_BUTTON_A
 
@@ -48,7 +48,7 @@ void Interactable::Update(float dt) {
 
 void Interactable::Render() {
 #ifdef DEBUG_INTERACT_RANGE
-    if (!canInteract) return;
+    //if (!canInteract) return;
 
     IsoCollider* objCol = (IsoCollider*) associated.GetComponent("IsoCollider");
     Vec2 objectCoord;

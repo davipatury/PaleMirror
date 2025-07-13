@@ -9,12 +9,16 @@ SDL_BlendMode blendMode = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ZERO, SDL_B
 ShadowCaster::ShadowCaster(GameObject& associated, Vec2 offset) : Component(associated) {
     this->offset = offset;
     fixedVertices = false;
+    shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, 1200, 900);
+    SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_BLEND);
 }
 
 ShadowCaster::ShadowCaster(GameObject &associated, std::vector<Vec2> offsetVectors) : Component(associated) {
     this->offset = {0, 0};
     this->offsetVectors = offsetVectors;
     fixedVertices = true;
+    shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, 1200, 900);
+    SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_BLEND);
 }
 
 void ShadowCaster::Update(float dt) {
@@ -143,9 +147,12 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
 
     // Clear shadow texture
     SDL_Rect screenRect = {0, 0, 1200, 900};
-    SDL_Texture* shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, 1200, 900);
-    SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_BLEND);
     SDL_SetRenderTarget(GAME_RENDERER, shadow);
+    //SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(GAME_RENDERER, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+    SDL_RenderFillRect(GAME_RENDERER, &screenRect);
+    SDL_SetRenderDrawBlendMode(GAME_RENDERER, SDL_BLENDMODE_BLEND);
 
     // Draw shadow triangles
 #ifndef DEBUG_SHADOW
@@ -155,7 +162,7 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
 
     // Draw hollow sprite
     SpriteRenderer* sr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
-    if (sr != nullptr) {
+    if (sr != nullptr && sr->sprite.IsOpen()) {
         SDL_SetTextureBlendMode(sr->sprite.texture, blendMode);
         sr->Render();
         SDL_SetTextureBlendMode(sr->sprite.texture, SDL_BLENDMODE_BLEND);
@@ -163,7 +170,6 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
 
     SDL_SetRenderTarget(GAME_RENDERER, nullptr);
     SDL_RenderCopy(GAME_RENDERER, shadow, &screenRect, &screenRect);
-    SDL_DestroyTexture(shadow);
 }
 
 std::vector<Line> ShadowCaster::GenerateEdges(std::vector<Vec2> vertices) {

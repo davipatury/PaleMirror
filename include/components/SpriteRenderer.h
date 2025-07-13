@@ -24,6 +24,7 @@ public:
     void SetVisible(bool visible);
 
     void SetScale(float scaleX, float scaleY);
+    void SetColorMod(Uint8 r, Uint8 g, Uint8 b);
 
     bool Is(std::string type);
 

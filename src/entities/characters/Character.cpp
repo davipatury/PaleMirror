@@ -246,7 +246,7 @@ void Character::Update(float dt) {
     }
     */
 
-    // std::cout << "Player position: " << associated.box.x << ", " << associated.box.y << std::endl;
+    //std::cout << "Player position: " << associated.box.x << ", " << associated.box.y << std::endl;
 }
 
 void Character::NotifyCollision(GameObject& other) {

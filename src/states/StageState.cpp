@@ -8,6 +8,7 @@
 
 #define OBJECT_LAYER 0
 #define SHADOW_LAYER 1
+#define FLASHLIGHT_LAYER 2
 #define HUD_LAYER 5
 #define PUZZLE_LAYER 6
 #define DIALOGUE_LAYER 7
@@ -47,8 +48,14 @@ void StageState::LoadAssets() {
     AddObject(scc);
 
     // HUD
+    GameObject* flHUD = new GameObject("[FlashlightHUD]");
+    flHUD->AddComponent(new FlashlightHUD(*flHUD));
+    flHUD->box.z = FLASHLIGHT_LAYER;
+    flHUD->lazyRender = false;
+    flHUD->pauseOnOpenUI = false;
+    AddObject(flHUD);
+
     GameObject* hud = new GameObject("[HUD]");
-    hud->AddComponent(new FlashlightHUD(*hud));
     hud->AddComponent(new HealthHUD(*hud));
     hud->AddComponent(new InteractableHUD(*hud));
     hud->box.z = HUD_LAYER;
@@ -76,12 +83,18 @@ void StageState::LoadAssets() {
     scienceRoom->Build();
     PortugueseClassRoom* portugueseRoom = new PortugueseClassRoom(this);
     portugueseRoom->Build();
+    BanheiroFemininoRoom* banheiroFemRoom = new BanheiroFemininoRoom(this);
+    banheiroFemRoom->Build();
+    BanheiroMasculinoRoom* banheiroMascRoom = new BanheiroMasculinoRoom(this);
+    banheiroMascRoom->Build();
 
     rooms["main"] = mainRoom;
     rooms["history"] = historyRoom;
     rooms["arts"] = artsRoom;
     rooms["science"] = scienceRoom;
     rooms["portuguese"] = portugueseRoom;
+    rooms["banheiroFem"] = banheiroFemRoom;
+    rooms["banheiroMasc"] = banheiroMascRoom;
 
     currentRoom = mainRoom;
     mainRoom->Enter();

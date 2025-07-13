@@ -37,9 +37,9 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         /*{"", "Radio", {0, 0, 0, 255},
         "*estatica* *estatica* *estatica*"
         },*/
-        {"Madu", "Madu", {167, 8, 8, 255}, "madu"},
+        {"Madu", "Madu", {167, 8, 8, 255}, "madu", true},
         {"Maju", "Maju", {118, 191, 27, 255}, "maju"},
-        {"Malu", "Malu", {223, 197, 62, 255}, "malu"},
+        {"Malu", "Malu", {223, 197, 62, 255}, "malu"}
     };
 
     // Paint puzzle lines

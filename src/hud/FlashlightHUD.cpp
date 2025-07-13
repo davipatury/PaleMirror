@@ -15,6 +15,7 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
     texture = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 1200, 900);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
+#ifdef DEBUG_FLASHLIGHT
     SDL_RendererInfo rendererInfo;
     SDL_GetRendererInfo(GAME_RENDERER, &rendererInfo);
     std::cout << "[Flashlight] " << rendererInfo.name << " | " << rendererInfo.flags << std::endl;
@@ -23,6 +24,7 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
         std::cout << rendererInfo.texture_formats[i] << "; ";
     }
     std::cout << std::endl;
+#endif
 }
 
 FlashlightHUD::~FlashlightHUD() {}
@@ -90,7 +92,7 @@ void FlashlightHUD::Render() {
 #endif
                 IsoCollider* objCol = (IsoCollider*) obj->GetComponent("IsoCollider");
                 SpriteRenderer* objSR = (SpriteRenderer*) obj->GetComponent("SpriteRenderer");
-                if (objSR && objCol && objCol->blockLight) {
+                if (objSR && objSR->sprite.IsOpen() && objCol && objCol->blockLight) {
                     IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
                     float diffX = abs(playerCol->box.TopLeft().x - objCol->box.TopRight().x);
                     float diffY = abs(playerCol->box.TopLeft().y - objCol->box.BottomLeft().y);
