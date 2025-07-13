@@ -98,8 +98,23 @@ std::string Vec2::ToStr() {
     return "{" + std::to_string(x) + ", " + std::to_string(y) + "}";
 }
 
-SDL_Vertex Vec2::ToSDLVertex(SDL_Color color, SDL_FPoint tex_coord) {
-    return SDL_Vertex {SDL_FPoint {x, y}, color, tex_coord };
+SDL_Vertex Vec2::ToSDLVertex(Uint8 r, Uint8 g , Uint8 b, Uint8 a, float tex_x, float tex_y) {
+    SDL_FPoint pos;
+    pos.x = x;
+    pos.y = y;
+    SDL_Color color;
+    color.r = r;
+    color.g = g;
+    color.b = b;
+    color.a = a;
+    SDL_FPoint tex_coord;
+    tex_coord.x = tex_x;
+    tex_coord.y = tex_y;
+    SDL_Vertex vertex;
+    vertex.position = pos;
+    vertex.color = color;
+    vertex.tex_coord = tex_coord;
+    return vertex;
 }
 
 float Vec2::Dot(Vec2 b) const {

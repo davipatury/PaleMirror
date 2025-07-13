@@ -41,7 +41,7 @@ public:
     float Cross(Vec2 b) const;
 
     std::string ToStr();
-    SDL_Vertex ToSDLVertex(SDL_Color color = {0, 0, 0, 255}, SDL_FPoint tex_coord = {0, 0});
+    SDL_Vertex ToSDLVertex(Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, float tex_x = 0, float tex_y = 0);
 
     float x;
     float y;

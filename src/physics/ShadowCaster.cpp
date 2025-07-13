@@ -97,10 +97,11 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     for (int i = 0; i < relativeVertices.size(); i++) {
         //std::cout << "RV: " << relativeVertices[i].ToStr() << std::endl;
         std::vector<Ray::Intersection> intersections = Ray::AllIntersections(Line(origin, relativeVertices[i]), edges);
-        if (i >= relativeVertices.size() - 4) intersections.pop_back();
+        if (i >= relativeVertices.size() - 4 && !intersections.empty()) intersections.pop_back();
         if (intersections.size() > 1) {
             for (int j = intersections.size() - 2; j < intersections.size(); j++) {
-                renderVertices.push_back(intersections[j].pos.ToSDLVertex());
+                SDL_Vertex vertex = intersections[j].pos.ToSDLVertex();
+                renderVertices.push_back(vertex);
                 //std::cout << "Intersection " << j << ": " << intersections[j].pos.ToStr() << std::endl;
             }
         }

@@ -72,50 +72,50 @@ void FlashlightHUD::Render() {
         Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(angle - flashlightAngle), origin.y - flashlightSize * cos(angle - flashlightAngle));
         Vec2 flRight = Vec2(origin.x + flashlightSize * sin(angle + flashlightAngle), origin.y - flashlightSize * cos(angle + flashlightAngle));
         std::vector<SDL_Vertex> lightVertices = {
-            origin.ToSDLVertex({255, 255, 255, 255}, {0.5, 0.5}),
-            flLeft.ToSDLVertex({255, 255, 255, 255}, {1, 0.3}),
-            flRight.ToSDLVertex({255, 255, 255, 255}, {1, 0.7})
+            origin.ToSDLVertex(255, 255, 255, 255, 0.5, 0.5),
+            flLeft.ToSDLVertex(255, 255, 255, 255, 1, 0.3),
+            flRight.ToSDLVertex(255, 255, 255, 255, 1, 0.7)
         };
         SDL_RenderGeometry(GAME_RENDERER, backlight.texture, lightVertices.data(), lightVertices.size(), nullptr, 0);
+    }
 
-        // Render objects above flashlight
-        std::vector<GameObject*> objArray = CURRENT_STATE.RenderSort(0);
-        for (int i = 0; i < objArray.size(); i++) {
-            GameObject* obj = objArray[i];
-            if (obj->box.z == 0) {
-                if (!CURRENT_STATE.dependsOn(&Character::player->associated, obj)) {
-                    // Player is behind this obj
+    // Render objects above flashlight
+    std::vector<GameObject*> objArray = CURRENT_STATE.RenderSort(0);
+    for (int i = 0; i < objArray.size(); i++) {
+        GameObject* obj = objArray[i];
+        if (obj->box.z == 0) {
+            if (!CURRENT_STATE.dependsOn(&Character::player->associated, obj)) {
+                // Player is behind this obj
 #ifdef DEBUG_FLASHLIGHT
-                    std::cout << "[Flashlight] Player is behind " << obj->name << std::endl;
+                std::cout << "[Flashlight] Player is behind " << obj->name << std::endl;
 #endif
-                    IsoCollider* objCol = (IsoCollider*) obj->GetComponent("IsoCollider");
-                    SpriteRenderer* objSR = (SpriteRenderer*) obj->GetComponent("SpriteRenderer");
-                    if (objSR && objCol && objCol->blockLight) {
-                        IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
-                        float diffX = abs(playerCol->box.TopLeft().x - objCol->box.TopRight().x);
-                        float diffY = abs(playerCol->box.TopLeft().y - objCol->box.BottomLeft().y);
-                        float minDiff = std::min(diffX, diffY);
+                IsoCollider* objCol = (IsoCollider*) obj->GetComponent("IsoCollider");
+                SpriteRenderer* objSR = (SpriteRenderer*) obj->GetComponent("SpriteRenderer");
+                if (objSR && objCol && objCol->blockLight) {
+                    IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
+                    float diffX = abs(playerCol->box.TopLeft().x - objCol->box.TopRight().x);
+                    float diffY = abs(playerCol->box.TopLeft().y - objCol->box.BottomLeft().y);
+                    float minDiff = std::min(diffX, diffY);
 
-                        int newAlpha = std::min(minDiff / 100, 1.0f) * 255;
+                    int newAlpha = std::min(minDiff / 100, 1.0f) * 255;
 
-                        // Save old values
-                        Uint8 r, g, b, a;
-                        int getCMRet = SDL_GetTextureColorMod(objSR->sprite.texture, &r, &g, &b);
-                        if (getCMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureColorMod: " << SDL_GetError() << std::endl;
-                        int getAMRet = SDL_GetTextureAlphaMod(objSR->sprite.texture, &a);
-                        if (getAMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureAlphaMod: " << SDL_GetError() << std::endl;
+                    // Save old values
+                    Uint8 r, g, b, a;
+                    int getCMRet = SDL_GetTextureColorMod(objSR->sprite.texture, &r, &g, &b);
+                    if (getCMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureColorMod: " << SDL_GetError() << std::endl;
+                    int getAMRet = SDL_GetTextureAlphaMod(objSR->sprite.texture, &a);
+                    if (getAMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureAlphaMod: " << SDL_GetError() << std::endl;
 
-                        // Render all black sprite
-                        int setCMRet = SDL_SetTextureColorMod(objSR->sprite.texture, 0, 0, 0);
-                        if (setCMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureColorMod: " << SDL_GetError() << std::endl;
-                        int setAMRet = SDL_SetTextureAlphaMod(objSR->sprite.texture, newAlpha);
-                        if (setAMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureAlphaMod: " << SDL_GetError() << std::endl;
-                        objSR->Render();
+                    // Render all black sprite
+                    int setCMRet = SDL_SetTextureColorMod(objSR->sprite.texture, 0, 0, 0);
+                    if (setCMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureColorMod: " << SDL_GetError() << std::endl;
+                    int setAMRet = SDL_SetTextureAlphaMod(objSR->sprite.texture, newAlpha);
+                    if (setAMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureAlphaMod: " << SDL_GetError() << std::endl;
+                    objSR->Render();
 
-                        // Restore old values
-                        SDL_SetTextureColorMod(objSR->sprite.texture, r, g, b);
-                        SDL_SetTextureAlphaMod(objSR->sprite.texture, a);
-                    }
+                    // Restore old values
+                    SDL_SetTextureColorMod(objSR->sprite.texture, r, g, b);
+                    SDL_SetTextureAlphaMod(objSR->sprite.texture, a);
                 }
             }
         }
