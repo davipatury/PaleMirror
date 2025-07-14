@@ -3,11 +3,13 @@
 
 #include "core/Component.h"
 #include "components/SpriteRenderer.h"
-#include "actions/Action.h"
-#include <memory>
-#include <string>
+#include "actions/Actions.h"
 
-#define DOOR_INTERACTION_DISTANCE 40
+#include <string>
+#include <functional>
+
+#define DOOR_BACK_INTERACT_DIST 30
+#define DOOR_INTERACT_DIST 40
 
 class GameObject;
 class Collider;
@@ -17,11 +19,11 @@ class Interactable : public Component {
         float activationDistance = 100.0f;
         bool canInteract = false;
     private:
-        std::unique_ptr<Action> action;
+        std::function<void (State*)> action;
         SpriteRenderer* highlightSr = nullptr;
 
     public:
-        Interactable(GameObject& associated, std::unique_ptr<Action> a, SpriteRenderer* sr = nullptr): Component(associated), action(std::move(a)), highlightSr(sr) {}
+        Interactable(GameObject& associated, std::function<void (State*)> a, float ad = 100.0f, SpriteRenderer* sr = nullptr): Component(associated), action(a), highlightSr(sr), activationDistance(ad) {}
 
         void Update(float dt) override;
         void Render() override;

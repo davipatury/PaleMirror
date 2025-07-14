@@ -1,7 +1,7 @@
 #include "rooms/MainRoom.h"
 
 MainRoom::MainRoom(State* state) : Room(state) {
-    bgFile = "Recursos/img/objetos/bg.png";
+    bgFile = "Recursos/img/rooms/escola.png";
     bgMusicFile = "Recursos/audio/Mapa.mp3";
     lockCameraOnRoom = false;
     basePos = Vec2{0, 0};
@@ -99,10 +99,7 @@ void MainRoom::Build() {
     auto door11sr = new SpriteRenderer(*door11, "Recursos/img/objetos/porta_highlight.png");
     door11->AddComponent(door11sr);
     door11->AddComponent(new IsoCollider(*door11, {0.5, 0.4}, {-20, -22}));
-    std::unique_ptr<Action> changeRoomDoor11(new ChangeRoomAction(state, "portuguese"));
-    Interactable* interactDoor11 = new Interactable(*door11, std::move(changeRoomDoor11), door11sr);
-    interactDoor11->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
-    door11->AddComponent(interactDoor11);
+    door11->AddComponent(new Interactable(*door11, Actions::ChangeRoom("portuguese"), DOOR_INTERACT_DIST, door11sr));
     state->AddObject(door11);
 
     // Bloco de salas 1 - Porta 2
@@ -110,10 +107,7 @@ void MainRoom::Build() {
     auto door12sr = new SpriteRenderer(*door12, "Recursos/img/objetos/porta_highlight.png");
     door12->AddComponent(door12sr);
     door12->AddComponent(new IsoCollider(*door12, {0.5, 0.4}, {-20, -20}));
-    std::unique_ptr<Action> changeRoomDoor12(new ChangeRoomAction(state, "science"));
-    Interactable* interactDoor12 = new Interactable(*door12, std::move(changeRoomDoor12), door12sr);
-    interactDoor12->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
-    door12->AddComponent(interactDoor12);
+    door12->AddComponent(new Interactable(*door12, Actions::ChangeRoom("science"), DOOR_INTERACT_DIST, door12sr));
     state->AddObject(door12);
 
     // Bloco de salas 2
@@ -129,10 +123,7 @@ void MainRoom::Build() {
     auto door21sr = new SpriteRenderer(*door21, "Recursos/img/objetos/porta_highlight.png");
     door21->AddComponent(door21sr);
     door21->AddComponent(new IsoCollider(*door21, {0.5, 0.4}, {-20, -22}));
-    std::unique_ptr<Action> changeRoomDoor21(new ChangeRoomAction(state, "history"));
-    Interactable* interactDoor21 = new Interactable(*door21, std::move(changeRoomDoor21), door21sr);
-    interactDoor21->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
-    door21->AddComponent(interactDoor21);
+    door21->AddComponent(new Interactable(*door21, Actions::ChangeRoom("history"), DOOR_INTERACT_DIST, door21sr));
     state->AddObject(door21);
 
     // Bloco de salas 2 - Porta 2
@@ -140,10 +131,7 @@ void MainRoom::Build() {
     auto door22sr = new SpriteRenderer(*door22, "Recursos/img/objetos/porta_highlight.png");
     door22->AddComponent(door22sr);
     door22->AddComponent(new IsoCollider(*door22, {0.5, 0.4}, {-20, -20}));
-    std::unique_ptr<Action> changeRoomDoor22(new ChangeRoomAction(state, "arts"));
-    Interactable* interactDoor22 = new Interactable(*door22, std::move(changeRoomDoor22), door22sr);
-    interactDoor22->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
-    door22->AddComponent(interactDoor22);
+    door22->AddComponent(new Interactable(*door22, Actions::ChangeRoom("arts"), DOOR_INTERACT_DIST, door22sr));
     state->AddObject(door22);
 
     // Bloco de salas 3
@@ -166,10 +154,7 @@ void MainRoom::Build() {
     doorBanFemSR->sprite.SetFlip(SDL_FLIP_HORIZONTAL);
     doorBanFem->AddComponent(doorBanFemSR);
     doorBanFem->AddComponent(new IsoCollider(*doorBanFem, {0.5, 0.4}, {-12, -18}));
-    std::unique_ptr<Action> changeRoomdoorBanFem(new ChangeRoomAction(state, "banheiroFem"));
-    Interactable* interactdoorBanFem = new Interactable(*doorBanFem, std::move(changeRoomdoorBanFem), doorBanFemSR);
-    interactdoorBanFem->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
-    doorBanFem->AddComponent(interactdoorBanFem);
+    doorBanFem->AddComponent(new Interactable(*doorBanFem, Actions::ChangeRoom("banheiroFem"), DOOR_INTERACT_DIST, doorBanFemSR));
     state->AddObject(doorBanFem);
 
     // Bloco de banheiros - Porta masculino
@@ -178,9 +163,6 @@ void MainRoom::Build() {
     doorBanMascSR->sprite.SetFlip(SDL_FLIP_HORIZONTAL);
     doorBanMasc->AddComponent(doorBanMascSR);
     doorBanMasc->AddComponent(new IsoCollider(*doorBanMasc, {0.5, 0.4}, {-12, -18}));
-    std::unique_ptr<Action> changeRoomdoorBanMasc(new ChangeRoomAction(state, "banheiroMasc"));
-    Interactable* interactdoorBanMasc = new Interactable(*doorBanMasc, std::move(changeRoomdoorBanMasc), doorBanMascSR);
-    interactdoorBanMasc->SetActivationDistance(DOOR_INTERACTION_DISTANCE);
-    doorBanMasc->AddComponent(interactdoorBanMasc);
+    doorBanMasc->AddComponent(new Interactable(*doorBanMasc, Actions::ChangeRoom("banheiroMasc"), DOOR_INTERACT_DIST, doorBanMascSR));
     state->AddObject(doorBanMasc);
 }

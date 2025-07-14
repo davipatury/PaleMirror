@@ -52,7 +52,7 @@ void BanheiroMasculinoRoom::Build() {
 
     // Boxes
     GameObject* boxes = createGO("[OBJ-BANHEIRO-MASC] Boxes", 757, 418);
-    boxes->AddComponent(new SpriteRenderer(*boxes, "Recursos/img/objetos/boxesfeminino.png"));
+    boxes->AddComponent(new SpriteRenderer(*boxes, "Recursos/img/objetos/boxes.png"));
     boxes->AddComponent(new IsoCollider(*boxes, {0.5, 1.2}, {61, -90}));
     state->AddObject(boxes);
 
@@ -62,10 +62,7 @@ void BanheiroMasculinoRoom::Build() {
     state->AddObject(espelho);
 
     // Porta
-    GameObject* roomDoorBack = createGO("[OBJ--BANHEIRO-FEM] Porta", 278, 815);
-    std::unique_ptr<Action> backRoomAction(new ChangeRoomAction(state, "main", 7));
-    Interactable* interactDoorBack = new Interactable(*roomDoorBack, std::move(backRoomAction));
-    interactDoorBack->SetActivationDistance(30);
-    roomDoorBack->AddComponent(interactDoorBack);
+    GameObject* roomDoorBack = createGO("[OBJ--BANHEIRO-MASC] Porta", 278, 815);
+    roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 7), DOOR_BACK_INTERACT_DIST));
     state->AddObject(roomDoorBack);
 }

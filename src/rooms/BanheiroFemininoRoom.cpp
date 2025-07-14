@@ -76,9 +76,6 @@ void BanheiroFemininoRoom::Build() {
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ--BANHEIRO-FEM] Porta", 278, 815);
-    std::unique_ptr<Action> backRoomAction(new ChangeRoomAction(state, "main", 6));
-    Interactable* interactDoorBack = new Interactable(*roomDoorBack, std::move(backRoomAction));
-    interactDoorBack->SetActivationDistance(30);
-    roomDoorBack->AddComponent(interactDoorBack);
+    roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 6), DOOR_BACK_INTERACT_DIST));
     state->AddObject(roomDoorBack);
 }

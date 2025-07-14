@@ -75,9 +75,6 @@ void ScienceClassRoom::Build() {
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
-    std::unique_ptr<Action> backRoomAction(new ChangeRoomAction(state, "main", 1));
-    Interactable* interactDoorBack = new Interactable(*roomDoorBack, std::move(backRoomAction));
-    interactDoorBack->SetActivationDistance(30);
-    roomDoorBack->AddComponent(interactDoorBack);
+    roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 1), DOOR_BACK_INTERACT_DIST));
     state->AddObject(roomDoorBack);
 }

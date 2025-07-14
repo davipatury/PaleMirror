@@ -1,6 +1,4 @@
 #include "states/StageState.h"
-#include "actions/TeleportAction.h"
-#include "actions/DocumentAction.h"
 #include "components/Interactable.h"
 #include <memory>
 #include "entities/projectiles/HitAttack.h"

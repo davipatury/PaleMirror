@@ -40,8 +40,7 @@ void Interactable::Update(float dt) {
     if (canInteract) {
         InteractableHUD::RecordInteractable();
         if(INPUT_MANAGER.KeyPress(INTERACTION_KEY) || INPUT_MANAGER.CButtonPress(INTERACTION_CBUTTON)){
-            //std::unique_ptr<Action> actionCopy = action->Clone();
-            action->Execute();
+            action(&CURRENT_STATE);
         }
     }
 }

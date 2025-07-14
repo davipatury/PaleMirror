@@ -40,7 +40,7 @@ file(GLOB_RECURSE SOURCES
 
 add_executable(PaleMirror ${SOURCES})
 
-file(COPY ${CMAKE_SOURCE_DIR}/Recursos DESTINATION ${CMAKE_INSTALL_BINDIR}/Recursos)
+file(COPY ${CMAKE_SOURCE_DIR}/Recursos DESTINATION ${CMAKE_BINARY_DIR})
 
 include(GNUInstallDirs)
 install(TARGETS PaleMirror
