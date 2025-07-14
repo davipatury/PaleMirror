@@ -9,7 +9,6 @@ class TeleportAction : public Action {
 public:
     TeleportAction(const Vec2& dst, GameObject* target = nullptr, bool followTarget = false);
     void Execute() override;
-    std::unique_ptr<Action> Clone() const override;
 
 private:
     Vec2 destination;

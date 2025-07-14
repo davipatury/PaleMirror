@@ -15,7 +15,6 @@ private:
 public:
     DocumentAction(const std::string& path);
     void Execute() override;
-    std::unique_ptr<Action> Clone() const override;
 };
 
 #endif

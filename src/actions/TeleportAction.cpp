@@ -18,7 +18,3 @@ void TeleportAction::Execute() {
 
     Camera::Follow(objectToFollow);
 }
-
-std::unique_ptr<Action> TeleportAction::Clone() const {
-    return std::unique_ptr<Action>(new TeleportAction(destination, target, followTarget));
-}

@@ -11,7 +11,6 @@ class ChangeRoomAction : public Action {
 public:
     ChangeRoomAction(State* state, std::string targetRoom, int entryPosIndex = 0);
     void Execute() override;
-    std::unique_ptr<Action> Clone() const override;
 private:
     std::string targetRoom;
     State* state;

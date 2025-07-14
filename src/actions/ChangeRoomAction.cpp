@@ -13,7 +13,3 @@ void ChangeRoomAction::Execute() {
     Vec2 dest = {destination.x, destination.y};
     Character::player->Issue(Character::Command(Character::Command::TELEPORT, dest.x, dest.y));
 }
-
-std::unique_ptr<Action> ChangeRoomAction::Clone() const {
-    return std::unique_ptr<Action>(new ChangeRoomAction(state, targetRoom));
-}

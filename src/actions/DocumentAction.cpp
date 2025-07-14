@@ -26,7 +26,3 @@ void DocumentAction::Execute() {
         }
     }
 }
-
-std::unique_ptr<Action> DocumentAction::Clone() const {
-    return std::unique_ptr<Action>(new DocumentAction(documentPath));
-}
