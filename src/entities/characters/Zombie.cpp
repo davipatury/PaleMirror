@@ -5,7 +5,7 @@
 
 int Zombie::zombieCounter;
 
-Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/Hit0.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
+Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/sounds/monster/hit1.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
     hitpoints = 100;
 
     SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/monster.png", 4, 1);
@@ -39,7 +39,7 @@ void Zombie::Damage(int damage) {
         associated.RemoveComponent(associated.GetComponent("IsoCollider"));
         deathTimer.Restart();
     } else {
-        hitSound.Play(1);
+        hitSound.Play(0);
         hit = true;
         hitTimer.Restart();
 
