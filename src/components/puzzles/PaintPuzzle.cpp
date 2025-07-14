@@ -1,4 +1,4 @@
-#include "components/PaintPuzzle.h"
+#include "components/puzzles/PaintPuzzle.h"
 #include "core/Game.h"
 
 #define PAINT_BG_OFFSET_X 233

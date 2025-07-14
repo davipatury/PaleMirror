@@ -1,4 +1,4 @@
-#include "components/MirrorPuzzle.h"
+#include "components/puzzles/MirrorPuzzle.h"
 #include "core/Game.h"
 
 //#define DEBUG_MIRROR_PUZZLE

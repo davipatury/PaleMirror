@@ -1,4 +1,4 @@
-#include "components/FusePuzzle.h"
+#include "components/puzzles/FusePuzzle.h"
 
 #define FUSE_PUZZLE_RECT_X 260
 #define FUSE_PUZZLE_RECT_Y 210

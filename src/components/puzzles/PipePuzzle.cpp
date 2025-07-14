@@ -1,4 +1,4 @@
-#include "components/PipePuzzle.h"
+#include "components/puzzles/PipePuzzle.h"
 
 #define PIPE_PUZZLE_RECT_X 0
 #define PIPE_PUZZLE_RECT_Y 0
