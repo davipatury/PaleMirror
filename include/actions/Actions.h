@@ -16,6 +16,7 @@ class Actions {
 public:
     static std::function<void (State*)> ChangeRoom(std::string targetRoom, int entryPosIndex = 0);
     static std::function<void (State*)> Document(const std::string& path);
+    static std::function<void (State*)> CollectItem();
 };
 
 #endif
