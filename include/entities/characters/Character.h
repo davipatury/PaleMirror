@@ -59,18 +59,22 @@ private:
     float linearSpeed;
     int hp;
     Timer deathTimer;
-    Timer damageTimer;
+    Timer hitTimer;
     Timer attackTimer;
+    Timer walkSoundTimer;
     //Timer recoveryTimer;
     bool flip;
     bool tookDamage;
     bool isAttacking;
     Sound* deathSound;
     Sound* hitSound;
+    Sound* attackSound;
+    Sound* walkSound;
 
     std::vector<std::string> idleSprites;
     std::vector<std::string> walkSprites;
     std::vector<std::string> attackSprites;
+    std::vector<std::string> hitSprites;
     std::string currentSprite;
     int currentDirection;
 

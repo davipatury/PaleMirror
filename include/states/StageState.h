@@ -64,6 +64,10 @@ public:
 
     float pauseX;
     float pauseY;
+
+    bool zombieFarAway = false;
+    Timer zombieFarAwayTimer;
+    Sound* zombieFarAwaySound;
 private:
     Music backgroundMusic;
 

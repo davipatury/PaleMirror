@@ -4,6 +4,7 @@
 #include "components/Interactable.h"
 #include <memory>
 #include "entities/projectiles/HitAttack.h"
+#include "core/GameData.h"
 #include "math.h"
 
 #define OBJECT_LAYER 0
@@ -17,6 +18,8 @@ StageState::StageState() {
     started = false;
     quitRequested = false;
     popRequested = false;
+    zombieFarAwayTimer = Timer();
+    zombieFarAwaySound = new Sound("Recursos/audio/sounds/monster/monstro2000-2.wav");
 }
 
 StageState::~StageState() {
@@ -179,7 +182,14 @@ void StageState::Update(float dt) {
         AddObject(pip);
     }
 
+    if(GameData::zombieFarAway and zombieFarAwayTimer.Get() > 15) {
+        GameData::zombieFarAway = false;
+        zombieFarAwayTimer.Restart();
+        zombieFarAwaySound->Play(0);
+    }
+
     // Update game objects
+    zombieFarAwayTimer.Update(dt);
     UpdateArray(dt);
 
     // Collision

@@ -7,7 +7,7 @@ HitAttack::HitAttack(GameObject& associated, int damage, float duration) : Compo
 }
 
 void HitAttack::Start() {
-    Collider* collider = new Collider(associated);
+    IsoCollider* collider = new IsoCollider(associated, {1.2, 1.2}, {-10, -45});
     associated.AddComponent(collider);
 }
 
@@ -21,13 +21,6 @@ void HitAttack::Update(float dt) {
 void HitAttack::NotifyCollision(GameObject& other) {
     if (other.GetComponent("Zombie") != nullptr) {
         associated.RequestDelete();
-    }
-
-    if (other.GetComponent("Character") != nullptr) {
-        Character* character = (Character*)other.GetComponent("Character");
-        if (character != Character::player) {
-            associated.RequestDelete();
-        }
     }
 }
 

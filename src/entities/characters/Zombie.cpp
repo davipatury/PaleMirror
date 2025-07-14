@@ -1,10 +1,11 @@
 #include "entities/characters/Zombie.h"
 #include "entities/projectiles/HitAttack.h"
 #include "core/Game.h"
+#include "core/GameData.h"
 
 int Zombie::zombieCounter;
 
-Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/Hit0.wav"){
+Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/Hit0.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
     hitpoints = 100;
 
     SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/monster.png", 4, 1);
@@ -17,6 +18,10 @@ Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recu
     animator->SetAnimation("walking");
     
     zombieCounter++;
+    hit = false;
+    hitTimer.Restart();
+    deathTimer.Restart();
+    monsterSoundTimer.Restart();
 }
 
 void Zombie::Start() {
@@ -31,15 +36,50 @@ void Zombie::Damage(int damage) {
     hitpoints -= damage;
     if (hitpoints <= 0) {
         deathSound.Play(1);
-        //associated.RemoveComponent(associated.GetComponent("Collider"));
+        associated.RemoveComponent(associated.GetComponent("IsoCollider"));
         deathTimer.Restart();
     } else {
         hitSound.Play(1);
+        hit = true;
+        hitTimer.Restart();
+
+        // Animação de Hit
+
     }
 }
 
 void Zombie::Update(float dt) {
     deathTimer.Update(dt);
+    hitTimer.Update(dt);
+    monsterSoundTimer.Update(dt);
+
+    if(monsterSoundTimer.Get() > ((rand()%6)+4) && hitpoints > 0) {
+        if (Character::player and Character::player->Pos().Distance(associated.box.Center()) <= chaseRadius) {
+            monsterSound.Play(0);
+            monsterSoundTimer.Restart();
+        }
+    }
+
+    if(Character::player){
+        float dist = Character::player->Pos().Distance(associated.box.Center());
+        if(dist >= chaseRadius and dist <= 3*chaseRadius) {
+            GameData::zombieFarAway = true;
+        }
+    }
+
+    if(hit and hitpoints and hitTimer.Get() > 1.5f){
+        auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
+        if (animator) {
+            /*
+            if (moveLeft) {
+                animator->SetAnimation("hitLeft");
+            } else {
+                animator->SetAnimation("hit");
+            }
+            */
+        }
+        hit = false;
+    }
 
     if (hitpoints > 0) {
         if (Character::player) {
@@ -57,7 +97,7 @@ void Zombie::Update(float dt) {
                 swap(path, maybePath);
                 pathIndex = 0;
             }
-
+            if(hit) return;
             // segue próximo ponto do caminho
             if (pathIndex < path.size()) {
                 Vec2 target = path[pathIndex];
@@ -70,10 +110,12 @@ void Zombie::Update(float dt) {
                 anim->SetAnimation(left ? "walking" : "walkingFlip");
             }
         }
-    } else if (deathTimer.Get() >= 5) {
+    } else if (deathTimer.Get() >= 2) {
         zombieCounter--;
         associated.RequestDelete();
     }
+
+    
 
     // std::cout << "Zombie position: " << associated.box.x << ", " << associated.box.y << std::endl;
 }
@@ -161,6 +203,13 @@ std::vector<Vec2> Zombie::computePath(const Vec2& target) {
 void Zombie::NotifyCollision(GameObject& other) {
     IsoCollider* colB = (IsoCollider*) other.GetComponent("IsoCollider");
     if (colB != nullptr && !colB->passable) {
+        if (other.GetComponent("HitAttack") != nullptr) {
+            if (auto* hitAttack = static_cast<HitAttack*>(other.GetComponent("HitAttack"))) {
+                Damage(hitAttack->GetDamage());
+                return;
+            }
+        }
+
         IsoCollider* colA = (IsoCollider*) associated.GetComponent("IsoCollider");
         Rect before = colA->box;
         Rect after = Collision::Solve(colA->box, colB->box, colA->prevBox);

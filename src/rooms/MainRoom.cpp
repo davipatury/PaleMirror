@@ -32,6 +32,39 @@ void MainRoom::Build() {
     zombie->AddComponent(new Zombie(*zombie));
     state->AddObject(zombie);
 
+    GameObject* zombie2 = createGO("[Monster]", 1100, 1300);
+    zombie2->AddComponent(new Zombie(*zombie2));
+    state->AddObject(zombie2);
+
+    GameObject* zombie3 = createGO("[Monster]", 1200, 1300);
+    zombie3->AddComponent(new Zombie(*zombie3));
+    state->AddObject(zombie3);
+
+    GameObject* zombie4 = createGO("[Monster]", 1300, 1400);
+    zombie4->AddComponent(new Zombie(*zombie4));
+    state->AddObject(zombie4);
+
+    GameObject* zombie5 = createGO("[Monster]", 1400, 1500);
+    zombie5->AddComponent(new Zombie(*zombie5));
+    state->AddObject(zombie5);
+
+    GameObject* zombie6 = createGO("[Monster]", 1150, 1300);
+    zombie6->AddComponent(new Zombie(*zombie6));
+    state->AddObject(zombie6);
+
+    GameObject* zombie7 = createGO("[Monster]", 1050, 1300);
+    zombie6->AddComponent(new Zombie(*zombie7));
+    state->AddObject(zombie7);
+
+    GameObject* zombie8 = createGO("[Monster]", 1250, 1300);
+    zombie6->AddComponent(new Zombie(*zombie8));
+    state->AddObject(zombie8);
+
+    GameObject* zombie12 = createGO("[Monster]", 1350, 1300);
+    zombie6->AddComponent(new Zombie(*zombie12));
+    state->AddObject(zombie12);
+
+
     // Arvores
     GameObject* tree1 = createGO("[OBJ] Tree1", 540, 1299);
     tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/objetos/tree.png"));

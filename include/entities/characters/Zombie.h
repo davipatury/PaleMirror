@@ -35,8 +35,11 @@ private:
     int hitpoints;
     Sound deathSound;
     Sound hitSound;
+    Sound monsterSound;
+
     Timer deathTimer;
     Timer hitTimer;
+    Timer monsterSoundTimer;
     bool hit;
     bool walkingLeft;
     float chaseRadius = 500.f;

@@ -16,15 +16,17 @@
 Character* Character::player = nullptr;
 
 Character::Character(GameObject& associated, const char* sprite) : Component(associated) {
-    linearSpeed = 150;
+    linearSpeed = 160;
     hp = 100;
     flip = false;
     lastMoveDirection = Vec2(1, 0);
     deathSound = new Sound("Recursos/audio/Dead.wav");
-    hitSound = new Sound("Recursos/audio/Hit1.wav");
+    hitSound = new Sound("Recursos/audio/sounds/Helena/hit1.wav");
+    attackSound = new Sound("Recursos/audio/sounds/Helena/attack1.wav");
+    walkSound = new Sound("Recursos/audio/sounds/Helena/passos.wav");
 
     const std::string basePath = "Recursos/img/Helena/";
-    const std::string types[] = {"Idle", "Walk", "Attack"};
+    const std::string types[] = {"Idle", "Walk", "Attack", "Hit"};
 
     for (int i = 0; i < 8; i++) {
         // 1, 2, 6, 7, 8 -> 1
@@ -45,6 +47,12 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
         //idleSprites.push_back(basePath + types[0] + "/Knight_" + types[0] + "_dir" + std::to_string(i+1) + ".png");
         walkSprites.push_back(basePath + types[1] + "/" + types[1] + std::to_string(i+1) + ".png");
         //attackSprites.push_back(basePath + types[2] + "/Knight_" + types[2] + "_dir" + std::to_string(i+1) + ".png");
+
+        if(i == 2 || i == 3 || i == 4) {
+            hitSprites.push_back(basePath + types[3] + "/" + types[3] + "345" + ".png");
+        } else {
+            hitSprites.push_back(basePath + types[3] + "/" + types[3] + "12678" + ".png");
+        }
     }
 
     SpriteRenderer* spriteRdr = new SpriteRenderer(associated, idleSprites[7].c_str(), 1, 1);
@@ -59,9 +67,9 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
     
     for (int i = 0; i < 8; i++) {
         if(i+1 == 7 or i+1 == 6 or i+1 == 3){
-            animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.250, SDL_FLIP_HORIZONTAL));
+            animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.150, SDL_FLIP_HORIZONTAL));
         }else{
-            animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.250));
+            animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.150));
         }
 
         // 1, 2, 8 = Parado
@@ -79,9 +87,15 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
         }
 
         if(i+1 == 7 || i+1 == 6 || i+1 == 3 || i+1 == 4){
-            animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 5, 0.150, SDL_FLIP_HORIZONTAL));
+            animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 5, 0.120, SDL_FLIP_HORIZONTAL));
         }else{
-            animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 5, 0.150));
+            animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 5, 0.120));
+        }
+
+        if(i+1 == 5 || i+1 == 6 || i+1 == 7) {
+            animator->AddAnimation("hit" + std::to_string(i+1), Animation(0, 2, 0.150, SDL_FLIP_HORIZONTAL));
+        } else {
+            animator->AddAnimation("hit" + std::to_string(i+1), Animation(0, 2, 0.150));
         }
 
         //animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 3, 0.250));
@@ -93,8 +107,9 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
 
     isAttacking = false;
     deathTimer = Timer();
-    damageTimer = Timer();
+    hitTimer = Timer();
     attackTimer = Timer();
+    walkSoundTimer = Timer();
     //recoveryTimer = Timer();
 }
 
@@ -105,6 +120,7 @@ Character::~Character() {
     }
     delete deathSound;
     delete hitSound;
+    delete attackSound;
 }
 
 void Character::Start() {
@@ -120,7 +136,11 @@ void Character::Update(float dt) {
         Command task = taskQueue.front();
         switch (task.type) {
         case Command::MOVE: {
-            if (!isAttacking) {
+            if (!isAttacking and !tookDamage) {
+                if(walkSoundTimer.Get() > 0.5f) {
+                    walkSoundTimer.Restart();
+                    walkSound->Play(0);
+                }
                 Vec2 moveSpeed = task.pos.Normalized().MulScalar(linearSpeed * dt);
                 if (moveSpeed.x != 0 && moveSpeed.y != 0) {
                     // Straighten diagonal movement (xSpeed = 2 * ySpeed)
@@ -140,12 +160,15 @@ void Character::Update(float dt) {
             break;
         }
         case Command::ATTACK: {
-            if (!isAttacking) {
+            if (!isAttacking and !tookDamage) {
                 isAttacking = true;
                 attackTimer.Restart();
+                attackSound->Play(0);
                 float angle = atan2(lastMoveDirection.y, lastMoveDirection.x);
-                int centerX = (int)(associated.box.x + associated.box.w/2);
-                int centerY = (int)(associated.box.y + associated.box.h/2);
+                IsoCollider* Col = (IsoCollider*) associated.GetComponent("IsoCollider");
+                Vec2 coordsCenter = Col->box.Center().ToCart();
+                int centerX = coordsCenter.x;
+                int centerY = coordsCenter.y;
                 attackBox = CalculateAttackBox(centerX, centerY, angle);
                 
                 GameObject* attackGO = new GameObject();
@@ -154,7 +177,7 @@ void Character::Update(float dt) {
                 attackGO->box.w = attackBox.w;
                 attackGO->box.h = attackBox.h;
                 
-                HitAttack* hitAttack = new HitAttack(*attackGO, 35, 1);
+                HitAttack* hitAttack = new HitAttack(*attackGO, 35, 0.8f);
                 attackGO->AddComponent(hitAttack);
                 
                 CURRENT_STATE.AddObject(attackGO);
@@ -169,16 +192,21 @@ void Character::Update(float dt) {
         }
         taskQueue.pop();
     }
-
     deathTimer.Update(dt);
-    damageTimer.Update(dt);
+    hitTimer.Update(dt);
     attackTimer.Update(dt);
-
+    walkSoundTimer.Update(dt);
     //recoveryTimer.Update(dt);
 
     Animator* animator = (Animator*) associated.GetComponent("Animator");
     SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
     spriteRdr->SetScale(0.085, 0.085);
+
+    if (tookDamage && hitTimer.Get() > 0.2f) {
+        tookDamage = false;
+    }else if(tookDamage){
+        return;
+    }
     
     if (hp > 0) {
         std::string animName;
@@ -188,7 +216,7 @@ void Character::Update(float dt) {
         if (isAttacking) {
             animName = "attack" + std::to_string(currentDirection + 1);
 
-            if (attackTimer.Get() > 1.0) {
+            if (attackTimer.Get() > 0.8) {
                 isAttacking = false;
                 if (spriteRdr) {
                     if (moving) {
@@ -202,6 +230,7 @@ void Character::Update(float dt) {
                     }
                 }
             }else{
+                
                 if (spriteRdr && currentSprite != attackSprites[currentDirection]) {
                     spriteRdr->Open(attackSprites[currentDirection].c_str());
                     spriteRdr->SetFrameCount(6, 1);
@@ -216,7 +245,7 @@ void Character::Update(float dt) {
                     spriteRdr->SetFrameCount(4, 1);
                     currentSprite = walkSprites[currentDirection];
             }
-        } else {
+        }else {
             animName = "idle" + std::to_string(currentDirection + 1);
 
             if (spriteRdr && currentSprite != idleSprites[currentDirection]) {
@@ -233,11 +262,6 @@ void Character::Update(float dt) {
             animator->SetAnimation("dead");
         }
     }
-
-    if (tookDamage && damageTimer.Get() > 1) {
-        tookDamage = false;
-    }
-
     /*
     if(recoveryTimer.Get() > 20){
         hp += 25;
@@ -256,6 +280,9 @@ void Character::NotifyCollision(GameObject& other) {
             Hit(10);
             return;
         }
+        if (other.GetComponent("HitAttack") != nullptr && this == player) {
+            return;
+        }
         IsoCollider* colA = (IsoCollider*) associated.GetComponent("IsoCollider");
         Rect before = colA->box;
         Rect after = Collision::Solve(colA->box, colB->box, colA->prevBox);
@@ -272,16 +299,27 @@ void Character::NotifyCollision(GameObject& other) {
 
 void Character::Hit(int damage) {
     if (hp <= 0) return;
-
-    if(damageTimer.Get() < 1) return;
+    if(hitTimer.Get() < 1.2f) return;
     hp -= damage;
+    
     if (hp <= 0) {
         deathTimer.Restart();
         deathSound->Play();
     } else {
-        damageTimer.Restart();
+        hitTimer.Restart();
         tookDamage = true;
-        hitSound->Play();
+        hitSound->Play(0);
+        Animator* animator = (Animator*) associated.GetComponent("Animator");
+        if (animator) {
+            std::string hitAnim = "hit" + std::to_string(currentDirection + 1);
+            SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+            if (spriteRdr && currentSprite != hitSprites[currentDirection]) {
+                    spriteRdr->Open(hitSprites[currentDirection].c_str());
+                    spriteRdr->SetFrameCount(3, 1);
+                    currentSprite = hitSprites[currentDirection];
+            }
+            animator->SetAnimation(hitAnim);
+        }
     }
 }
 
@@ -295,41 +333,21 @@ int Character::GetHP() {
 
 SDL_Rect Character::CalculateAttackBox(float x, float y, float angle) {
     SDL_Rect box;
-    float distance = 50;
-    int size = 70;
+    float distance = 55;
+    int size = 80;
     
     float centerX = x + distance * cos(angle);
     float centerY = y + distance * sin(angle);
     
-    float perspectiveOffset = 0;
-    float normalizedAngle = angle * 180.0f / M_PI;
-    if (normalizedAngle < 0) normalizedAngle += 360;
-    
-    if (normalizedAngle >= 0 && normalizedAngle <= 180) {
-        perspectiveOffset = -50;
-    }
-    
     box.x = centerX - size/2;
-    box.y = centerY - size/2 + perspectiveOffset;
+    box.y = centerY - size/2;
     box.w = size;
     box.h = size;
     
     return box;
 }
 
-void Character::Render() {
-    if (isAttacking && attackBox.w > 0 && attackBox.h > 0) {
-        SDL_Rect destRect = {
-            static_cast<int>(attackBox.x - Camera::pos.x),
-            static_cast<int>(attackBox.y - Camera::pos.y),
-            attackBox.w,
-            attackBox.h
-        };
-        
-        SDL_SetRenderDrawColor(GAME_RENDERER, 255, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawRect(GAME_RENDERER, &destRect);
-    }
-}
+void Character::Render() {}
 
 void Character::Issue(Command task) {
     taskQueue.push(task);
