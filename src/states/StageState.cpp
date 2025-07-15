@@ -206,9 +206,9 @@ void StageState::Update(float dt) {
     //  Start cutscene
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
         Actions::ChangeRoom("banheiroIntro")(this, nullptr);
-        DialogueHUD::RequestDialogue("prologoPreRitual");
-        DialogueHUD::RequestDialogue("prologoRitual");
-        DialogueHUD::RequestDialogue("prologoPosRitual");
+        //DialogueHUD::RequestDialogue("prologoPreRitual");
+        //DialogueHUD::RequestDialogue("prologoRitual");
+        //DialogueHUD::RequestDialogue("prologoPosRitual");
     }
     
     // Spawn locker puzzle
