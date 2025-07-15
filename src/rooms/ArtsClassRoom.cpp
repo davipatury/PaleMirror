@@ -73,6 +73,23 @@ void ArtsClassRoom::Build() {
     mesa->AddComponent(new IsoCollider(*mesa, {1, 1}, {0, -17}));
     state->AddObject(mesa);
 
+    // Velas
+    GameObject* vela = createGO("[OBJ] Vela", 851, 685);
+    vela->AddComponent(new SpriteRenderer(*vela, "Recursos/img/items/vela.png"));
+    vela->AddComponent(new Interactable(*vela, Actions::CollectItem(ITEM_VELA), 30));
+    state->AddObject(vela);
+
+    GameObject* vela2 = createGO("[OBJ] Vela", 851, 615);
+    vela2->AddComponent(new SpriteRenderer(*vela2, "Recursos/img/items/vela.png"));
+    vela2->AddComponent(new Interactable(*vela2, Actions::CollectItem(ITEM_VELA), 30));
+    state->AddObject(vela2);
+
+    // Balde
+    GameObject* baldeTinta = createGO("[OBJ] Balde de Tinta", 791, 685);
+    baldeTinta->AddComponent(new SpriteRenderer(*baldeTinta, "Recursos/img/items/balde.png"));
+    baldeTinta->AddComponent(new Interactable(*baldeTinta, Actions::CollectItem(ITEM_BALDE_TINTA), 30));
+    state->AddObject(baldeTinta);
+
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 3), DOOR_BACK_INTERACT_DIST));

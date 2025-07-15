@@ -19,11 +19,11 @@ class Interactable : public Component {
         float activationDistance = 100.0f;
         bool canInteract = false;
     private:
-        std::function<void (State*)> action;
+        std::function<void (State*, GameObject*)> action;
         SpriteRenderer* highlightSr = nullptr;
 
     public:
-        Interactable(GameObject& associated, std::function<void (State*)> a, float ad = 100.0f, SpriteRenderer* sr = nullptr): Component(associated), action(a), highlightSr(sr), activationDistance(ad) {}
+        Interactable(GameObject& associated, std::function<void (State*, GameObject*)> a, float ad = 100.0f, SpriteRenderer* sr = nullptr): Component(associated), action(a), highlightSr(sr), activationDistance(ad) {}
 
         void Update(float dt) override;
         void Render() override;

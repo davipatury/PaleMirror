@@ -41,6 +41,7 @@ void InputManager::Update() {
     SDL_GetMouseState(&mouseX, &mouseY);
     quitRequested = false;
     anyKeyPress = false;
+    mouseWheel = 0;
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -78,6 +79,10 @@ void InputManager::Update() {
         case SDL_CONTROLLERBUTTONUP: {
             controllerState[event.cbutton.button] = false;
             controllerUpdate[event.cbutton.button] = updateCounter;
+            break;
+        }
+        case SDL_MOUSEWHEEL: {
+            mouseWheel = event.wheel.y;
             break;
         }
         case SDL_QUIT:
@@ -139,6 +144,10 @@ int InputManager::GetMouseY() {
 
 Vec2 InputManager::GetMousePos() {
     return Vec2(mouseX, mouseY);
+}
+
+int InputManager::GetMouseWheel() {
+    return mouseWheel;
 }
 
 /*

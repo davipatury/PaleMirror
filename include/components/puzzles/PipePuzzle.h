@@ -55,7 +55,7 @@ public:
     std::vector<Pipe> pipes;
     std::vector<int> rotated;
     int selectedPiece;
-    bool solvedDialogue = false;
+    bool solved = false;
 
     Sprite bg;
 };

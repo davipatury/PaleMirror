@@ -30,11 +30,14 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
 FlashlightHUD::~FlashlightHUD() {}
 
 void FlashlightHUD::Update(float dt) {
-    if (Character::player == nullptr) return;
-    if (!isDark) return;
-    if (CURRENT_STATE.openUI) return;
+    if (Character::player == nullptr ||
+        !isDark ||
+        CURRENT_STATE.openUI ||
+        !INVENTORY->HasItemInHand(ITEM_LANTERNA)
+    ) return;
 
-    if (INPUT_MANAGER.MousePress(RIGHT_MOUSE_BUTTON) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_Y)) ToggleFlashlight();
+    // Use flashlight (already know flashlight's in hand based on the check above)
+    if (USE_CHECK) ToggleFlashlight();
 
     if (!flashlightOn) return;
     if (INPUT_MANAGER.HasController()) {
@@ -48,8 +51,7 @@ void FlashlightHUD::Update(float dt) {
 }
 
 void FlashlightHUD::Render() {
-    if (Character::player == nullptr) return;
-    if (!isDark) return;
+    if (Character::player == nullptr || !isDark) return;
 
     Vec2 origin = Character::player->associated.box.Center() - Camera::pos;
     int BLoffsetX = backlight.GetWidth() * 0.5;
@@ -67,7 +69,7 @@ void FlashlightHUD::Render() {
     backlight.Render(origin.x - BLoffsetX, origin.y - BLoffsetY, backlight.GetWidth(), backlight.GetHeight());
 
     // Flashlight cone
-    if (flashlightOn) {
+    if (INVENTORY->HasItemInHand(ITEM_LANTERNA) && flashlightOn) {
         int flashlightSize = 600;
         float flashlightAngle = M_PI / 8;
         Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(angle - flashlightAngle), origin.y - flashlightSize * cos(angle - flashlightAngle));

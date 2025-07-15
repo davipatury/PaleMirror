@@ -38,7 +38,7 @@ void TitleState::Start() {
 
 void TitleState::Update(float dt) {
     // Quit requested
-    if (INPUT_MANAGER.IsKeyDown(ESCAPE_KEY) || INPUT_MANAGER.QuitRequested()) {
+    if (ESCAPE_CHECK || INPUT_MANAGER.QuitRequested()) {
         quitRequested = true;
     }
 
@@ -57,7 +57,7 @@ void TitleState::Update(float dt) {
         selectedOption = 1;
     }
 
-    if (INPUT_MANAGER.KeyPress(SDLK_RETURN) || INPUT_MANAGER.IsKeyDown(SDLK_SPACE) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A)) {
+    if (CONFIRM_CHECK) {
         if (selectedOption == 0) Game::GetInstance().Push(new StageState());
         else Game::GetInstance().Push(new LoadState());
     }

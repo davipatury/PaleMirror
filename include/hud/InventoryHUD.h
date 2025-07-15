@@ -32,7 +32,7 @@ public:
     class Item {
     public:
         Item(std::string n, const char* s, int a = 0) : name(n), sprite(Sprite(s, 1, 1, true)), amount(a) {}
-        void Render(float x, float y) {
+        virtual void Render(float x, float y) {
             sprite.Render(x, y, sprite.GetWidth(), sprite.GetHeight());
         }
         std::string name;
@@ -41,12 +41,10 @@ public:
     };
     class BaldeTinta : public Item {
     public:
-        BaldeTinta(int a = 0) : Item(ITEM_BALDE_TINTA, "Recursos/img/items/balde"), tinta(Sprite("Recursos/img/items/tinta.png", 1, 1, true)) {}
-        void Render(float x, float y) {
-            sprite.Render(x, y, sprite.GetWidth(), sprite.GetHeight());
-            tinta.Render(x, y, sprite.GetWidth(), sprite.GetHeight());
-        }
+        BaldeTinta(int a = 0);
+        void Render(float x, float y) override;
         Sprite tinta;
+        Uint8 r, g, b;
     };
 
     int Collect(std::string itemName, int amount = 1);
@@ -60,6 +58,7 @@ public:
 private:
     Sprite toolbar, toolbarSelect;
     TextHUD* amountText;
+    TextHUD* itemNameText;
     int selToolbar;
 };
 

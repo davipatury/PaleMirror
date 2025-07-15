@@ -55,7 +55,7 @@ public:
 
     std::vector<Fuse> fuses;
     int selectedPiece;
-    bool solvedDialogue = false;
+    bool solved = false;
 
     Sprite bg;
 };

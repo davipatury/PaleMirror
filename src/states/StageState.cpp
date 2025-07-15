@@ -2,7 +2,6 @@
 #include "components/Interactable.h"
 #include "actions/Actions.h"
 #include <memory>
-#include "entities/projectiles/HitAttack.h"
 #include "core/GameData.h"
 #include "math.h"
 
@@ -26,6 +25,9 @@ StageState::~StageState() {
 }
 
 void StageState::LoadAssets() {
+    // Generate random paint puzzle solution
+    PaintPuzzle::GenerateRandomSolution();
+
     /*
      * Game Objects
      */
@@ -106,6 +108,9 @@ void StageState::LoadAssets() {
 
     currentRoom = mainRoom;
     mainRoom->Enter();
+
+    // Give flashlight on begin (REMOVE LATER)
+    INVENTORY->Collect(ITEM_LANTERNA);
 }
 
 void StageState::Start() {
@@ -120,9 +125,8 @@ void StageState::Update(float dt) {
         quitRequested = true;
     }
 
-    if (!openUI && INPUT_MANAGER.IsKeyDown(ESCAPE_KEY) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_START)) {
+    if (!openUI && ESCAPE_CHECK) {
         popRequested = true;
-        INPUT_MANAGER.ReleaseKey(ESCAPE_KEY);
     }
 
     // Debug delete monsters
@@ -133,18 +137,6 @@ void StageState::Update(float dt) {
                 go->RequestDelete();
             }
         }
-    }
-
-    if (INPUT_MANAGER.KeyPress(SDLK_9)) {
-        INVENTORY->Collect(ITEM_VELA);
-    }
-
-    if (INPUT_MANAGER.KeyPress(SDLK_8)) {
-        INVENTORY->Remove(ITEM_VELA);
-    }
-
-    if (INPUT_MANAGER.KeyPress(SDLK_7)) {
-        INVENTORY->Collect(ITEM_CANO);
     }
 
     // Dialogue debug
@@ -182,7 +174,7 @@ void StageState::Update(float dt) {
     // Spawn paint puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('p')) {
         GameObject* pp = new GameObject();
-        pp->AddComponent(new PaintPuzzle(*pp, PaintPuzzle::AMARELO_ALARANJADO));
+        pp->AddComponent(new PaintPuzzle(*pp));
         pp->box.z = PUZZLE_LAYER;
         pp->lazyRender = false;
         pp->pauseOnOpenUI = false;
@@ -201,9 +193,19 @@ void StageState::Update(float dt) {
 
     //  Start cutscene
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
-        Actions::ChangeRoom("banheiroIntro")(this);
+        Actions::ChangeRoom("banheiroIntro");
         DialogueHUD::RequestDialogue("prologoMarias");
         DialogueHUD::RequestDialogue("prologoEnelah");
+    }
+    
+    // Spawn locker puzzle
+    if (!openUI && INPUT_MANAGER.KeyPress('l')) {
+        GameObject* lp = new GameObject();
+        lp->AddComponent(new LockPuzzle(*lp, "1234"));
+        lp->box.z = PUZZLE_LAYER;
+        lp->lazyRender = false;
+        lp->pauseOnOpenUI = false;
+        AddObject(lp);
     }
 
     if(GameData::zombieFarAway and zombieFarAwayTimer.Get() > 15) {

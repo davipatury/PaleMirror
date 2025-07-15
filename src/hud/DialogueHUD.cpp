@@ -161,7 +161,13 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "A-amiga?", true
         },
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
-        "Pode deixar comigo!",
+        "Pode deixar comigo!"}
+    };
+
+    // Pipe puzzle
+    dialogueLines["lockPuzzle_solved"] = {
+        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+            "abriu a porta :)"
         }
     };
 

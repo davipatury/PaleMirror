@@ -12,11 +12,16 @@
 #define RECT_AMARELO Rect(449, 506, 108, 79)
 #define RECT_LIMPAR Rect(773, 183, 47, 148)
 
-PaintPuzzle::PaintPuzzle(GameObject& associated, PaintColor corCerta) : Component(associated),
+PaintPuzzle::PaintColor PaintPuzzle::possibleSolutions[] = {
+    PaintPuzzle::VERMELHO_ARROXEADO, PaintPuzzle::VERMELHO_ALARANJADO, PaintPuzzle::AMARELO_ESVERDEADO, PaintPuzzle::AMARELO_ALARANJADO, PaintPuzzle::AZUL_ROXEADO, PaintPuzzle::AZUL_ESVERDEADO
+};
+
+PaintPuzzle::PaintColor PaintPuzzle::solution;
+
+PaintPuzzle::PaintPuzzle(GameObject& associated) : Component(associated),
     bg("Recursos/img/paint_puzzle/cavalete.png", 1, 1, true),
     tinta("Recursos/img/paint_puzzle/paint.png", 1, 1, true)
 {
-    this->corCerta = corCerta;
     corAtual = COR_VAZIA;
     estadoAtual = QUADRO_VAZIO;
     selectedRect = EMPTY_RECT;
@@ -30,6 +35,7 @@ void PaintPuzzle::Update(float dt) {
     if (IsSolved()) {
         // Solved
         DialogueHUD::RequestDialogue("paintPuzzle_solved", [this]() {
+            INVENTORY->Collect(ITEM_BALDE_TINTA);
             associated.RequestDelete();
         });
         estadoAtual = QUADRO_SOLVED;
@@ -74,12 +80,9 @@ void PaintPuzzle::Update(float dt) {
         }
     }
 
-    if (INPUT_MANAGER.IsKeyDown(SDLK_ESCAPE)) {
+    if (ESCAPE_CHECK) {
         CURRENT_STATE.openUI = false;
-        associated.pauseOnOpenUI = true;
         associated.RequestDelete();
-        std::cout << "PaintPuzzle closed" << std::endl;
-        INPUT_MANAGER.ReleaseKey(SDLK_ESCAPE);
     }
 }
 
@@ -103,7 +106,7 @@ void PaintPuzzle::Render() {
     // Splash de tinta
     if (corAtual == COR_VAZIA) return;
 
-    SDL_Color cor = GetCurrentColor();
+    SDL_Color cor = GetColor(corAtual);
     SDL_SetTextureColorMod(tinta.texture, cor.r, cor.g, cor.b);
     tinta.Render(PAINT_TINTA_OFFSET_X, PAINT_TINTA_OFFSET_Y, tinta.GetWidth(), tinta.GetHeight());
 }
@@ -143,32 +146,40 @@ void PaintPuzzle::Pintar(PaintColor cor) {
     }
 }
 
-SDL_Color PaintPuzzle::GetCurrentColor() {
+SDL_Color PaintPuzzle::GetColor(PaintColor cor) {
     // Primarias
-    if (corAtual == VERMELHO)               return SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE};
-    if (corAtual == AZUL)                   return SDL_Color{0, 95, 255, SDL_ALPHA_OPAQUE};
-    if (corAtual == AMARELO)                return SDL_Color{255, 242, 0, SDL_ALPHA_OPAQUE};
+    if (cor == VERMELHO)               return SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE};
+    if (cor == AZUL)                   return SDL_Color{0, 95, 255, SDL_ALPHA_OPAQUE};
+    if (cor == AMARELO)                return SDL_Color{255, 242, 0, SDL_ALPHA_OPAQUE};
     // Secundarias
-    if (corAtual == VIOLETA)                return SDL_Color{143, 25, 164, SDL_ALPHA_OPAQUE};
-    if (corAtual == LARANJA)                return SDL_Color{255, 143, 0, SDL_ALPHA_OPAQUE};
-    if (corAtual == VERDE)                  return SDL_Color{0, 182, 66, SDL_ALPHA_OPAQUE};
+    if (cor == VIOLETA)                return SDL_Color{143, 25, 164, SDL_ALPHA_OPAQUE};
+    if (cor == LARANJA)                return SDL_Color{255, 143, 0, SDL_ALPHA_OPAQUE};
+    if (cor == VERDE)                  return SDL_Color{0, 182, 66, SDL_ALPHA_OPAQUE};
     // Terciarias
-    if (corAtual == VERMELHO_ARROXEADO)     return SDL_Color{196, 45, 174, SDL_ALPHA_OPAQUE};
-    if (corAtual == VERMELHO_ALARANJADO)    return SDL_Color{255, 82, 0, SDL_ALPHA_OPAQUE};
-    if (corAtual == AMARELO_ESVERDEADO)     return SDL_Color{64, 227, 23, SDL_ALPHA_OPAQUE};
-    if (corAtual == AMARELO_ALARANJADO)     return SDL_Color{255, 205, 0, SDL_ALPHA_OPAQUE};
-    if (corAtual == AZUL_ROXEADO)           return SDL_Color{132, 64, 255, SDL_ALPHA_OPAQUE};
-    if (corAtual == AZUL_ESVERDEADO)        return SDL_Color{0, 143, 123, SDL_ALPHA_OPAQUE};
+    if (cor == VERMELHO_ARROXEADO)     return SDL_Color{196, 45, 174, SDL_ALPHA_OPAQUE};
+    if (cor == VERMELHO_ALARANJADO)    return SDL_Color{255, 82, 0, SDL_ALPHA_OPAQUE};
+    if (cor == AMARELO_ESVERDEADO)     return SDL_Color{64, 227, 23, SDL_ALPHA_OPAQUE};
+    if (cor == AMARELO_ALARANJADO)     return SDL_Color{255, 205, 0, SDL_ALPHA_OPAQUE};
+    if (cor == AZUL_ROXEADO)           return SDL_Color{132, 64, 255, SDL_ALPHA_OPAQUE};
+    if (cor == AZUL_ESVERDEADO)        return SDL_Color{0, 143, 123, SDL_ALPHA_OPAQUE};
 
-    if (corAtual == COR_DESCONHECIDA)       return SDL_Color{67, 41, 41, SDL_ALPHA_OPAQUE};
+    if (cor == COR_DESCONHECIDA)       return SDL_Color{67, 41, 41, SDL_ALPHA_OPAQUE};
     // Nao eh pra chegar aqui
     return SDL_Color{0, 0, 0, SDL_ALPHA_OPAQUE};
 }
 
+SDL_Color PaintPuzzle::GetSolutionColor() {
+    return GetColor(solution);
+}
+
 bool PaintPuzzle::IsSolved() {
-    return corAtual == corCerta;
+    return corAtual == solution;
 }
 
 bool PaintPuzzle::Is(std::string type) {
     return type == "PaintPuzzle";
+}
+
+void PaintPuzzle::GenerateRandomSolution() {
+    solution = possibleSolutions[std::rand() % (sizeof(possibleSolutions) / sizeof(*possibleSolutions))];
 }

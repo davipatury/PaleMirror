@@ -12,6 +12,7 @@
 #include "core/Sprite.h"
 #include "math/Vec2.h"
 #include "hud/DialogueHUD.h"
+#include "hud/InventoryHUD.h"
 
 class PaintPuzzle : public Component
 {
@@ -29,14 +30,16 @@ public:
         COR_DESCONHECIDA
     };
 
-    PaintPuzzle(GameObject& associated, PaintColor corCerta);
+    PaintPuzzle(GameObject& associated);
 
     void Update(float dt);
     void Render();
     void Start();
     bool Is(std::string type);
 
-    SDL_Color GetCurrentColor();
+    static SDL_Color GetColor(PaintColor cor);
+    static SDL_Color GetSolutionColor();
+    static void GenerateRandomSolution();
     void Pintar(PaintColor cor);
     bool IsSolved();
 
@@ -46,6 +49,9 @@ public:
     PaintColor corAtual;
     Sprite bg;
     Sprite tinta;
+
+    static PaintColor solution;
+    static PaintColor possibleSolutions[];
 };
 
 #endif // PAINTPUZZLE_H

@@ -8,6 +8,7 @@
 #include "components/Camera.h"
 #include "entities/characters/Character.h"
 #include "core/Component.h"
+#include "hud/InventoryHUD.h"
 
 class FlashlightHUD : public Component
 {
