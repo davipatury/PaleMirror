@@ -118,9 +118,8 @@ void StageState::Update(float dt) {
         quitRequested = true;
     }
 
-    if (!openUI && INPUT_MANAGER.IsKeyDown(ESCAPE_KEY) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_START)) {
+    if (!openUI && ESCAPE_CHECK) {
         popRequested = true;
-        INPUT_MANAGER.ReleaseKey(ESCAPE_KEY);
     }
 
     // Debug delete monsters

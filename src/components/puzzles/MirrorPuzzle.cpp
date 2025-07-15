@@ -13,6 +13,8 @@ MirrorPuzzle::MirrorPuzzle(GameObject& associated, std::vector<Piece> pieces) : 
 }
 
 void MirrorPuzzle::Update(float dt) {
+    if (solved) return;
+
     if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
         if (selectedPiece == -1) {
             Vec2 mousePos = INPUT_MANAGER.GetMousePos();
@@ -34,25 +36,22 @@ void MirrorPuzzle::Update(float dt) {
         }
     }
 
-    if (INPUT_MANAGER.IsKeyDown(SDLK_ESCAPE)) {
+    if (ESCAPE_CHECK) {
         CURRENT_STATE.openUI = false;
-        associated.pauseOnOpenUI=true;
         associated.RequestDelete();
-        INPUT_MANAGER.ReleaseKey(SDLK_ESCAPE);
     }
 
     if (selectedPiece != -1) {
         pieces[selectedPiece].pos.x = INPUT_MANAGER.GetMouseX() - pieces[selectedPiece].GetWidth() / 2 - MIRROR_PUZZLE_RECT_X;
         pieces[selectedPiece].pos.y = INPUT_MANAGER.GetMouseY() - pieces[selectedPiece].GetHeight() / 2 - MIRROR_PUZZLE_RECT_Y;
-    } else if (IsSolved() && !solvedDialogue) {
+    } else if (IsSolved()) {
         for (int i = 0; i < pieces.size(); i++) {
             pieces[i].pos = pieces[i].posCerta;
         }
         DialogueHUD::RequestDialogue("mirrorPuzzle_solved", [this]() {
             associated.RequestDelete();
-            CURRENT_STATE.openUI = false;
         });
-        solvedDialogue = true;
+        solved = true;
     }
 }
 

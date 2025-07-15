@@ -74,12 +74,9 @@ void PaintPuzzle::Update(float dt) {
         }
     }
 
-    if (INPUT_MANAGER.IsKeyDown(SDLK_ESCAPE)) {
+    if (ESCAPE_CHECK) {
         CURRENT_STATE.openUI = false;
-        associated.pauseOnOpenUI = true;
         associated.RequestDelete();
-        std::cout << "PaintPuzzle closed" << std::endl;
-        INPUT_MANAGER.ReleaseKey(SDLK_ESCAPE);
     }
 }
 

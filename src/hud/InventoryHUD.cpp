@@ -28,11 +28,11 @@ void InventoryHUD::Update(float dt) {
     else if(INPUT_MANAGER.KeyPress(SDLK_3))     selToolbar = 2;
     else if (INPUT_MANAGER.KeyPress(SDLK_4))    selToolbar = 3;
 
-    if (INPUT_MANAGER.GetMouseWheel() < 0) {
+    if (INPUT_MANAGER.GetMouseWheel() < 0 || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) {
         selToolbar++;
         if (selToolbar > 3) selToolbar = 0;
     }
-    if (INPUT_MANAGER.GetMouseWheel() > 0) {
+    if (INPUT_MANAGER.GetMouseWheel() > 0 || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) {
         selToolbar--;
         if (selToolbar < 0) selToolbar = 3;
     }

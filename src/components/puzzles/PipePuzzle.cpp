@@ -14,6 +14,8 @@ void PipePuzzle::PipePressed(int idx){
 }
 
 void PipePuzzle::Update(float dt) {
+    if (solved) return;
+
     if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
         Vec2 mousePos = {(float) INPUT_MANAGER.GetMouseX(), (float) INPUT_MANAGER.GetMouseY()};
         for (int i = 0; i < pipes.size(); i++) {
@@ -24,19 +26,16 @@ void PipePuzzle::Update(float dt) {
         }
     }
 
-    if (INPUT_MANAGER.IsKeyDown(SDLK_ESCAPE)) {
+    if (ESCAPE_CHECK) {
         CURRENT_STATE.openUI = false;
-        associated.pauseOnOpenUI=true;
         associated.RequestDelete();
-        INPUT_MANAGER.ReleaseKey(SDLK_ESCAPE);
     }
 
-    if (IsSolved() && !solvedDialogue) {
+    if (IsSolved()) {
         DialogueHUD::RequestDialogue("pipePuzzle_solved", [this]() {
             associated.RequestDelete();
-            CURRENT_STATE.openUI = false;
         });
-        solvedDialogue = true;
+        solved = true;
     }
 }
 

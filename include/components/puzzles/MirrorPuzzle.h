@@ -50,7 +50,7 @@ public:
 
     bool IsSolved();
 
-    bool solvedDialogue = false;
+    bool solved = false;
     std::vector<Piece> pieces;
     int selectedPiece;
     Sprite bg;

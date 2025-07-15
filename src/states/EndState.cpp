@@ -46,12 +46,12 @@ void EndState::Start() {
 
 void EndState::Update(float dt) {
     // Quit requested
-    if (INPUT_MANAGER.IsKeyDown(ESCAPE_KEY) || INPUT_MANAGER.QuitRequested()) {
+    if (ESCAPE_CHECK || INPUT_MANAGER.QuitRequested()) {
         quitRequested = true;
     }
 
     // Start
-    if (INPUT_MANAGER.IsKeyDown(SDLK_SPACE) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A)) {
+    if (CONFIRM_CHECK) {
         popRequested = true;
     }
 

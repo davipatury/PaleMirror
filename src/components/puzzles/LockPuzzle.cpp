@@ -54,11 +54,9 @@ void LockPuzzle::Update(float dt) {
         solved = true;
     }
 
-    if (INPUT_MANAGER.IsKeyDown(SDLK_ESCAPE)) {
+    if (ESCAPE_CHECK) {
         CURRENT_STATE.openUI = false;
-        associated.pauseOnOpenUI = true;
         associated.RequestDelete();
-        INPUT_MANAGER.ReleaseKey(SDLK_ESCAPE);
     }
 
     Vec2 mousePos = INPUT_MANAGER.GetMousePos();
