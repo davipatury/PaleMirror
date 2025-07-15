@@ -15,6 +15,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     helenaBrava("Recursos/img/hud/helena-brava.png", 1, 1, true),
     helenaFeliz("Recursos/img/hud/helena-feliz.png", 1, 1, true),
     helenaNeutra("Recursos/img/hud/helena-neutra.png", 1, 1, true),
+    enelah("Recursos/img/hud/enelah.png", 1, 1, true),
     madu("Recursos/img/hud/madu.png", 1, 1, true),
     maju("Recursos/img/hud/maju.png", 1, 1, true),
     malu("Recursos/img/hud/malu.png", 1, 1, true)
@@ -75,7 +76,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         }
     };
 
-    dialogueLines["prologo_marias"] = {
+    dialogueLines["prologoMarias"] = {
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
         "E se alguem da escola nos ver aqui?", true
         },
@@ -86,16 +87,16 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "Está com medinho do ritual Helena? Achei que você queria entrar para o nosso grupinho...", true
         },
         {"Madu", "Madu", {101, 38, 141, 255},
-        "Ela está com medinho hihihihi", true
+        "Ela está com medinho hihihihi.", true
         },
-        {"Helena", "Helena", {101, 38, 141, 255},
+        {"HelenaBrava", "Helena", {101, 38, 141, 255},
         "Não estou!", true
         },
         {"Malu", "Malu", {101, 38, 141, 255},
         "Então prove para gente, vai na frente e faça o ritual.", true
         },
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
-        "Aliquam efficitur nulla ipsum, eget consectetur diam lacinia ac. Sed id nunc nisl. Pellentesque interdum massa nec risus imperdiet, in pulvinar odio rutrum."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt ultrices mi non suscipit. Suspendisse vitae consequat turpis. Donec bibendum velit felis, in sodales ipsum eleifend sit amet."
         },
 
         //barulho de tranca
@@ -110,7 +111,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "Você sempre têm ideias tão boas Malu!", true
         },
         {"Malu", "Malu", {101, 38, 141, 255},
-        "Eu sei, eu sou perfeita", true
+        "Eu sei, eu sou perfeita.", true
         },
         {"Madu", "Madu", {101, 38, 141, 255},
         "bye bye", true
@@ -119,8 +120,8 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         //tela pisca e barulhos sinistros
     };
 
-    dialogueLines["prologo_vila"] = {
-        {"Vila", "Vila", {101, 38, 141, 255},
+    dialogueLines["prologoEnelah"] = {
+        {"Enelah", "Enelah", {101, 38, 141, 255},
         "Helena? Você está bem?", true
         },
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
@@ -129,38 +130,32 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
         "Q-quem é vo-você? C-como sabe meu nome?",
         },
-        {"Vila", "Vila", {101, 38, 141, 255},
+        {"Enelah", "Enelah", {101, 38, 141, 255},
         "Desculpe te assustar, me chamo Eneleh, você acabou desmaiando e eu fiquei preocupada... eu vi o que elas fizeram com você.", true
         },
         {"HelenaBrava", "Helena", {101, 38, 141, 255},
-        "Ughh, eu fui TÃO ingênua, mas obrigada pela preocupação", true
+        "Ughh, eu fui TÃO ingênua, mas obrigada pela preocupação.", true
         },
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Mas e como você foi parar aí dentro do espelho?",
         },
-        {"Vila", "Vila", {101, 38, 141, 255},
-        "Ahhh isso é uma longa história, me prenderam nesse espelho há muitos anos atrás", true
+        {"Enelah", "Enelah", {101, 38, 141, 255},
+        "Ahhh isso é uma longa história, me prenderam nesse espelho há muitos anos atrás.", true
         },
-        {"Helena", "Helena", {101, 38, 141, 255},
-        "Assim, estamos trancadas aqui até amanhã, então temos tempo", true
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+        "Assim, estamos trancadas aqui até amanhã, então temos tempo.", true
         },
-        {"Vila", "Vila", {101, 38, 141, 255},
+        {"Enelah", "Enelah", {101, 38, 141, 255},
         "Verdadade. Desculpe, é que não estou acostumada com isso. Eu nunca tive uma amiga, sempre fui excluída e zombavam de mim... você entende né?", true
         },
-        {"Helana", "Helena", {101, 38, 141, 255},
-        "Err, te entendo bem", true
+        {"HelanaNeutra", "Helena", {101, 38, 141, 255},
+        "Err, te entendo bem.", true
         },
-        {"Vila", "Vila", {101, 38, 141, 255},
+        {"Enelah", "Enelah", {101, 38, 141, 255},
         "Fico muito feliz de ter te conhecido Helena.", true
         },
-        {"Vila", "Vila", {101, 38, 141, 255},
-        "Antes de te contar a história, tem como me tirar daqui?",
-        },
-        {"Helena", "Helena", {101, 38, 141, 255},
-        "...", true
-        },
-        {"Vila", "Vila", {101, 38, 141, 255},
-        "Esse espelho está um pouco quebrado, preciso de sua ajuda para conserta-lo, amiga", true
+        {"Enelah", "Enelah", {101, 38, 141, 255},
+        "Antes de te contar a história, tem como me tirar daqui? Esse espelho está um pouco quebrado, preciso de sua ajuda para conserta-lo, amiga.",
         },
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
         "A-amiga?", true
@@ -221,6 +216,7 @@ void DialogueHUD::Update(float dt) {
             else if (dialLine.picture == "HelenaBrava") pictureSprite = &helenaBrava;
             else if (dialLine.picture == "HelenaFeliz") pictureSprite = &helenaFeliz;
             else if (dialLine.picture == "HelenaNeutra") pictureSprite = &helenaNeutra;
+            else if (dialLine.picture == "Enelah") pictureSprite = &enelah;
             else if (dialLine.picture == "Madu") pictureSprite = &madu;
             else if (dialLine.picture == "Maju") pictureSprite = &maju;
             else if (dialLine.picture == "Malu") pictureSprite = &malu;

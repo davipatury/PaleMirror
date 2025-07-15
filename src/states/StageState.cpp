@@ -1,5 +1,6 @@
 #include "states/StageState.h"
 #include "components/Interactable.h"
+#include "actions/Actions.h"
 #include <memory>
 #include "entities/projectiles/HitAttack.h"
 #include "core/GameData.h"
@@ -91,6 +92,8 @@ void StageState::LoadAssets() {
     banheiroFemRoom->Build();
     BanheiroMasculinoRoom* banheiroMascRoom = new BanheiroMasculinoRoom(this);
     banheiroMascRoom->Build();
+    BanheiroIntroRoom* banheiroIntroRoom = new BanheiroIntroRoom(this);
+    banheiroIntroRoom->Build();
 
     rooms["main"] = mainRoom;
     rooms["history"] = historyRoom;
@@ -99,6 +102,7 @@ void StageState::LoadAssets() {
     rooms["portuguese"] = portugueseRoom;
     rooms["banheiroFem"] = banheiroFemRoom;
     rooms["banheiroMasc"] = banheiroMascRoom;
+    rooms["banheiroIntro"] = banheiroIntroRoom;
 
     currentRoom = mainRoom;
     mainRoom->Enter();
@@ -193,6 +197,13 @@ void StageState::Update(float dt) {
         pip->lazyRender = false;
         pip->pauseOnOpenUI = false;
         AddObject(pip);
+    }
+
+    //  Start cutscene
+    if (!openUI && INPUT_MANAGER.KeyPress('b')) {
+        Actions::ChangeRoom("banheiroIntro")(this);
+        DialogueHUD::RequestDialogue("prologoMarias");
+        DialogueHUD::RequestDialogue("prologoEnelah");
     }
 
     if(GameData::zombieFarAway and zombieFarAwayTimer.Get() > 15) {

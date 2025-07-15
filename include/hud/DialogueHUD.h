@@ -57,7 +57,7 @@ private:
     TextHUD* dialogueText;
     TextHUD* charNameText;
 
-    Sprite caixaDialogo, helenaAssustada, helenaBrava, helenaFeliz, helenaNeutra, madu, maju, malu;
+    Sprite caixaDialogo, helenaAssustada, helenaBrava, helenaFeliz, helenaNeutra, enelah, madu, maju, malu;
 
     Sprite* pictureSprite;
     Vec2 picturePos;
