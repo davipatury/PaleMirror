@@ -10,6 +10,8 @@
 #include "core/Component.h"
 #include "utils/TextHUD.h"
 
+#define INTERACTABLE InteractableHUD::instance
+
 class InteractableHUD : public Component
 {
 public:
@@ -20,10 +22,18 @@ public:
     void Render();
     bool Is(std::string type);
 
-    static void RecordInteractable();
+    enum InteractableType { INTERACT, USE_ITEM };
+    void RecordInteractable(GameObject* go, Vec2 offset, InteractableType type, std::string text);
+
+    static InteractableHUD* instance;
 private:
-    TextHUD* text;
-    static bool hasInteractable;
+    Sprite keyE, keySpace, cbuttonA, cbuttonX;
+    TextHUD* interactText;
+
+    GameObject* interactableGO = nullptr;
+    Vec2 offset = {0, 0};
+    InteractableType type = INTERACT;
+    std::string text = "";
 };
 
 #endif // INTERACTABLEHUD_H

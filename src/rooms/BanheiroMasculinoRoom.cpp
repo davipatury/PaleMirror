@@ -63,6 +63,6 @@ void BanheiroMasculinoRoom::Build() {
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ--BANHEIRO-MASC] Porta", 278, 815);
-    roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 7), DOOR_BACK_INTERACT_DIST));
+    roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 7), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));
     state->AddObject(roomDoorBack);
 }
