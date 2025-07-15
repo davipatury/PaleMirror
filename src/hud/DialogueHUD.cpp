@@ -17,7 +17,9 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     helenaNeutra("Recursos/img/hud/helena-neutra.png", 1, 1, true),
     madu("Recursos/img/hud/madu.png", 1, 1, true),
     maju("Recursos/img/hud/maju.png", 1, 1, true),
-    malu("Recursos/img/hud/malu.png", 1, 1, true)
+    malu("Recursos/img/hud/malu.png", 1, 1, true),
+    keySpace("Recursos/img/controls/key_space.png", 1, 1, true),
+    cbuttonA("Recursos/img/controls/cbutton_a.png", 1, 1, true)
 {
     dialogueText = new TextHUD({238, 555}, "Recursos/font/PixelifySans-SemiBold.ttf", 40, TextHUD::BLENDED, "A", {0, 0, 0, 255}, DIALOGUE_WRAP_LEN);
     charNameText = new TextHUD({255, 480}, "Recursos/font/PixelifySans-SemiBold.ttf", 50, TextHUD::BLENDED, "B", {255, 255, 255, 255});
@@ -93,6 +95,10 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     startLine = false;
 
     picturePos.y = 214;
+
+    // Controls
+    keySpace.SetScale(0.5, 0.5);
+    cbuttonA.SetScale(0.5, 0.5);
 }
 
 DialogueHUD::~DialogueHUD() {}
@@ -159,7 +165,7 @@ void DialogueHUD::Update(float dt) {
             }
         }
 
-        if ((INPUT_MANAGER.KeyPress(SDLK_RETURN) || INPUT_MANAGER.IsKeyDown(SDLK_SPACE) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A)) && !skipFirstKeyCheck) {
+        if ((INPUT_MANAGER.KeyPress(SDLK_RETURN) || INPUT_MANAGER.KeyPress(SDLK_SPACE) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A)) && !skipFirstKeyCheck) {
             if (picturePos.x != 0) picturePos.x = 0;
             else if (currentTextPos < dialLine.line.length()) currentTextPos = dialLine.line.length();
             else {
@@ -176,7 +182,7 @@ void DialogueHUD::Update(float dt) {
 
 void DialogueHUD::Render() {
     if (!currentDialogue.empty()) {
-        SDL_Rect screenRect = {0, 0, 1200, 900};
+        SDL_Rect screenRect = WINDOW_RECT;
         SDL_SetRenderDrawBlendMode(GAME_RENDERER, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, 127);
         SDL_RenderFillRect(GAME_RENDERER, &screenRect);
@@ -187,6 +193,9 @@ void DialogueHUD::Render() {
         caixaDialogo.Render(201, 458, caixaDialogo.GetWidth(), caixaDialogo.GetHeight());
         dialogueText->Render();
         charNameText->Render();
+
+        if (INPUT_MANAGER.HasController()) cbuttonA.Render(700 - cbuttonA.GetWidth() / 2, 815, cbuttonA.GetWidth(), cbuttonA.GetHeight());
+        else keySpace.Render(700 - keySpace.GetWidth() / 2, 815, keySpace.GetWidth(), keySpace.GetHeight());
     }
 }
 

@@ -58,6 +58,7 @@ private:
     TextHUD* charNameText;
 
     Sprite caixaDialogo, helenaAssustada, helenaBrava, helenaFeliz, helenaNeutra, madu, maju, malu;
+    Sprite keySpace, cbuttonA;
 
     Sprite* pictureSprite;
     Vec2 picturePos;

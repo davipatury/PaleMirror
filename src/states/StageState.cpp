@@ -140,6 +140,13 @@ void StageState::Update(float dt) {
         }
     }
 
+    // Fullscreen
+    if (INPUT_MANAGER.KeyPress(SDLK_F11)) {
+        Uint32 flags = SDL_GetWindowFlags(GAME_WINDOW);
+        bool isFullscreen = flags & SDL_WINDOW_FULLSCREEN;
+        SDL_SetWindowFullscreen(GAME_WINDOW, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+    }
+
     // Dialogue debug
     if (!openUI && INPUT_MANAGER.KeyPress('o')) {
         DialogueHUD::RequestDialogue("test");

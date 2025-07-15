@@ -23,8 +23,8 @@ void EndState::LoadAssets() {
 
     GameObject* text = new GameObject();
     text->AddComponent(new Text(*text, "Recursos/font/PixelifySans-Regular.ttf", 30, Text::TextStyle::SOLID, GameData::playerVictory ? "Parabens! Voce venceu!" : "Voce perdeu :(", {255, 255, 255, 255}));
-    text->box.x = 600 - text->box.w * 0.5;
-    text->box.y = 450 - text->box.h * 0.5;
+    text->box.x = (WINDOW_WIDTH - text->box.w) * 0.5;
+    text->box.y = (WINDOW_HEIGHT - text->box.h) * 0.5;
     text->box.z = 0;
     AddObject(text);
 

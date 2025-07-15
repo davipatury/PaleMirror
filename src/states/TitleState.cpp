@@ -62,6 +62,13 @@ void TitleState::Update(float dt) {
         else Game::GetInstance().Push(new LoadState());
     }
 
+    // Fullscreen
+    if (INPUT_MANAGER.KeyPress(SDLK_F11)) {
+        Uint32 flags = SDL_GetWindowFlags(GAME_WINDOW);
+        bool isFullscreen = flags & SDL_WINDOW_FULLSCREEN;
+        SDL_SetWindowFullscreen(GAME_WINDOW, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+    }
+
     UpdateArray(dt);
 }
 
@@ -75,15 +82,16 @@ void TitleState::Render() {
         // Novo
         activeButton.Render(margin + activeMarginX, 646 + activeMarginY, activeButton.GetWidth(), activeButton.GetHeight());
         // Carregar
-        button.Render(1200 - margin - button.GetWidth(), 646, button.GetWidth(), button.GetHeight());
+        button.Render(WINDOW_WIDTH - margin - button.GetWidth(), 646, button.GetWidth(), button.GetHeight());
     } else {
         // Novo
         button.Render(margin, 646, button.GetWidth(), button.GetHeight());
         // Carregar
-        activeButton.Render(1200 - margin - button.GetWidth() + activeMarginX, 646 + activeMarginY, activeButton.GetWidth(), activeButton.GetHeight());
+        activeButton.Render(WINDOW_WIDTH - margin - button.GetWidth() + activeMarginX, 646 + activeMarginY, activeButton.GetWidth(), activeButton.GetHeight());
     }
 
     startButtonText->Render();
+    loadButtonText->SetPos({WINDOW_WIDTH - margin - button.GetWidth() + 25, 700});
     loadButtonText->Render();
 }
 

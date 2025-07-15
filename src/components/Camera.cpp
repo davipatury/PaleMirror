@@ -1,5 +1,7 @@
 #include "components/Camera.h"
 
+#include "core/Game.h"
+
 Vec2 Camera::pos;
 Vec2 Camera::speed;
 Rect Camera::cameraLimits;
@@ -16,8 +18,8 @@ void Camera::Unfollow() {
 void Camera::Update(float dt) {
     if (focus != nullptr) {
         Vec2 focusCenter = focus->box.Center();
-        pos.x = focusCenter.x - (1200 / 2);
-        pos.y = focusCenter.y - (900 / 2);
+        pos.x = focusCenter.x - (WINDOW_WIDTH * 0.5);
+        pos.y = focusCenter.y - (WINDOW_HEIGHT * 0.5);
     } else {
         float xSpeed = 0;
         float ySpeed = 0;
@@ -35,13 +37,13 @@ void Camera::Update(float dt) {
     if (cameraLimits.w > 0) {
         if (pos.x < tl.x) pos.x = tl.x;
         if (pos.y < tl.y) pos.y = tl.y;
-        if (pos.x > br.x - 1200) pos.x = br.x - 1200;
-        if (pos.y > br.y - 900) pos.y = br.y - 900;
+        if (pos.x > br.x - WINDOW_WIDTH) pos.x = br.x - WINDOW_WIDTH;
+        if (pos.y > br.y - WINDOW_HEIGHT) pos.y = br.y - WINDOW_HEIGHT;
     }
 }
 
 Rect Camera::PosRect() {
-    return Rect(pos.x, pos.y, 1200, 900);
+    return Rect(pos.x, pos.y, WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
 void Camera::SetCameraLimits(Rect limits) {

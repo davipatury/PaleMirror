@@ -1,7 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
 
+#define WINDOW_WIDTH Game::GetInstance().GetWindowSize().x
+#define WINDOW_HEIGHT Game::GetInstance().GetWindowSize().y
+#define WINDOW_RECT Game::GetInstance().GetWindowRect()
+#define WINDOW_SIZE Game::GetInstance().GetWindowSize()
 #define GAME_RENDERER Game::GetInstance().GetRenderer()
+#define GAME_WINDOW Game::GetInstance().GetWindow()
 #define CURRENT_STATE Game::GetInstance().GetCurrentState()
 
 #include "SDL.h"
@@ -26,6 +31,9 @@ public:
     void Run();
 
     SDL_Renderer* GetRenderer();
+    SDL_Window* GetWindow();
+    Vec2 GetWindowSize();
+    SDL_Rect GetWindowRect();
     float GetDeltaTime();
 
     State& GetCurrentState();
@@ -41,6 +49,8 @@ private:
 
     std::stack<std::unique_ptr<State>> stateStack;
     State* storedState;
+
+    int windowWidth, windowHeight;
 
     int frameStart;
     float dt;

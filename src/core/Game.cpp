@@ -104,6 +104,23 @@ SDL_Renderer* Game::GetRenderer() {
     return renderer;
 }
 
+SDL_Window* Game::GetWindow() {
+    return window;
+}
+
+Vec2 Game::GetWindowSize() {
+    return {(float) windowWidth, (float) windowHeight};
+}
+
+SDL_Rect Game::GetWindowRect() {
+    SDL_Rect rect;
+    rect.x = 0;
+    rect.y = 0;
+    rect.w = windowWidth;
+    rect.h = windowHeight;
+    return rect;
+}
+
 void Game::Run() {
     if (storedState == nullptr) return;
     stateStack.emplace(storedState);
@@ -126,6 +143,7 @@ void Game::Run() {
         if (!stateStack.empty()) {
             CalculateDeltaTime();
             SDL_RenderClear(renderer);
+            SDL_GetWindowSize(window, &windowWidth, &windowHeight);
             INPUT_MANAGER.Update();
             stateStack.top()->Update(dt);
             stateStack.top()->Render();
