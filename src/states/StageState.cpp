@@ -193,7 +193,7 @@ void StageState::Update(float dt) {
 
     //  Start cutscene
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
-        Actions::ChangeRoom("banheiroIntro");
+        Actions::ChangeRoom("banheiroIntro")(this, nullptr);
         DialogueHUD::RequestDialogue("prologoMarias");
         DialogueHUD::RequestDialogue("prologoEnelah");
     }
