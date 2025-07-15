@@ -1,5 +1,6 @@
 #include "states/StageState.h"
 #include "components/Interactable.h"
+#include "actions/Actions.h"
 #include <memory>
 #include "core/GameData.h"
 #include "math.h"
@@ -98,6 +99,8 @@ void StageState::LoadAssets() {
     banheiroFemRoom->Build();
     BanheiroMasculinoRoom* banheiroMascRoom = new BanheiroMasculinoRoom(this);
     banheiroMascRoom->Build();
+    BanheiroIntroRoom* banheiroIntroRoom = new BanheiroIntroRoom(this);
+    banheiroIntroRoom->Build();
 
     rooms["main"] = mainRoom;
     rooms["history"] = historyRoom;
@@ -106,6 +109,7 @@ void StageState::LoadAssets() {
     rooms["portuguese"] = portugueseRoom;
     rooms["banheiroFem"] = banheiroFemRoom;
     rooms["banheiroMasc"] = banheiroMascRoom;
+    rooms["banheiroIntro"] = banheiroIntroRoom;
 
     currentRoom = mainRoom;
     mainRoom->Enter();
@@ -199,6 +203,13 @@ void StageState::Update(float dt) {
         AddObject(pip);
     }
 
+    //  Start cutscene
+    if (!openUI && INPUT_MANAGER.KeyPress('b')) {
+        Actions::ChangeRoom("banheiroIntro")(this, nullptr);
+        DialogueHUD::RequestDialogue("prologoMarias");
+        DialogueHUD::RequestDialogue("prologoEnelah");
+    }
+    
     // Spawn locker puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('l')) {
         GameObject* lp = new GameObject();

@@ -58,13 +58,13 @@ void TextHUD::RemakeTexture() {
     SDL_Surface* surface;
     switch (style) {
     case SOLID:
-        surface = TTF_RenderText_Solid_Wrapped(font, text.c_str(), color, wrapLength);
+        surface = TTF_RenderUTF8_Solid_Wrapped(font, text.c_str(), color, wrapLength);
         break;
     case SHADED:
-        surface = TTF_RenderText_Shaded_Wrapped(font, text.c_str(), color, {0, 0, 0, 255}, wrapLength);
+        surface = TTF_RenderUTF8_Shaded_Wrapped(font, text.c_str(), color, {0, 0, 0, 255}, wrapLength);
         break;
     case BLENDED:
-        surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), color, wrapLength);
+        surface = TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, wrapLength);
         break;
     }
 
