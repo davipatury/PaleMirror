@@ -21,6 +21,7 @@ Interactable::Interactable(GameObject& associated, std::function<void (State*, G
 void Interactable::Update(float dt) {
     if (Character::player == nullptr) return;
     if (action == nullptr) return;
+    if (associated.IsDead()) return;
 
     // Player center coordinates
     IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
@@ -40,10 +41,10 @@ void Interactable::Update(float dt) {
 
     // Execute action
     if (canInteract) {
-        INTERACTABLE->RecordInteractable(&associated, hudOffset, type, hudText);
         if((type == InteractableHUD::INTERACT && INTERACT_CHECK) || (type == InteractableHUD::USE_ITEM && USE_CHECK)) {
             action(&CURRENT_STATE, &associated);
         }
+        if (!associated.IsDead()) INTERACTABLE->RecordInteractable(&associated, hudOffset, type, hudText);
     }
 }
 
