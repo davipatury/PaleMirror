@@ -8,7 +8,7 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
     flashlightOn = true;
     angle = 0;
 
-    SDL_BlendMode bm = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD);
+    SDL_BlendMode bm = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD);
     int bmRet = SDL_SetTextureBlendMode(backlight.texture, bm);
     if (bmRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode: " << SDL_GetError() << std::endl;
 
