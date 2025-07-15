@@ -12,8 +12,6 @@
 #include <string>
 
 #define DEBUG_INTERACT_RANGE
-#define INTERACTION_KEY 'e'
-#define INTERACTION_CBUTTON SDL_CONTROLLER_BUTTON_A
 
 void Interactable::Update(float dt) {
     if (Character::player == nullptr) return;
@@ -39,8 +37,8 @@ void Interactable::Update(float dt) {
 
     if (canInteract) {
         InteractableHUD::RecordInteractable();
-        if(INPUT_MANAGER.KeyPress(INTERACTION_KEY) || INPUT_MANAGER.CButtonPress(INTERACTION_CBUTTON)){
-            action(&CURRENT_STATE);
+        if(INTERACT_CHECK){
+            action(&CURRENT_STATE, &associated);
         }
     }
 }

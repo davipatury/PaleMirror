@@ -23,7 +23,7 @@ void PlayerController::Update(float dt) {
         moveY = leftAxis.y;
     }
 
-    if (INPUT_MANAGER.KeyPress('c') || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_B)) {
+    if (INVENTORY->HasItemInHand(ITEM_CANO) && USE_CHECK) {
         chr->Issue(Character::Command(Character::Command::ATTACK, 0, 0));
     }
     if (moveX != 0 || moveY != 0) {

@@ -8,6 +8,7 @@
 #include "entities/characters/Character.h"
 #include "core/Component.h"
 #include "utils/InputManager.h"
+#include "hud/InventoryHUD.h"
 
 class PlayerController : public Component
 {

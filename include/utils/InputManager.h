@@ -19,6 +19,12 @@
 #define JOYSTICK_MAX_VALUE 32767.0f
 #define JOYSTICK_DEADZONE 2000
 
+// Default values
+#define INTERACT_CHECK  (INPUT_MANAGER.KeyPress(SDLK_e)      || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_A))
+#define USE_CHECK       (INPUT_MANAGER.KeyPress(SDLK_SPACE)  || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_X))
+#define BACK_CHECK      (INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_B))
+#define ESCAPE_CHECK    (INPUT_MANAGER.KeyPress(SDLK_ESCAPE) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_START))
+
 #define INPUT_MANAGER InputManager::GetInstance()
 
 #include "SDL.h"
@@ -49,6 +55,7 @@ public:
     int GetMouseX();
     int GetMouseY();
     Vec2 GetMousePos();
+    int GetMouseWheel();
 
     bool QuitRequested();
 
@@ -72,6 +79,7 @@ private:
 
     int mouseX;
     int mouseY;
+    int mouseWheel;
 
     SDL_GameController* controller;
     bool anyKeyPress;

@@ -102,6 +102,9 @@ void StageState::LoadAssets() {
 
     currentRoom = mainRoom;
     mainRoom->Enter();
+
+    // Give flashlight on begin (REMOVE LATER)
+    INVENTORY->Collect(ITEM_LANTERNA);
 }
 
 void StageState::Start() {
@@ -129,18 +132,6 @@ void StageState::Update(float dt) {
                 go->RequestDelete();
             }
         }
-    }
-
-    if (INPUT_MANAGER.KeyPress(SDLK_9)) {
-        INVENTORY->Collect(ITEM_VELA);
-    }
-
-    if (INPUT_MANAGER.KeyPress(SDLK_8)) {
-        INVENTORY->Remove(ITEM_VELA);
-    }
-
-    if (INPUT_MANAGER.KeyPress(SDLK_7)) {
-        INVENTORY->Collect(ITEM_CANO);
     }
 
     // Dialogue debug
