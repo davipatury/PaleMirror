@@ -24,6 +24,9 @@ StageState::~StageState() {
 }
 
 void StageState::LoadAssets() {
+    // Generate random paint puzzle solution
+    PaintPuzzle::GenerateRandomSolution();
+
     /*
      * Game Objects
      */
@@ -167,7 +170,7 @@ void StageState::Update(float dt) {
     // Spawn paint puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('p')) {
         GameObject* pp = new GameObject();
-        pp->AddComponent(new PaintPuzzle(*pp, PaintPuzzle::AMARELO_ALARANJADO));
+        pp->AddComponent(new PaintPuzzle(*pp));
         pp->box.z = PUZZLE_LAYER;
         pp->lazyRender = false;
         pp->pauseOnOpenUI = false;

@@ -41,13 +41,10 @@ public:
     };
     class BaldeTinta : public Item {
     public:
-        BaldeTinta(int a = 0) : Item(ITEM_BALDE_TINTA, "Recursos/img/items/balde.png"), tinta(Sprite("Recursos/img/items/tinta.png", 1, 1, true)) {}
-        void Render(float x, float y) override {
-            sprite.Render(x, y, sprite.GetWidth(), sprite.GetHeight());
-            SDL_SetTextureColorMod(tinta.texture, 255, 82, 0);
-            tinta.Render(x, y, sprite.GetWidth(), sprite.GetHeight());
-        }
+        BaldeTinta(int a = 0);
+        void Render(float x, float y) override;
         Sprite tinta;
+        Uint8 r, g, b;
     };
 
     int Collect(std::string itemName, int amount = 1);

@@ -1,5 +1,7 @@
 #include "hud/InventoryHUD.h"
 
+#include "components/puzzles/PaintPuzzle.h"
+
 #define AMT_OFFSET_X 36
 #define AMT_OFFSET_Y 36
 
@@ -115,4 +117,18 @@ int InventoryHUD::Remove(std::string itemName, int amount) {
 
 bool InventoryHUD::HasItemInHand(std::string itemName) {
     return inventory[selToolbar] != nullptr && inventory[selToolbar]->name == itemName;
+}
+
+// Balde de tinta
+InventoryHUD::BaldeTinta::BaldeTinta(int a) : Item(ITEM_BALDE_TINTA, "Recursos/img/items/balde.png", a), tinta(Sprite("Recursos/img/items/tinta.png", 1, 1, true)) {
+    SDL_Color corRitual = PaintPuzzle::GetSolutionColor();
+    r = corRitual.r;
+    g = corRitual.g;
+    b = corRitual.b;
+}
+
+void InventoryHUD::BaldeTinta::Render(float x, float y) {
+    sprite.Render(x, y, sprite.GetWidth(), sprite.GetHeight());
+    SDL_SetTextureColorMod(tinta.texture, r, g, b);
+    tinta.Render(x, y, sprite.GetWidth(), sprite.GetHeight());
 }

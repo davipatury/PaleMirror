@@ -5,6 +5,7 @@
 #include "actions/Actions.h"
 #include "components/Interactable.h"
 #include "core/State.h"
+#include "components/puzzles/PaintPuzzle.h"
 
 class BanheiroFemininoRoom : public Room
 {
