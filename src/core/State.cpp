@@ -154,6 +154,10 @@ bool State::PopRequested() {
     return popRequested;
 }
 
+void State::RequestPop() {
+    popRequested = true;
+}
+
 bool State::QuitRequested() {
     return quitRequested;
 }

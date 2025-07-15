@@ -81,3 +81,7 @@ void Interactable::SetType(InteractableHUD::InteractableType type) {
 void Interactable::SetHUDOffset(Vec2 offset) {
     this->hudOffset = offset;
 }
+
+void Interactable::SetAction(std::function<void (State*, GameObject*)> action) {
+    this->action = action;
+}

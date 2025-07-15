@@ -49,6 +49,7 @@ public:
 
     int Collect(std::string itemName, int amount = 1);
     int Remove(std::string itemName, int amount = 1);
+    bool HasItem(std::string itemName);
     bool HasItemInHand(std::string itemName);
 
     Item* inventory[4] = {nullptr};

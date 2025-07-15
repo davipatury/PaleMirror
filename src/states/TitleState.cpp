@@ -110,6 +110,10 @@ void TitleState::Pause() {
 }
 
 void TitleState::Resume() {
+    tutorial = false;
+    SpriteRenderer* sr = (SpriteRenderer*) bg->GetComponent("SpriteRenderer");
+    sr->Open("Recursos/img/menu/Home.jpeg");
+
     Camera::Unfollow();
     Camera::pos.x = 0;
     Camera::pos.y = 0;

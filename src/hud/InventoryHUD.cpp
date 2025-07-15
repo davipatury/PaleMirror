@@ -25,6 +25,8 @@ InventoryHUD::InventoryHUD(GameObject& associated) : Component(associated),
 InventoryHUD::~InventoryHUD() {}
 
 void InventoryHUD::Update(float dt) {
+    if (CURRENT_STATE.openUI) return;
+
     if (INPUT_MANAGER.KeyPress(SDLK_1))         selToolbar = 0;
     else if( INPUT_MANAGER.KeyPress(SDLK_2))    selToolbar = 1;
     else if(INPUT_MANAGER.KeyPress(SDLK_3))     selToolbar = 2;
@@ -114,6 +116,15 @@ int InventoryHUD::Remove(std::string itemName, int amount) {
     }
 
     return 0;
+}
+
+bool InventoryHUD::HasItem(std::string itemName) {
+    for (int i = 0; i < 4; i++) {
+        if (inventory[i] != nullptr && inventory[i]->name == itemName) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool InventoryHUD::HasItemInHand(std::string itemName) {

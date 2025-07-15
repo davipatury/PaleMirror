@@ -144,7 +144,6 @@ void Character::Update(float dt) {
                 Vec2 moveSpeed = task.pos.Normalized().MulScalar(linearSpeed * dt);
                 if (moveSpeed.x != 0 && moveSpeed.y != 0) {
                     // Straighten diagonal movement (xSpeed = 2 * ySpeed)
-                    // TODO: use 0.578125 instead of dividing/multiplying by 2
                     moveSpeed.x *= 1.5;
                     moveSpeed.y *= 0.8671875;
                 }

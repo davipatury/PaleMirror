@@ -28,6 +28,7 @@ public:
     virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* go);
 
     bool PopRequested();
+    void RequestPop();
     bool QuitRequested();
 
     bool openUI = false;
