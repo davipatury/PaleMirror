@@ -1,0 +1,51 @@
+#ifndef PAINTPUZZLE_H
+#define PAINTPUZZLE_H
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stdlib.h>
+
+#include "core/Game.h"
+#include "utils/InputManager.h"
+#include "math/Rect.h"
+#include "core/Sprite.h"
+#include "math/Vec2.h"
+#include "hud/DialogueHUD.h"
+
+class PaintPuzzle : public Component
+{
+public:
+    enum PaintState { QUADRO_VAZIO, QUADRO_PRIMARIO, QUADRO_SECUNDARIO, QUADRO_TERCIARIO, QUADRO_ERRADO, QUADRO_SOLVED };
+    enum PaintColor {
+        COR_VAZIA,
+        // Primarias
+        VERMELHO, AZUL, AMARELO,
+        // Secundarias
+        VIOLETA, LARANJA, VERDE,
+        // Terciarias
+        VERMELHO_ARROXEADO, VERMELHO_ALARANJADO, AMARELO_ESVERDEADO, AMARELO_ALARANJADO, AZUL_ROXEADO, AZUL_ESVERDEADO,
+        // Erros
+        COR_DESCONHECIDA
+    };
+
+    PaintPuzzle(GameObject& associated, PaintColor corCerta);
+
+    void Update(float dt);
+    void Render();
+    void Start();
+    bool Is(std::string type);
+
+    SDL_Color GetCurrentColor();
+    void Pintar(PaintColor cor);
+    bool IsSolved();
+
+    Rect selectedRect;
+    PaintState estadoAtual;
+    PaintColor corCerta;
+    PaintColor corAtual;
+    Sprite bg;
+    Sprite tinta;
+};
+
+#endif // PAINTPUZZLE_H

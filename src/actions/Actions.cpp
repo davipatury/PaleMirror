@@ -16,3 +16,9 @@ std::function<void (State*)> Actions::Document(const std::string& path) {
         // TODO: Create and call DocumentUI
     };
 }
+
+std::function<void (State*)> Actions::CollectItem() {
+    return [](State* state) {
+        // Create inventory system
+    };
+}

@@ -58,6 +58,9 @@ void StageState::LoadAssets() {
 
     GameObject* hud = new GameObject("[HUD]");
     hud->AddComponent(new HealthHUD(*hud));
+    InventoryHUD* inv = new InventoryHUD(*hud);
+    InventoryHUD::instance = inv;
+    hud->AddComponent(inv);
     hud->AddComponent(new InteractableHUD(*hud));
     hud->box.z = HUD_LAYER;
     hud->lazyRender = false;
@@ -119,7 +122,7 @@ void StageState::Update(float dt) {
     }
 
     // Debug delete monsters
-    if (INPUT_MANAGER.IsKeyDown(SDLK_DELETE)) {
+    if (INPUT_MANAGER.KeyPress(SDLK_DELETE)) {
         for (int i = 0; i < objectArray.size(); i++) {
             GameObject* go = objectArray[i].get();
             if (go->GetComponent("Zombie") != nullptr || go->GetComponent("AIController") != nullptr) {
@@ -128,8 +131,20 @@ void StageState::Update(float dt) {
         }
     }
 
+    if (INPUT_MANAGER.KeyPress(SDLK_9)) {
+        INVENTORY->Collect(ITEM_VELA);
+    }
+
+    if (INPUT_MANAGER.KeyPress(SDLK_8)) {
+        INVENTORY->Remove(ITEM_VELA);
+    }
+
+    if (INPUT_MANAGER.KeyPress(SDLK_7)) {
+        INVENTORY->Collect(ITEM_CANO);
+    }
+
     // Dialogue debug
-    if (!openUI && INPUT_MANAGER.IsKeyDown('o')) {
+    if (!openUI && INPUT_MANAGER.KeyPress('o')) {
         DialogueHUD::RequestDialogue("test");
     }
 

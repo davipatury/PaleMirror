@@ -3,21 +3,13 @@
 HealthHUD::HealthHUD(GameObject& associated) : Component(associated),
     dmg1("Recursos/img/hud/dmg1.png", 1, 1, true),
     dmg2("Recursos/img/hud/dmg2.png", 1, 1, true),
-    dmg3("Recursos/img/hud/dmg3.png", 1, 1, true),
-    toolbar("Recursos/img/hud/toolbar.png", 1, 1, true),
-    toolbarselect("Recursos/img/hud/toolbar-selector.png", 1, 1, true)
+    dmg3("Recursos/img/hud/dmg3.png", 1, 1, true)
 {
-    selToolbar = 0;
 }
 
 HealthHUD::~HealthHUD() {}
 
-void HealthHUD::Update(float dt) {
-    if (INPUT_MANAGER.KeyPress(SDLK_1))         selToolbar = 0;
-    else if( INPUT_MANAGER.KeyPress(SDLK_2))    selToolbar = 1;
-    else if(INPUT_MANAGER.KeyPress(SDLK_3))     selToolbar = 2;
-    else if (INPUT_MANAGER.KeyPress(SDLK_4))    selToolbar = 3;
-}
+void HealthHUD::Update(float dt) {}
 
 void HealthHUD::Render() {
     if (Character::player == nullptr) return;
@@ -29,9 +21,6 @@ void HealthHUD::Render() {
     } else if (hp < 80) {
         dmg1.Render(0, 0, 1200, 900);
     }
-
-    toolbar.Render(460, 760, toolbar.GetWidth(), toolbar.GetHeight());
-    toolbarselect.Render(467 + selToolbar * (9 + toolbarselect.GetWidth()), 769, toolbarselect.GetWidth(), toolbarselect.GetHeight());
 }
 
 bool HealthHUD::Is(std::string type) {
