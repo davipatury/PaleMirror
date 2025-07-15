@@ -1,7 +1,6 @@
 #include "states/StageState.h"
 #include "components/Interactable.h"
 #include <memory>
-#include "entities/projectiles/HitAttack.h"
 #include "core/GameData.h"
 #include "math.h"
 
@@ -184,6 +183,16 @@ void StageState::Update(float dt) {
         pip->lazyRender = false;
         pip->pauseOnOpenUI = false;
         AddObject(pip);
+    }
+
+    // Spawn locker puzzle
+    if (!openUI && INPUT_MANAGER.KeyPress('l')) {
+        GameObject* lp = new GameObject();
+        lp->AddComponent(new LockPuzzle(*lp, "1234"));
+        lp->box.z = PUZZLE_LAYER;
+        lp->lazyRender = false;
+        lp->pauseOnOpenUI = false;
+        AddObject(lp);
     }
 
     if(GameData::zombieFarAway and zombieFarAwayTimer.Get() > 15) {
