@@ -15,7 +15,9 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     helenaBrava("Recursos/img/hud/helena-brava.png", 1, 1, true),
     helenaFeliz("Recursos/img/hud/helena-feliz.png", 1, 1, true),
     helenaNeutra("Recursos/img/hud/helena-neutra.png", 1, 1, true),
-    enelah("Recursos/img/hud/enelah.png", 1, 1, true),
+    anelehBrava("Recursos/img/hud/aneleh-brava.png", 1, 1, true),
+    anelehFeliz("Recursos/img/hud/aneleh-feliz.png", 1, 1, true),
+    anelehInocente("Recursos/img/hud/aneleh-inocente.png", 1, 1, true),
     madu("Recursos/img/hud/madu.png", 1, 1, true),
     maju("Recursos/img/hud/maju.png", 1, 1, true),
     malu("Recursos/img/hud/malu.png", 1, 1, true)
@@ -76,52 +78,50 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         }
     };
 
-    dialogueLines["prologoMarias"] = {
+    dialogueLines["prologoPreRitual"] = {
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
         "E se alguem da escola nos ver aqui?", true
         },
-        {"Maju", "Maju", {101, 38, 141, 255},
+        {"Maju", "Maju", {118, 191, 27, 255},
         "Cala a boca! É por isso que a gente esperou todo mundo sair para invadir a escola, cabeça de pirulito.", true
         },
-        {"Malu", "Malu", {101, 38, 141, 255},
+        {"Malu", "Malu", {223, 197, 62, 255},
         "Está com medinho do ritual Helena? Achei que você queria entrar para o nosso grupinho...", true
         },
-        {"Madu", "Madu", {101, 38, 141, 255},
+        {"Madu", "Madu", {167, 8, 8, 255},
         "Ela está com medinho hihihihi.", true
         },
         {"HelenaBrava", "Helena", {101, 38, 141, 255},
         "Não estou!", true
         },
-        {"Malu", "Malu", {101, 38, 141, 255},
+        {"Malu", "Malu", {223, 197, 62, 255},
         "Então prove para gente, vai na frente e faça o ritual.", true
         },
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt ultrices mi non suscipit. Suspendisse vitae consequat turpis. Donec bibendum velit felis, in sodales ipsum eleifend sit amet."
         },
+    };
 
-        //barulho de tranca
-
-        {"Madu", "Madu", {101, 38, 141, 255},
+    dialogueLines["prologoRitual"] = {
+        {"Madu", "Madu", {167, 8, 8, 255},
         "hihihihi", true
         },
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
         "O QUE VOCÊS ESTÃO FAZENDO? ABREM A PORTA! POR FAVOR!", true
         },
-        {"Maju", "Maju", {101, 38, 141, 255},
+        {"Maju", "Maju", {118, 191, 27, 255},
         "Você sempre têm ideias tão boas Malu!", true
         },
-        {"Malu", "Malu", {101, 38, 141, 255},
+        {"Malu", "Malu", {223, 197, 62, 255},
         "Eu sei, eu sou perfeita.", true
         },
-        {"Madu", "Madu", {101, 38, 141, 255},
+        {"Madu", "Madu", {167, 8, 8, 255},
         "bye bye", true
         },
-        
-        //tela pisca e barulhos sinistros
     };
 
-    dialogueLines["prologoEnelah"] = {
-        {"Enelah", "Enelah", {101, 38, 141, 255},
+    dialogueLines["prologoPosRitual"] = {
+        {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
         "Helena? Você está bem?", true
         },
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
@@ -130,7 +130,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
         "Q-quem é vo-você? C-como sabe meu nome?",
         },
-        {"Enelah", "Enelah", {101, 38, 141, 255},
+        {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
         "Desculpe te assustar, me chamo Eneleh, você acabou desmaiando e eu fiquei preocupada... eu vi o que elas fizeram com você.", true
         },
         {"HelenaBrava", "Helena", {101, 38, 141, 255},
@@ -139,22 +139,22 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Mas e como você foi parar aí dentro do espelho?",
         },
-        {"Enelah", "Enelah", {101, 38, 141, 255},
+        {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
         "Ahhh isso é uma longa história, me prenderam nesse espelho há muitos anos atrás.", true
         },
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Assim, estamos trancadas aqui até amanhã, então temos tempo.", true
         },
-        {"Enelah", "Enelah", {101, 38, 141, 255},
+        {"AnelehInocente", "Aneleh", {199, 90, 15, 255},
         "Verdadade. Desculpe, é que não estou acostumada com isso. Eu nunca tive uma amiga, sempre fui excluída e zombavam de mim... você entende né?", true
         },
         {"HelanaNeutra", "Helena", {101, 38, 141, 255},
         "Err, te entendo bem.", true
         },
-        {"Enelah", "Enelah", {101, 38, 141, 255},
+        {"AnelehFeliz", "Aneleh", {101, 38, 141, 255},
         "Fico muito feliz de ter te conhecido Helena.", true
         },
-        {"Enelah", "Enelah", {101, 38, 141, 255},
+        {"AnelehInocente", "Aneleh", {199, 90, 15, 255},
         "Antes de te contar a história, tem como me tirar daqui? Esse espelho está um pouco quebrado, preciso de sua ajuda para conserta-lo, amiga.",
         },
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
@@ -222,7 +222,9 @@ void DialogueHUD::Update(float dt) {
             else if (dialLine.picture == "HelenaBrava") pictureSprite = &helenaBrava;
             else if (dialLine.picture == "HelenaFeliz") pictureSprite = &helenaFeliz;
             else if (dialLine.picture == "HelenaNeutra") pictureSprite = &helenaNeutra;
-            else if (dialLine.picture == "Enelah") pictureSprite = &enelah;
+            else if (dialLine.picture == "AnelehBrava") pictureSprite = &anelehBrava;
+            else if (dialLine.picture == "AnelehFeliz") pictureSprite = &anelehFeliz;
+            else if (dialLine.picture == "AnelehInocente") pictureSprite = &anelehInocente;
             else if (dialLine.picture == "Madu") pictureSprite = &madu;
             else if (dialLine.picture == "Maju") pictureSprite = &maju;
             else if (dialLine.picture == "Malu") pictureSprite = &malu;

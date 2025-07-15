@@ -54,6 +54,10 @@ public:
 
     std::vector<Pipe> pipes;
     std::vector<int> rotated;
+    std::vector<float> pipeAngles;
+    std::vector<float> pipeTargetAngles;
+
+    Sound* pipePressed;
     int selectedPiece;
     bool solved = false;
 

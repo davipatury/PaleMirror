@@ -58,6 +58,7 @@ public:
     bool solved = false;
 
     Sprite bg;
+    Sound* fusePressed;
 };
 
 #endif // FUSEPUZZLE_H

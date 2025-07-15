@@ -49,6 +49,7 @@ public:
     PaintColor corAtual;
     Sprite bg;
     Sprite tinta;
+    Sound* splash;
 
     static PaintColor solution;
     static PaintColor possibleSolutions[];
