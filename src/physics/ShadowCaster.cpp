@@ -9,7 +9,7 @@ SDL_BlendMode blendMode = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ZERO, SDL_B
 ShadowCaster::ShadowCaster(GameObject& associated, Vec2 offset) : Component(associated) {
     this->offset = offset;
     fixedVertices = false;
-    shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, 1200, 900);
+    shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
     SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_BLEND);
 }
 
@@ -17,7 +17,7 @@ ShadowCaster::ShadowCaster(GameObject &associated, std::vector<Vec2> offsetVecto
     this->offset = {0, 0};
     this->offsetVectors = offsetVectors;
     fixedVertices = true;
-    shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, 1200, 900);
+    shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
     SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_BLEND);
 }
 
@@ -83,14 +83,14 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     }
 
     // Screen vertices and edges
-    relativeVertices.push_back({0, 900});
-    relativeVertices.push_back({1200, 900});
+    relativeVertices.push_back({0, WINDOW_HEIGHT});
+    relativeVertices.push_back({WINDOW_WIDTH, WINDOW_HEIGHT});
     relativeVertices.push_back({0, 0});
-    relativeVertices.push_back({1200, 0});
-    edges.push_back({{0, 0}, {0, 900}});
-    edges.push_back({{0, 900}, {1200, 900}});
-    edges.push_back({{1200, 900}, {1200, 0}});
-    edges.push_back({{0, 0}, {1200, 0}});
+    relativeVertices.push_back({WINDOW_WIDTH, 0});
+    edges.push_back({{0, 0}, {0, WINDOW_HEIGHT}});
+    edges.push_back({{0, WINDOW_HEIGHT}, {WINDOW_WIDTH, WINDOW_HEIGHT}});
+    edges.push_back({{WINDOW_WIDTH, WINDOW_HEIGHT}, {WINDOW_WIDTH, 0}});
+    edges.push_back({{0, 0}, {WINDOW_WIDTH, 0}});
 
     std::vector<SDL_Vertex> renderVertices;
     //std::cout << std::endl << "Vertices " << relativeVertices.size() << std::endl;
@@ -146,7 +146,7 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     }
 
     // Clear shadow texture
-    SDL_Rect screenRect = {0, 0, 1200, 900};
+    SDL_Rect screenRect = WINDOW_RECT;
     SDL_SetRenderTarget(GAME_RENDERER, shadow);
     //SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawBlendMode(GAME_RENDERER, SDL_BLENDMODE_NONE);

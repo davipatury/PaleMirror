@@ -56,7 +56,7 @@ void MirrorPuzzle::Update(float dt) {
 }
 
 void MirrorPuzzle::Render() {
-    bg.Render(0, 0, 1200, 900);
+    bg.Render(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
     // Background rectangle
     SDL_Rect bgRect = {MIRROR_PUZZLE_RECT_X, MIRROR_PUZZLE_RECT_Y, 250, 500};

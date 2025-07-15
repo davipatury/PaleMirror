@@ -67,6 +67,7 @@ private:
 
     int KeyToIndex(int key);
     float ParseAxis(int value);
+    void ConfigureController();
 
     bool mouseState[6];
     int mouseUpdate[6];

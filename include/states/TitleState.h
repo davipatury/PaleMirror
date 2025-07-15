@@ -26,6 +26,9 @@ public:
     Music titleMusic;
     int selectedOption;
 
+    GameObject* bg;
+    bool tutorial = false;
+
     Sprite button;
     Sprite activeButton;
 

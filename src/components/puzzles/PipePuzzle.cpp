@@ -55,11 +55,7 @@ void PipePuzzle::Update(float dt) {
 }
 
 void PipePuzzle::Render() {
-    SDL_Rect bgRect;
-    bgRect.x = PIPE_PUZZLE_RECT_X;
-    bgRect.y = PIPE_PUZZLE_RECT_Y;
-    bgRect.w = 1200;
-    bgRect.h = 900;
+    SDL_Rect bgRect = WINDOW_RECT;
 
     // Background rectangle
     bg.Render(bgRect.x, bgRect.y, bgRect.w, bgRect.h);

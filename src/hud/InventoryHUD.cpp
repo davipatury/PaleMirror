@@ -42,13 +42,14 @@ void InventoryHUD::Update(float dt) {
 
 void InventoryHUD::Render() {
     // Render toolbar
-    toolbar.Render(460, 760, toolbar.GetWidth(), toolbar.GetHeight());
-    toolbarSelect.Render(467 + selToolbar * (9 + toolbarSelect.GetWidth()), 769, toolbarSelect.GetWidth(), toolbarSelect.GetHeight());
+    int toolbarX = (WINDOW_WIDTH - toolbar.GetWidth()) * 0.5;
+    toolbar.Render(toolbarX, 760, toolbar.GetWidth(), toolbar.GetHeight());
+    toolbarSelect.Render(toolbarX + 7 + selToolbar * (9 + toolbarSelect.GetWidth()), 769, toolbarSelect.GetWidth(), toolbarSelect.GetHeight());
 
     // Render item icons
     for (int i = 0; i < 4; i++) {
         if (inventory[i] != nullptr) {
-            float x = (62 * i) + 469;
+            float x = (62 * i) + toolbarX + 9;
             float y = 771;
             inventory[i]->Render(x, y);
             if (inventory[i]->amount > 1) {
@@ -63,7 +64,7 @@ void InventoryHUD::Render() {
     // Render selected item name
     if (inventory[selToolbar] != nullptr) {
         itemNameText->SetText(inventory[selToolbar]->name);
-        itemNameText->SetPos({600 - itemNameText->GetWidth() / 2, 850});
+        itemNameText->SetPos({(WINDOW_WIDTH - itemNameText->GetWidth()) / 2, 850});
         itemNameText->Render();
     }
 }

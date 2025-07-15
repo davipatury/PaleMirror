@@ -60,11 +60,16 @@ void StageState::LoadAssets() {
     AddObject(flHUD);
 
     GameObject* hud = new GameObject("[HUD]");
+    // HealthHUD
     hud->AddComponent(new HealthHUD(*hud));
+    // InventoryHUD
     InventoryHUD* inv = new InventoryHUD(*hud);
     InventoryHUD::instance = inv;
     hud->AddComponent(inv);
-    hud->AddComponent(new InteractableHUD(*hud));
+    // IntactableHUD
+    InteractableHUD* intr = new InteractableHUD(*hud);
+    InteractableHUD::instance = intr;
+    hud->AddComponent(intr);
     hud->box.z = HUD_LAYER;
     hud->lazyRender = false;
     hud->pauseOnOpenUI = false;
@@ -137,6 +142,13 @@ void StageState::Update(float dt) {
                 go->RequestDelete();
             }
         }
+    }
+
+    // Fullscreen
+    if (INPUT_MANAGER.KeyPress(SDLK_F11)) {
+        Uint32 flags = SDL_GetWindowFlags(GAME_WINDOW);
+        bool isFullscreen = flags & SDL_WINDOW_FULLSCREEN;
+        SDL_SetWindowFullscreen(GAME_WINDOW, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
     }
 
     // Dialogue debug

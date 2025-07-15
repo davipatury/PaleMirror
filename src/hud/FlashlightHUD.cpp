@@ -12,7 +12,7 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
     int bmRet = SDL_SetTextureBlendMode(backlight.texture, bm);
     if (bmRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode: " << SDL_GetError() << std::endl;
 
-    texture = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 1200, 900);
+    texture = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
 #ifdef DEBUG_FLASHLIGHT
@@ -61,7 +61,7 @@ void FlashlightHUD::Render() {
     SDL_SetRenderTarget(GAME_RENDERER, texture);
 
     // Draw all screen black rectangle
-    SDL_Rect screenRect = {0, 0, 1200, 900};
+    SDL_Rect screenRect = WINDOW_RECT;
     SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(GAME_RENDERER, &screenRect);
 
@@ -70,7 +70,7 @@ void FlashlightHUD::Render() {
 
     // Flashlight cone
     if (INVENTORY->HasItemInHand(ITEM_LANTERNA) && flashlightOn) {
-        int flashlightSize = 600;
+        int flashlightSize = WINDOW_WIDTH * 0.5;
         float flashlightAngle = M_PI / 8;
         Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(angle - flashlightAngle), origin.y - flashlightSize * cos(angle - flashlightAngle));
         Vec2 flRight = Vec2(origin.x + flashlightSize * sin(angle + flashlightAngle), origin.y - flashlightSize * cos(angle + flashlightAngle));

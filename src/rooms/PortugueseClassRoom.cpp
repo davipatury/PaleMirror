@@ -39,7 +39,7 @@ void PortugueseClassRoom::Build() {
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
-    roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 0), DOOR_BACK_INTERACT_DIST));
+    roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 0), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));
     state->AddObject(roomDoorBack);
 
     GameObject* zombie = createGO("[Monster]", 675, 500);

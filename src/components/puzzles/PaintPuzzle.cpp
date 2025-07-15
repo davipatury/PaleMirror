@@ -93,7 +93,7 @@ void PaintPuzzle::Update(float dt) {
 
 void PaintPuzzle::Render() {
     // Semi transparent black background
-    SDL_Rect screenRect = {0, 0, 1200, 900};
+    SDL_Rect screenRect = WINDOW_RECT;
     SDL_SetRenderDrawBlendMode(GAME_RENDERER, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, 127);
     SDL_RenderFillRect(GAME_RENDERER, &screenRect);

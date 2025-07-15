@@ -19,13 +19,7 @@ InputManager::InputManager() {
     }
 
     std::cout << "[InputManager] Total joysticks found: " << SDL_NumJoysticks() << std::endl;
-    for (int i = 0; i < SDL_NumJoysticks(); i++) {
-        if (SDL_IsGameController(i)) {
-            controller = SDL_GameControllerOpen(i);
-            std::cout << "[InputManager] Controller index used: " << i << std::endl;
-            break;
-        }
-    }
+    ConfigureController();
 
     updateCounter = 0;
     quitRequested = false;
@@ -34,7 +28,9 @@ InputManager::InputManager() {
     mouseY = 0;
 }
 
-InputManager::~InputManager() { }
+InputManager::~InputManager() {
+    if (HasController()) SDL_GameControllerClose(controller);
+}
 
 void InputManager::Update() {
     updateCounter++;
@@ -83,6 +79,17 @@ void InputManager::Update() {
         }
         case SDL_MOUSEWHEEL: {
             mouseWheel = event.wheel.y;
+            break;
+        }
+        case SDL_CONTROLLERDEVICEREMOVED: {
+            std::cout << "[InputManager] Controller removed" << std::endl;
+            SDL_GameControllerClose(controller);
+            controller = nullptr;
+            ConfigureController();
+            break;
+        }
+        case SDL_CONTROLLERDEVICEADDED: {
+            if (!HasController()) ConfigureController();
             break;
         }
         case SDL_QUIT:
@@ -153,6 +160,16 @@ int InputManager::GetMouseWheel() {
 /*
  * Controller input
  */
+void InputManager::ConfigureController() {
+    for (int i = 0; i < SDL_NumJoysticks(); i++) {
+        if (SDL_IsGameController(i)) {
+            controller = SDL_GameControllerOpen(i);
+            std::cout << "[InputManager] Controller index used: " << i << std::endl;
+            break;
+        }
+    }
+}
+
 bool InputManager::HasController() {
     return controller != nullptr;
 }
