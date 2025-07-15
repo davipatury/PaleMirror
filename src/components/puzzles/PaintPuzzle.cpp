@@ -22,6 +22,7 @@ PaintPuzzle::PaintPuzzle(GameObject& associated) : Component(associated),
     bg("Recursos/img/paint_puzzle/cavalete.png", 1, 1, true),
     tinta("Recursos/img/paint_puzzle/paint.png", 1, 1, true)
 {
+    splash = new Sound("Recursos/audio/sounds/puzzle/splash-tinta-2.wav");
     corAtual = COR_VAZIA;
     estadoAtual = QUADRO_VAZIO;
     selectedRect = EMPTY_RECT;
@@ -69,12 +70,16 @@ void PaintPuzzle::Update(float dt) {
     if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
         // Check if mouse is inside rects
         if (selectedRect == RECT_VERMELHO) {
+            splash->Play();
             Pintar(VERMELHO);
         } else if (selectedRect == RECT_AZUL) {
+            splash->Play();
             Pintar(AZUL);
         } else if (selectedRect == RECT_AMARELO) {
+            splash->Play();
             Pintar(AMARELO);
         } else if (selectedRect == RECT_LIMPAR) {
+            splash->Play();
             corAtual = COR_VAZIA;
             estadoAtual = QUADRO_VAZIO;
         }

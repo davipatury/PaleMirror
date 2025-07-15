@@ -4,17 +4,32 @@
 #define PIPE_PUZZLE_RECT_Y 0
 
 PipePuzzle::PipePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/pipe_puzzle/pipebg.png", 1, 1, true) {
-    for(int i=0; i<16; i++) pipes.push_back(Pipe()), rotated.push_back(0);
+    for(int i=0; i<16; i++) pipes.push_back(Pipe()), rotated.push_back(0), pipeAngles.push_back(0.0f), pipeTargetAngles.push_back(0.0f);
+    pipePressed = new Sound("Recursos/audio/sounds/puzzle/cano-mexendo-3.wav");
 }
 
 void PipePuzzle::PipePressed(int idx){
+    pipePressed->Play();
     rotated[idx] = (rotated[idx] + 1) % 4;
-    std::cout << "idx: " << idx << " rotated: " << rotated[idx] << std::endl;
-    // GIRA 90 GRAUS
+    pipeTargetAngles[idx] += 90.0f;
 }
 
 void PipePuzzle::Update(float dt) {
     if (solved) return;
+
+    const float ROTATION_SPEED = 360.0f;
+
+    for(int i = 0; i < pipes.size(); i++) {
+        float diff = pipeTargetAngles[i] - pipeAngles[i];
+        if (std::fabs(diff) > 0.1f) {
+            float delta = ROTATION_SPEED * dt;
+            if (std::fabs(diff) < delta) {
+                pipeAngles[i] = pipeTargetAngles[i];
+            } else {
+                pipeAngles[i] += delta;
+            }
+        }
+    }
 
     if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
         Vec2 mousePos = {(float) INPUT_MANAGER.GetMouseX(), (float) INPUT_MANAGER.GetMouseY()};
@@ -49,7 +64,7 @@ void PipePuzzle::Render() {
     for (int i = 0; i < pipes.size(); i++) {
         float x = pipes[i].pos.x + bgRect.x;
         float y = pipes[i].pos.y + bgRect.y;
-        pipes[i].sprite.Render(x, y, pipes[i].GetWidth(), pipes[i].GetHeight(), rotated[i] * 90);
+        pipes[i].sprite.Render(x, y, pipes[i].GetWidth(), pipes[i].GetHeight(), fmod(pipeAngles[i], 360.0f));
     }
 }
 

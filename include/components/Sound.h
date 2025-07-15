@@ -15,7 +15,7 @@ public:
     Sound(const char* file);
     ~Sound();
 
-    void Play(int time = 1);
+    void Play(int time = 0);
     void Stop();
     void Open(const char* file);
 

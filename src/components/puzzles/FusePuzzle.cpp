@@ -5,9 +5,12 @@
 
 FusePuzzle::FusePuzzle(GameObject& associated) : Component(associated), bg("Recursos/img/fuse_puzzle/fuseboxbg.png", 1, 1, true){
     for(int i=0; i<9; i++) fuses.push_back(Fuse());
+    fusePressed = new Sound("Recursos/audio/sounds/puzzle/click.wav");
 }
 
 void FusePuzzle::FusePressed(int idx){
+    fusePressed->Play();
+
     std::vector<int> adjacentFuses = {idx};
     if(idx%3 > 0) adjacentFuses.push_back(idx - 1);
     if(idx%3 < 2) adjacentFuses.push_back(idx + 1);
@@ -71,9 +74,10 @@ void FusePuzzle::Start() {
 
     for (int i = 0; i < fuses.size(); i++) {
         fuses[i].pos = {(float) (376 + (i%3 * 96)), (float) (90 + (i/3 * 126))};
-        bool on = (rand() % 2);
-        always_on &= on;
-        if(i == fuses.size()-1 && always_on) on = 0;
+        bool on = 0;
+        //bool on = (rand() % 2);
+        //always_on &= on;
+        //if(i == fuses.size()-1 && always_on) on = 0;
         fuses[i].on = on;
         fuses[i].sprite.SetFrame(on);
     }
