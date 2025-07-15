@@ -57,10 +57,9 @@ void BanheiroFemininoRoom::Build() {
 
     // Simbolo ritual
     GameObject* ritual = createGO("[OBJ-BANHEIRO-FEM] Ritual", 433, 730);
-    SpriteRenderer* ritualSR = new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual.png");
-    SDL_Color corRitual = PaintPuzzle::GetSolutionColor();
-    ritualSR->SetColorMod(corRitual.r, corRitual.g, corRitual.b);
-    ritual->AddComponent(ritualSR);
+    ritual->AddComponent(new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual.png"));
+    ritual->AddComponent(new Interactable(*ritual, nullptr));
+    ritual->AddComponent(new RunaRitual(*ritual));
     state->AddObject(ritual);
 
     // Espelho

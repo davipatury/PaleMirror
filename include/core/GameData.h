@@ -6,6 +6,9 @@ class GameData
 public:
     static bool playerVictory;
     static bool zombieFarAway;
+
+    enum RuneState { RUNA_ALAGADA, RUNA_VAZIA, RUNA_DESENHADA, RUNA_COM_UMA_VELA, RUNA_FINALIZADA };
+    static RuneState runeState;
 };
 
 #endif // GAMEDATA_H

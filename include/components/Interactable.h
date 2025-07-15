@@ -44,6 +44,7 @@ class Interactable : public Component {
         void SetHUDText(std::string text);
         void SetType(InteractableHUD::InteractableType type);
         void SetHUDOffset(Vec2 offset);
+        void SetAction(std::function<void (State*, GameObject*)> action);
 
         void SetActivationDistance(float d) { activationDistance = d; }
     };

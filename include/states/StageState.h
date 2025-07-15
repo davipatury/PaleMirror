@@ -36,6 +36,7 @@
 #include "hud/InteractableHUD.h"
 #include "hud/FlashlightHUD.h"
 #include "hud/InventoryHUD.h"
+#include "hud/PauseHUD.h"
 #include "utils/Text.h"
 #include "math/Vec2.h"
 #include "components/WaveSpawner.h"

@@ -52,6 +52,7 @@ void StageState::LoadAssets() {
     AddObject(scc);
 
     // HUD
+    // Flashlight
     GameObject* flHUD = new GameObject("[FlashlightHUD]");
     flHUD->AddComponent(new FlashlightHUD(*flHUD));
     flHUD->box.z = FLASHLIGHT_LAYER;
@@ -59,6 +60,7 @@ void StageState::LoadAssets() {
     flHUD->pauseOnOpenUI = false;
     AddObject(flHUD);
 
+    // General
     GameObject* hud = new GameObject("[HUD]");
     // HealthHUD
     hud->AddComponent(new HealthHUD(*hud));
@@ -74,7 +76,13 @@ void StageState::LoadAssets() {
     hud->lazyRender = false;
     hud->pauseOnOpenUI = false;
     AddObject(hud);
-
+    // Pause
+    GameObject* pauseHUD = new GameObject("[PauseHUD]");
+    pauseHUD->AddComponent(new PauseHUD(*pauseHUD));
+    pauseHUD->box.z = HUD_LAYER;
+    pauseHUD->lazyRender = false;
+    AddObject(pauseHUD);
+    // Dialogue
     GameObject* dHud = new GameObject("[DialogueHUD]");
     dHud->AddComponent(new DialogueHUD(*dHud));
     dHud->box.z = DIALOGUE_LAYER;
@@ -130,10 +138,6 @@ void StageState::Update(float dt) {
         quitRequested = true;
     }
 
-    if (!openUI && ESCAPE_CHECK) {
-        popRequested = true;
-    }
-
     // Debug delete monsters
     if (INPUT_MANAGER.KeyPress(SDLK_DELETE)) {
         for (int i = 0; i < objectArray.size(); i++) {
@@ -149,6 +153,11 @@ void StageState::Update(float dt) {
         Uint32 flags = SDL_GetWindowFlags(GAME_WINDOW);
         bool isFullscreen = flags & SDL_WINDOW_FULLSCREEN;
         SDL_SetWindowFullscreen(GAME_WINDOW, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+    }
+
+    if (INPUT_MANAGER.KeyPress('y')) {
+        std::cout << "Finge que arrumei os canos la" << std::endl;
+        GameData::runeState = GameData::RUNA_VAZIA;
     }
 
     // Dialogue debug

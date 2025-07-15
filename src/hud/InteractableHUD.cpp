@@ -26,7 +26,7 @@ void InteractableHUD::Update(float dt) {
 }
 
 void InteractableHUD::Render() {
-    if (interactableGO != nullptr) {
+    if (interactableGO != nullptr && !interactableGO->isDead) {
         Sprite key;
         if (INPUT_MANAGER.HasController()) {
             if (type == INTERACT)       key = cbuttonA;
