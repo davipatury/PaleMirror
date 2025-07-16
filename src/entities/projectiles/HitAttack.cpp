@@ -7,7 +7,7 @@ HitAttack::HitAttack(GameObject& associated, int damage, float duration) : Compo
 }
 
 void HitAttack::Start() {
-    IsoCollider* collider = new IsoCollider(associated, {1.2, 1.2}, {-10, -45});
+    IsoCollider* collider = new IsoCollider(associated, {1.2, 1.2}, {-10, -45}, true);
     associated.AddComponent(collider);
 }
 

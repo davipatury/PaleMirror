@@ -132,7 +132,7 @@ bool Zombie::checkCollision(float x, float y) {
         GameObject* go = oA[i].get();
         if (go == &associated) continue;
         IsoCollider* colliderA = (IsoCollider*) go->GetComponent("IsoCollider");
-        if(colliderA != nullptr and colliderA->box.Collides(isoBox) and (go->GetComponent("Character") == nullptr)) {
+        if(colliderA != nullptr and !colliderA->passable and colliderA->box.Collides(isoBox) and (go->GetComponent("Character") == nullptr)) {
             return true;
         }
     }
