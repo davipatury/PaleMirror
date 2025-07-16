@@ -9,6 +9,7 @@
 #include "entities/characters/Character.h"
 #include "core/Component.h"
 #include "hud/InventoryHUD.h"
+#include "components/LightEmitter.h"
 
 class FlashlightHUD : public Component
 {
@@ -31,6 +32,7 @@ public:
 private:
     Sprite backlight;
     SDL_Texture* texture;
+    SDL_Texture* supportTexture;
     bool isDark;
     bool flashlightOn;
     float angle;

@@ -59,6 +59,11 @@ void BanheiroFemininoRoom::Build() {
     GameObject* ritual = createGO("[OBJ-BANHEIRO-FEM] Ritual", 433, 730);
     ritual->AddComponent(new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual.png"));
     ritual->AddComponent(new Interactable(*ritual, nullptr));
+    ritual->AddComponent(new LightEmitter(*ritual, {
+        // Offset, Scale, Enabled, Sprite path
+        {{26, -5}, {0.5, 0.5}, false, "Recursos/img/lighting/backlight_inv_orange.png"},
+        {{232, 112}, {0.5, 0.5}, false, "Recursos/img/lighting/backlight_inv_orange.png"}
+    }));
     ritual->AddComponent(new RunaRitual(*ritual));
     state->AddObject(ritual);
 

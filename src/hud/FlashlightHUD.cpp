@@ -3,7 +3,11 @@
 
 //#define DEBUG_FLASHLIGHT
 
-FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), backlight("Recursos/img/lighting/backlight.png", 1, 1, true) {
+SDL_BlendMode invertAlphaBM = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+SDL_BlendMode objectsBM = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+
+
+FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), backlight("Recursos/img/lighting/backlight_inv.png", 1, 1, true) {
     isDark = true;
     flashlightOn = true;
     angle = 0;
@@ -14,6 +18,8 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
 
     texture = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    supportTexture = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
+    SDL_SetTextureBlendMode(supportTexture, SDL_BLENDMODE_BLEND);
 
 #ifdef DEBUG_FLASHLIGHT
     SDL_RendererInfo rendererInfo;
@@ -57,13 +63,15 @@ void FlashlightHUD::Render() {
     int BLoffsetX = backlight.GetWidth() * 0.5;
     int BLoffsetY = backlight.GetHeight() * 0.5;
 
-    // Custom texture
-    SDL_SetRenderTarget(GAME_RENDERER, texture);
-
-    // Draw all screen black rectangle
-    SDL_Rect screenRect = WINDOW_RECT;
+    // Support texture
+    SDL_SetRenderTarget(GAME_RENDERER, supportTexture);
     SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(GAME_RENDERER, &screenRect);
+    SDL_RenderClear(GAME_RENDERER);
+
+    // Main texture
+    SDL_SetRenderTarget(GAME_RENDERER, texture);
+    SDL_SetRenderDrawColor(GAME_RENDERER, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+    SDL_RenderClear(GAME_RENDERER);
 
     // Backlight
     backlight.Render(origin.x - BLoffsetX, origin.y - BLoffsetY, backlight.GetWidth(), backlight.GetHeight());
@@ -86,7 +94,7 @@ void FlashlightHUD::Render() {
     std::vector<GameObject*> objArray = CURRENT_STATE.RenderSort(0);
     for (int i = 0; i < objArray.size(); i++) {
         GameObject* obj = objArray[i];
-        if (obj->box.z == 0) {
+        if (obj->box.z == 0 && Camera::PosRect().Collides(obj->box)) {
             if (!CURRENT_STATE.dependsOn(&Character::player->associated, obj)) {
                 // Player is behind this obj
 #ifdef DEBUG_FLASHLIGHT
@@ -114,19 +122,41 @@ void FlashlightHUD::Render() {
                     if (setCMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureColorMod: " << SDL_GetError() << std::endl;
                     int setAMRet = SDL_SetTextureAlphaMod(objSR->sprite.texture, newAlpha);
                     if (setAMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureAlphaMod: " << SDL_GetError() << std::endl;
+
+                    // Render texture
+                    int setBMRet = SDL_SetTextureBlendMode(objSR->sprite.texture, objectsBM);
+                    if (setBMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode objectsBM: " << SDL_GetError() << std::endl;
                     objSR->Render();
+                    SDL_SetTextureBlendMode(objSR->sprite.texture, SDL_BLENDMODE_BLEND);
 
                     // Restore old values
                     SDL_SetTextureColorMod(objSR->sprite.texture, r, g, b);
                     SDL_SetTextureAlphaMod(objSR->sprite.texture, a);
                 }
             }
+
+            LightEmitter* lightEmit = (LightEmitter*) obj->GetComponent("LightEmitter");
+            if (lightEmit != nullptr) {
+                for (int j = 0; j < lightEmit->lightPoints.size(); j++) {
+                    if (lightEmit->IsEnabled(j)) {
+                        Vec2 lightPos = lightEmit->GetPos(j);
+                        Sprite lightSprite = lightEmit->GetSprite(j);
+                        lightSprite.Render(lightPos.x - lightSprite.GetWidth() * 0.5, lightPos.y - lightSprite.GetHeight() * 0.5, lightSprite.GetWidth(), lightSprite.GetHeight());
+                    }
+                }
+            }
         }
     }
 
     // Render custom lighting layer
-    SDL_SetRenderTarget(GAME_RENDERER, nullptr);
+    SDL_Rect screenRect = WINDOW_RECT;
+    SDL_SetRenderTarget(GAME_RENDERER, supportTexture);
+    int setBMInv = SDL_SetTextureBlendMode(texture, invertAlphaBM);
+    if (setBMInv != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode invertAlphaBM: " << SDL_GetError() << std::endl;
     SDL_RenderCopy(GAME_RENDERER, texture, &screenRect, &screenRect);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(GAME_RENDERER, nullptr);
+    SDL_RenderCopy(GAME_RENDERER, supportTexture, &screenRect, &screenRect);
 }
 
 bool FlashlightHUD::Is(std::string type) {

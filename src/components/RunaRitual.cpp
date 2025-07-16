@@ -55,7 +55,8 @@ void ColocarVela(State* state, GameObject* associated) {
 void RunaRitual::Update(float dt) {
     SpriteRenderer* sr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
-    if (!sr || !intr) return;
+    LightEmitter* light = (LightEmitter*) associated.GetComponent("LightEmitter");
+    if (!sr || !intr || !light) return;
     switch (GameData::runeState) {
     case GameData::RUNA_ALAGADA: {
         sr->SetVisible(false);
@@ -111,8 +112,9 @@ void RunaRitual::Update(float dt) {
         velas.SetFrame(2);
         intr->SetType(InteractableHUD::INTERACT);
         intr->SetHUDText("Finalizar");
-        intr->SetAction([this, intr](State* state, GameObject* go) {
+        intr->SetAction([this, intr, light](State* state, GameObject* go) {
             std::cout << "Finalizado" << std::endl;
+            light->SetEnabledAll(true);
             velas.SetFrame(3);
             associated.RemoveComponent(intr);
         });

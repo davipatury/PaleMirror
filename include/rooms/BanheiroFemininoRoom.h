@@ -6,6 +6,7 @@
 #include "components/Interactable.h"
 #include "core/State.h"
 #include "components/RunaRitual.h"
+#include "components/LightEmitter.h"
 
 class BanheiroFemininoRoom : public Room
 {
