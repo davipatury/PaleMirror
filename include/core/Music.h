@@ -19,6 +19,10 @@ public:
     void Stop(int msToStop = 1500);
     void Open(const char* file);
 
+    void SetPosition(double pos);
+    void FadeInPos(double pos, int times = -1, int ms = 2500);
+    double GetPosition();
+
     void Pause();
     void Resume();
 
