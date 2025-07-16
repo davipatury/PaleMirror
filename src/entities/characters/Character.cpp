@@ -276,6 +276,10 @@ void Character::NotifyCollision(GameObject& other) {
     IsoCollider* colB = (IsoCollider*) other.GetComponent("IsoCollider");
     if (colB != nullptr && !colB->passable) {
         if (other.GetComponent("Zombie") != nullptr && this == player) {
+            Hit(20);
+            return;
+        }
+        if (other.GetComponent("ZombieFast") != nullptr && this == player) {
             Hit(10);
             return;
         }

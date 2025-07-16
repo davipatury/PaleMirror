@@ -19,7 +19,7 @@ void Room::Build() {
 
 void Room::Enter() {
     if (bgMusic.IsOpen()) {
-        bgMusic.Play();
+        //bgMusic.Play();
     }
 
     if (lockCameraOnRoom && bgGO != nullptr) {

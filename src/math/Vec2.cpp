@@ -27,6 +27,14 @@ bool Vec2::operator!=(Vec2 const& o){
     return !(*this == o);
 }
 
+bool Vec2::operator<(Vec2 const& o){
+    if(o.x == x){
+        return y < o.y;
+    }else{
+        return x < o.x;
+    }
+}
+
 Vec2 Vec2::Sub(Vec2 vec) const {
     return Vec2(x - vec.x, y - vec.y);
 }

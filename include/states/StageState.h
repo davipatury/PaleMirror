@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "components/Camera.h"
 #include "physics/Collider.h"
@@ -41,6 +42,7 @@
 #include "math/Vec2.h"
 #include "components/WaveSpawner.h"
 #include "entities/characters/Zombie.h"
+#include "entities/characters/ZombieFast.h"
 #include "entities/projectiles/HitAttack.h"
 #include "rooms/MainRoom.h"
 #include "rooms/HistoryClassRoom.h"
