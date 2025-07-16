@@ -44,26 +44,22 @@ void StageState::LoadAssets() {
     AddObject(character);
 
     // Shadows
-
-    /*
     GameObject* scc = new GameObject("[ShadowCasterController");
     scc->AddComponent(new ShadowCaster::Controller(*scc));
     scc->box.z = SHADOW_LAYER;
     scc->lazyRender = false;
     scc->pauseOnOpenUI = false;
     AddObject(scc);
-    */
     // HUD
     // Flashlight
 
-    /*
     GameObject* flHUD = new GameObject("[FlashlightHUD]");
     flHUD->AddComponent(new FlashlightHUD(*flHUD));
     flHUD->box.z = FLASHLIGHT_LAYER;
     flHUD->lazyRender = false;
     flHUD->pauseOnOpenUI = false;
     AddObject(flHUD);
-    */
+
     // General
     GameObject* hud = new GameObject("[HUD]");
     // HealthHUD
