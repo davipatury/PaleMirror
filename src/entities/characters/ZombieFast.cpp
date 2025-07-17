@@ -7,7 +7,7 @@ int ZombieFast::zombieCounter;
 
 ZombieFast::ZombieFast(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/sounds/monster/hit1.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
     hitpoints = 100;
-    SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/zombiefastidle", 1, 1);
+    SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/zombiefastidle.png", 1, 1);
     associated.AddComponent(sprite);
 
     Animator* animator = new Animator(associated);

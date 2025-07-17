@@ -11,6 +11,8 @@
 #include "hud/InventoryHUD.h"
 #include "components/LightEmitter.h"
 
+#define FLASHLIGHT FlashlightHUD::instance
+
 class FlashlightHUD : public Component
 {
 public:
@@ -29,7 +31,10 @@ public:
 
     void ToggleDarkMode();
     void ToggleFlashlight();
+
+    static FlashlightHUD* instance;
 private:
+    Vec2 origin;
     Sprite backlight;
     SDL_Texture* texture;
     SDL_Texture* supportTexture;

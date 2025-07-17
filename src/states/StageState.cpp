@@ -36,8 +36,8 @@ void StageState::LoadAssets() {
     Character* charCmp = new Character((*character), "Recursos/img/Player.png");
     character->AddComponent(new PlayerController(*character));
     character->AddComponent(charCmp);
-    character->box.x = 1639;
-    character->box.y = 1656;
+    character->box.x = 2002;
+    character->box.y = 1988;
     character->box.z = OBJECT_LAYER;
     Character::player = charCmp;
     Camera::Follow(character);
@@ -52,9 +52,10 @@ void StageState::LoadAssets() {
     AddObject(scc);
     // HUD
     // Flashlight
-
     GameObject* flHUD = new GameObject("[FlashlightHUD]");
-    flHUD->AddComponent(new FlashlightHUD(*flHUD));
+    FlashlightHUD* flComp = new FlashlightHUD(*flHUD);
+    FlashlightHUD::instance = flComp;
+    flHUD->AddComponent(flComp);
     flHUD->box.z = FLASHLIGHT_LAYER;
     flHUD->lazyRender = false;
     flHUD->pauseOnOpenUI = false;

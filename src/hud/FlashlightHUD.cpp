@@ -6,6 +6,7 @@
 SDL_BlendMode invertAlphaBM = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 SDL_BlendMode objectsBM = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 
+FlashlightHUD* FlashlightHUD::instance;
 
 FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), backlight("Recursos/img/lighting/backlight_inv.png", 1, 1, true) {
     isDark = true;
@@ -36,11 +37,15 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
 FlashlightHUD::~FlashlightHUD() {}
 
 void FlashlightHUD::Update(float dt) {
-    if (Character::player == nullptr ||
+    if (!PLAYER ||
         !isDark ||
         CURRENT_STATE.openUI ||
-        !INVENTORY->HasItemInHand(ITEM_LANTERNA)
+        !INVENTORY->HasItemInHand(ITEM_LANTERNA) ||
+        PLAYER->IsDying()
     ) return;
+
+    // Update origin
+    origin = PLAYER->associated.box.Center() - Camera::pos;
 
     // Use flashlight (already know flashlight's in hand based on the check above)
     if (USE_CHECK) ToggleFlashlight();
@@ -50,16 +55,14 @@ void FlashlightHUD::Update(float dt) {
         Vec2 rightJoy = INPUT_MANAGER.ControllerAxis(RIGHT_JOYSTICK);
         if (rightJoy.x != 0 || rightJoy.y != 0) angle = rightJoy.Angle() + M_PI * 0.5;
     } else {
-        Vec2 origin = Character::player->associated.box.Center() - Camera::pos;
         Vec2 mousePos = Vec2(INPUT_MANAGER.GetMouseX(), INPUT_MANAGER.GetMouseY());
         angle = mousePos.Angle(origin) + M_PI * 0.5;
     }
 }
 
 void FlashlightHUD::Render() {
-    if (Character::player == nullptr || !isDark) return;
+    if (!isDark) return;
 
-    Vec2 origin = Character::player->associated.box.Center() - Camera::pos;
     int BLoffsetX = backlight.GetWidth() * 0.5;
     int BLoffsetY = backlight.GetHeight() * 0.5;
 
@@ -76,72 +79,74 @@ void FlashlightHUD::Render() {
     // Backlight
     backlight.Render(origin.x - BLoffsetX, origin.y - BLoffsetY, backlight.GetWidth(), backlight.GetHeight());
 
-    // Flashlight cone
-    if (INVENTORY->HasItemInHand(ITEM_LANTERNA) && flashlightOn) {
-        int flashlightSize = WINDOW_WIDTH * 0.5;
-        float flashlightAngle = M_PI / 8;
-        Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(angle - flashlightAngle), origin.y - flashlightSize * cos(angle - flashlightAngle));
-        Vec2 flRight = Vec2(origin.x + flashlightSize * sin(angle + flashlightAngle), origin.y - flashlightSize * cos(angle + flashlightAngle));
-        std::vector<SDL_Vertex> lightVertices = {
-            origin.ToSDLVertex(255, 255, 255, 255, 0.5, 0.5),
-            flLeft.ToSDLVertex(255, 255, 255, 255, 1, 0.3),
-            flRight.ToSDLVertex(255, 255, 255, 255, 1, 0.7)
-        };
-        SDL_RenderGeometry(GAME_RENDERER, backlight.texture, lightVertices.data(), lightVertices.size(), nullptr, 0);
-    }
+    if (PLAYER) {
+        // Flashlight cone
+        if (INVENTORY->HasItemInHand(ITEM_LANTERNA) && flashlightOn && !PLAYER->IsDying()) {
+            int flashlightSize = WINDOW_WIDTH * 0.5;
+            float flashlightAngle = M_PI / 8;
+            Vec2 flLeft = Vec2(origin.x + flashlightSize * sin(angle - flashlightAngle), origin.y - flashlightSize * cos(angle - flashlightAngle));
+            Vec2 flRight = Vec2(origin.x + flashlightSize * sin(angle + flashlightAngle), origin.y - flashlightSize * cos(angle + flashlightAngle));
+            std::vector<SDL_Vertex> lightVertices = {
+                origin.ToSDLVertex(255, 255, 255, 255, 0.5, 0.5),
+                flLeft.ToSDLVertex(255, 255, 255, 255, 1, 0.3),
+                flRight.ToSDLVertex(255, 255, 255, 255, 1, 0.7)
+            };
+            SDL_RenderGeometry(GAME_RENDERER, backlight.texture, lightVertices.data(), lightVertices.size(), nullptr, 0);
+        }
 
-    // Render objects above flashlight
-    std::vector<GameObject*> objArray = CURRENT_STATE.RenderSort(0);
-    for (int i = 0; i < objArray.size(); i++) {
-        GameObject* obj = objArray[i];
-        if (obj->box.z == 0 && Camera::PosRect().Collides(obj->box)) {
-            if (!CURRENT_STATE.dependsOn(&Character::player->associated, obj)) {
-                // Player is behind this obj
+        // Render objects above flashlight
+        std::vector<GameObject*> objArray = CURRENT_STATE.RenderSort(0);
+        for (int i = 0; i < objArray.size(); i++) {
+            GameObject* obj = objArray[i];
+            if (obj->box.z == 0 && Camera::PosRect().Collides(obj->box)) {
+                if (!CURRENT_STATE.dependsOn(&PLAYER->associated, obj)) {
+                    // Player is behind this obj
 #ifdef DEBUG_FLASHLIGHT
-                std::cout << "[Flashlight] Player is behind " << obj->name << std::endl;
+                    std::cout << "[Flashlight] Player is behind " << obj->name << std::endl;
 #endif
-                IsoCollider* objCol = (IsoCollider*) obj->GetComponent("IsoCollider");
-                SpriteRenderer* objSR = (SpriteRenderer*) obj->GetComponent("SpriteRenderer");
-                if (objSR && objSR->sprite.IsOpen() && objCol && objCol->blockLight) {
-                    IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
-                    float diffX = abs(playerCol->box.TopLeft().x - objCol->box.TopRight().x);
-                    float diffY = abs(playerCol->box.TopLeft().y - objCol->box.BottomLeft().y);
-                    float minDiff = std::min(diffX, diffY);
+                    IsoCollider* objCol = (IsoCollider*) obj->GetComponent("IsoCollider");
+                    SpriteRenderer* objSR = (SpriteRenderer*) obj->GetComponent("SpriteRenderer");
+                    if (objSR && objSR->sprite.IsOpen() && objCol && objCol->blockLight) {
+                        IsoCollider* playerCol = (IsoCollider*) PLAYER->associated.GetComponent("IsoCollider");
+                        float diffX = abs(playerCol->box.TopLeft().x - objCol->box.TopRight().x);
+                        float diffY = abs(playerCol->box.TopLeft().y - objCol->box.BottomLeft().y);
+                        float minDiff = std::min(diffX, diffY);
 
-                    int newAlpha = std::min(minDiff / 100, 1.0f) * 255;
+                        int newAlpha = std::min(minDiff / 100, 1.0f) * 255;
 
-                    // Save old values
-                    Uint8 r, g, b, a;
-                    int getCMRet = SDL_GetTextureColorMod(objSR->sprite.texture, &r, &g, &b);
-                    if (getCMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureColorMod: " << SDL_GetError() << std::endl;
-                    int getAMRet = SDL_GetTextureAlphaMod(objSR->sprite.texture, &a);
-                    if (getAMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureAlphaMod: " << SDL_GetError() << std::endl;
+                        // Save old values
+                        Uint8 r, g, b, a;
+                        int getCMRet = SDL_GetTextureColorMod(objSR->sprite.texture, &r, &g, &b);
+                        if (getCMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureColorMod: " << SDL_GetError() << std::endl;
+                        int getAMRet = SDL_GetTextureAlphaMod(objSR->sprite.texture, &a);
+                        if (getAMRet != 0) std::cout << "[Flashlight] Error on SDL_GetTextureAlphaMod: " << SDL_GetError() << std::endl;
 
-                    // Render all black sprite
-                    int setCMRet = SDL_SetTextureColorMod(objSR->sprite.texture, 0, 0, 0);
-                    if (setCMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureColorMod: " << SDL_GetError() << std::endl;
-                    int setAMRet = SDL_SetTextureAlphaMod(objSR->sprite.texture, newAlpha);
-                    if (setAMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureAlphaMod: " << SDL_GetError() << std::endl;
+                        // Render all black sprite
+                        int setCMRet = SDL_SetTextureColorMod(objSR->sprite.texture, 0, 0, 0);
+                        if (setCMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureColorMod: " << SDL_GetError() << std::endl;
+                        int setAMRet = SDL_SetTextureAlphaMod(objSR->sprite.texture, newAlpha);
+                        if (setAMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureAlphaMod: " << SDL_GetError() << std::endl;
 
-                    // Render texture
-                    int setBMRet = SDL_SetTextureBlendMode(objSR->sprite.texture, objectsBM);
-                    if (setBMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode objectsBM: " << SDL_GetError() << std::endl;
-                    objSR->Render();
-                    SDL_SetTextureBlendMode(objSR->sprite.texture, SDL_BLENDMODE_BLEND);
+                        // Render texture
+                        int setBMRet = SDL_SetTextureBlendMode(objSR->sprite.texture, objectsBM);
+                        if (setBMRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode objectsBM: " << SDL_GetError() << std::endl;
+                        objSR->Render();
+                        SDL_SetTextureBlendMode(objSR->sprite.texture, SDL_BLENDMODE_BLEND);
 
-                    // Restore old values
-                    SDL_SetTextureColorMod(objSR->sprite.texture, r, g, b);
-                    SDL_SetTextureAlphaMod(objSR->sprite.texture, a);
+                        // Restore old values
+                        SDL_SetTextureColorMod(objSR->sprite.texture, r, g, b);
+                        SDL_SetTextureAlphaMod(objSR->sprite.texture, a);
+                    }
                 }
-            }
 
-            LightEmitter* lightEmit = (LightEmitter*) obj->GetComponent("LightEmitter");
-            if (lightEmit != nullptr) {
-                for (int j = 0; j < lightEmit->lightPoints.size(); j++) {
-                    if (lightEmit->IsEnabled(j)) {
-                        Vec2 lightPos = lightEmit->GetPos(j);
-                        Sprite lightSprite = lightEmit->GetSprite(j);
-                        lightSprite.Render(lightPos.x - lightSprite.GetWidth() * 0.5, lightPos.y - lightSprite.GetHeight() * 0.5, lightSprite.GetWidth(), lightSprite.GetHeight());
+                LightEmitter* lightEmit = (LightEmitter*) obj->GetComponent("LightEmitter");
+                if (lightEmit != nullptr) {
+                    for (int j = 0; j < lightEmit->lightPoints.size(); j++) {
+                        if (lightEmit->IsEnabled(j)) {
+                            Vec2 lightPos = lightEmit->GetPos(j);
+                            Sprite lightSprite = lightEmit->GetSprite(j);
+                            lightSprite.Render(lightPos.x - lightSprite.GetWidth() * 0.5, lightPos.y - lightSprite.GetHeight() * 0.5, lightSprite.GetWidth(), lightSprite.GetHeight());
+                        }
                     }
                 }
             }

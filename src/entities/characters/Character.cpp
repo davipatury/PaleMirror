@@ -12,6 +12,9 @@
 #include "math/Rect.h"
 #include "utils/Timer.h"
 #include "utils/Animation.h"
+#include "hud/FlashlightHUD.h"
+
+#define CHARACTER_SIZE 112
 
 Character* Character::player = nullptr;
 
@@ -25,84 +28,56 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
     attackSound = new Sound("Recursos/audio/sounds/Helena/attack1.wav");
     walkSound = new Sound("Recursos/audio/sounds/Helena/passos.wav");
 
-    const std::string basePath = "Recursos/img/Helena/";
-    const std::string types[] = {"Idle", "Walk", "Attack", "Hit"};
-
-    for (int i = 0; i < 8; i++) {
-        // 1, 2, 6, 7, 8 -> 1
-        // 3, 4, 5 -> 2 -> 2
-
-        if(i == 1 || i == 5){
-            attackSprites.push_back(basePath + types[2] + "/" + types[2] + "26" + ".png");
-        }else if(i == 0 || i == 6 || i == 7){
-            attackSprites.push_back(basePath + types[2] + "/" + types[2] + "178" + ".png");
-        }else{
-            attackSprites.push_back(basePath + types[2] + "/" + types[2] + "345" + ".png");
-        }
-        if(i == 0 || i == 1 || i == 5 || i == 6 || i == 7) {
-            idleSprites.push_back(basePath + types[0] + "/" + types[0] + "1" + ".png");
-        } else {
-            idleSprites.push_back(basePath + types[0] + "/" + types[0] + "2" + ".png");
-        }
-        //idleSprites.push_back(basePath + types[0] + "/Knight_" + types[0] + "_dir" + std::to_string(i+1) + ".png");
-        walkSprites.push_back(basePath + types[1] + "/" + types[1] + std::to_string(i+1) + ".png");
-        //attackSprites.push_back(basePath + types[2] + "/Knight_" + types[2] + "_dir" + std::to_string(i+1) + ".png");
-
-        if(i == 2 || i == 3 || i == 4) {
-            hitSprites.push_back(basePath + types[3] + "/" + types[3] + "345" + ".png");
-        } else {
-            hitSprites.push_back(basePath + types[3] + "/" + types[3] + "12678" + ".png");
-        }
-    }
-
-    SpriteRenderer* spriteRdr = new SpriteRenderer(associated, idleSprites[7].c_str(), 1, 1);
-    spriteRdr->SetScale(1, 1);
-    spriteRdr->SetScale(0.5, 0.5);
+    int frameCountW = 6;
+    int frameCountH = 15;
+    SpriteRenderer* spriteRdr = new SpriteRenderer(associated, "Recursos/img/Helena/spritesheet.png", frameCountW, frameCountH);
     associated.AddComponent(spriteRdr);
-    currentSprite = idleSprites[7];
-    currentDirection = 7;
 
     Animator* animator = new Animator(associated);
     associated.AddComponent(animator);
-    
+
+    // Baixo-Esquerda (1)
+    // Esquerda (2)
+    // Cima-Esquerda (3)
+    // Cima (4)
+    // Cima-Direita (5)
+    // Direita (6)
+    // Baixo-Direita (7)
+    // Baixo (8)
     for (int i = 0; i < 8; i++) {
-        if(i+1 == 7 or i+1 == 6 or i+1 == 3){
-            animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.150, SDL_FLIP_HORIZONTAL));
-        }else{
-            animator->AddAnimation("walking" + std::to_string(i+1), Animation(0, 3, 0.150));
-        }
+        std::string n = std::to_string(i+1);
+        // Walk
+        SDL_RendererFlip walkFlip = (i+1 == 7 || i+1 == 6 || i+1 == 3) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+        int walkFrameStart = i * frameCountW;
+        int walkFrameEnd = walkFrameStart + 3;
+        animator->AddAnimation("walking" + n, Animation(walkFrameStart, walkFrameEnd, 0.150, walkFlip));
 
-        // 1, 2, 8 = Parado
-        // 3 e 4 = ParadoCostaLeft
-        // 5 = ParadoCostaRight
-        // 6 e 7 = ParadoRight
-        if( i+1 == 1 or i+1 == 2 or i+1 == 8){
-            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250));
-        }else if (i+1 == 3 or i+1 == 4){
-            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.100, SDL_FLIP_HORIZONTAL));
-        }else if(i+1 == 5){
-            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250));
-        }else{
-            animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 0, 0.250, SDL_FLIP_HORIZONTAL));
-        }
+        // Idle
+        int idleOffset = 13 * frameCountW;
+        SDL_RendererFlip idleFlip = (i+1 == 3 || i+1 == 4 || i+1 == 6 || i+1 == 7) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+        int idleFrame = ((i+1 == 1 || i+1 == 2 || i+1 == 6 || i+1 == 7 || i+1 == 8) ? 0 : 1) + idleOffset;
+        animator->AddAnimation("idle" + n, Animation(idleFrame, idleFrame, 0.250, idleFlip));
 
-        if(i+1 == 7 || i+1 == 6 || i+1 == 3 || i+1 == 4){
-            animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 5, 0.120, SDL_FLIP_HORIZONTAL));
-        }else{
-            animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 5, 0.120));
-        }
+        // Hit
+        int hitOffset = 11 * frameCountW;
+        SDL_RendererFlip hitFlip = (i+1 == 5 || i+1 == 6 || i+1 == 7) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+        int hitFrameStart = (i+1 == 3 || i+1 == 4 || i+1 == 5 ? 0 : frameCountW) + hitOffset;
+        int hitFrameEnd = hitFrameStart + 2;
+        animator->AddAnimation("hit" + n, Animation(hitFrameStart, hitFrameEnd, 0.5, hitFlip));
 
-        if(i+1 == 5 || i+1 == 6 || i+1 == 7) {
-            animator->AddAnimation("hit" + std::to_string(i+1), Animation(0, 2, 0.180, SDL_FLIP_HORIZONTAL));
-        } else {
-            animator->AddAnimation("hit" + std::to_string(i+1), Animation(0, 2, 0.180));
-        }
-
-        //animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 3, 0.250));
-        //animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 14, 0.1));
+        // Attack
+        int attackOffset = 8 * frameCountW;
+        SDL_RendererFlip attackFlip = (i+1 == 7 || i+1 == 6 || i+1 == 3 || i+1 == 4) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+        int attackFrameStart = ((i+1 == 2 || i+1 == 6) ? 0 : ((i+1 == 1 || i+1 == 7 || i+1 == 8) ? frameCountW : frameCountW*2)) + attackOffset;
+        int attackFrameEnd = attackFrameStart + 5;
+        animator->AddAnimation("attack" + n, Animation(attackFrameStart, attackFrameEnd, 0.120, attackFlip));
     }
 
-    animator->AddAnimation("dead", Animation(0, 5, 0.5));
+    int deadFrameStart = 14 * frameCountW;
+    int deadFrameEnd = deadFrameStart + 5;
+    animator->AddAnimation("dead", Animation(deadFrameStart, deadFrameEnd, 0.5));
+
+    currentDirection = 1;
     animator->SetAnimation("idle1");
 
     isAttacking = false;
@@ -121,6 +96,7 @@ Character::~Character() {
     delete deathSound;
     delete hitSound;
     delete attackSound;
+    delete walkSound;
 }
 
 void Character::Start() {
@@ -131,6 +107,10 @@ void Character::Start() {
 }
 
 void Character::Update(float dt) {
+    Animator* animator = (Animator*) associated.GetComponent("Animator");
+    SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+    if (spriteRdr == nullptr || animator == nullptr) return;
+
     bool moving = false;
     while (hp > 0 && !taskQueue.empty()) {
         Command task = taskQueue.front();
@@ -180,6 +160,8 @@ void Character::Update(float dt) {
                 attackGO->AddComponent(hitAttack);
                 
                 CURRENT_STATE.AddObject(attackGO);
+
+                animator->SetAnimation("attack" + std::to_string(currentDirection + 1));
             }
             break;
         }
@@ -197,77 +179,34 @@ void Character::Update(float dt) {
     walkSoundTimer.Update(dt);
     //recoveryTimer.Update(dt);
 
-    Animator* animator = (Animator*) associated.GetComponent("Animator");
-    SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
-    spriteRdr->SetScale(0.085, 0.085);
+    if (tookDamage) {
+        if (hitTimer.Get() > 0.2f) tookDamage = false;
+    } else {
+        if (hp > 0) {
+            //std::string animName;
+            float angle = atan2(lastMoveDirection.y, lastMoveDirection.x) * 180 / M_PI;
+            currentDirection = GetDirectionFromAngle(angle);
+            std::string n = std::to_string(currentDirection + 1);
 
-    if (tookDamage && hitTimer.Get() > 0.2f) {
-        tookDamage = false;
-    }else if(tookDamage){
-        return;
+            if (isAttacking) {
+                if (attackTimer.Get() > 0.8) {
+                    isAttacking = false;
+                    if (moving) animator->SetAnimation("walk" + n);
+                    else        animator->SetAnimation("idle" + n);
+                }
+            } else if (moving) {
+                animator->SetAnimation("walking" + n);
+            } else {
+                animator->SetAnimation("idle" + n);
+            }
+        } else {
+            if (deathTimer.Get() > 3) {
+                associated.RequestDelete();
+            }
+        }
     }
     
-    if (hp > 0) {
-        std::string animName;
-        float angle = atan2(lastMoveDirection.y, lastMoveDirection.x) * 180 / M_PI;
-        currentDirection = GetDirectionFromAngle(angle);
-        
-        if (isAttacking) {
-            animName = "attack" + std::to_string(currentDirection + 1);
 
-            if (attackTimer.Get() > 0.8) {
-                isAttacking = false;
-                if (spriteRdr) {
-                    if (moving) {
-                        spriteRdr->Open(walkSprites[currentDirection].c_str());
-                        spriteRdr->SetFrameCount(4, 1);
-                        currentSprite = walkSprites[currentDirection];
-                    } else {
-                        spriteRdr->Open(idleSprites[currentDirection].c_str());
-                        spriteRdr->SetFrameCount(1, 1);
-                        currentSprite = idleSprites[currentDirection];
-                    }
-                }
-            }else{
-                
-                if (spriteRdr && currentSprite != attackSprites[currentDirection]) {
-                    spriteRdr->Open(attackSprites[currentDirection].c_str());
-                    spriteRdr->SetFrameCount(6, 1);
-                    currentSprite = attackSprites[currentDirection];
-                }
-            }
-        } else if (moving) {
-            animName = "walking" + std::to_string(currentDirection + 1);
-
-            if (spriteRdr && currentSprite != walkSprites[currentDirection]) {
-                    spriteRdr->Open(walkSprites[currentDirection].c_str());
-                    spriteRdr->SetFrameCount(4, 1);
-                    currentSprite = walkSprites[currentDirection];
-            }
-        }else {
-            animName = "idle" + std::to_string(currentDirection + 1);
-
-            if (spriteRdr && currentSprite != idleSprites[currentDirection]) {
-                spriteRdr->Open(idleSprites[currentDirection].c_str());
-                spriteRdr->SetFrameCount(1, 1);
-                currentSprite = idleSprites[currentDirection];
-            }
-        }
-        animator->SetAnimation(animName);
-    } else {
-        if (deathTimer.Get() > 3) {
-            associated.RequestDelete();
-        } else {
-            spriteRdr->SetScale(1, 1);
-            if(spriteRdr && currentSprite != "Recursos/img/Helena/dead.png") {
-                currentSprite = "Recursos/img/Helena/dead.png";
-                spriteRdr->Open("Recursos/img/Helena/dead.png");
-                spriteRdr->SetFrameCount(6, 1);
-                spriteRdr->SetScale(1, 1);
-                animator->SetAnimation("dead");
-            }
-        }
-    }
     /*
     if(recoveryTimer.Get() > 20){
         hp += 25;
@@ -312,7 +251,10 @@ void Character::Hit(int damage) {
     if(hitTimer.Get() < 1.2f) return;
     hp -= damage;
     
+    Animator* animator = (Animator*) associated.GetComponent("Animator");
     if (hp <= 0) {
+        dying = true;
+        if (animator) animator->SetAnimation("dead");
         deathTimer.Restart();
         deathSound->Play();
     } else {
@@ -320,16 +262,7 @@ void Character::Hit(int damage) {
         tookDamage = true;
         hitSound->Play(0);
         Animator* animator = (Animator*) associated.GetComponent("Animator");
-        if (animator) {
-            std::string hitAnim = "hit" + std::to_string(currentDirection + 1);
-            SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
-            if (spriteRdr && currentSprite != hitSprites[currentDirection]) {
-                    spriteRdr->Open(hitSprites[currentDirection].c_str());
-                    spriteRdr->SetFrameCount(3, 1);
-                    currentSprite = hitSprites[currentDirection];
-            }
-            animator->SetAnimation(hitAnim);
-        }
+        if (animator) animator->SetAnimation("hit" + std::to_string(currentDirection + 1));
     }
 }
 
@@ -371,6 +304,10 @@ Character::Command::Command(CommandType type, float x, float y) {
     this->type = type;
     pos.x = x;
     pos.y = y;
+}
+
+bool Character::IsDying() {
+    return dying;
 }
 
 int Character::GetDirectionFromAngle(float angle) {

@@ -13,7 +13,7 @@
 class DebugHUD : public Component
 {
 public:
-    enum DebugMode { DEBUG_DISABLE, DEBUG_POS, DEBUG_SCALE, DEBUG_ISO_POS, DEBUG_ISO_SCALE };
+    enum DebugMode { DEBUG_DISABLE, DEBUG_POS, DEBUG_SCALE, DEBUG_ISO_POS, DEBUG_ISO_SCALE, DEBUG_PLAYER_POS };
 
     DebugHUD(GameObject& associated);
     ~DebugHUD();
