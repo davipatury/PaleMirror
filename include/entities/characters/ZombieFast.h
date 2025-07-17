@@ -20,6 +20,7 @@ class ZombieFast : public Component
 {
 public:
     ZombieFast(GameObject& associated);
+    ~ZombieFast() override;
 
     void Damage(int damage);
     void Start();
@@ -29,8 +30,6 @@ public:
     void NotifyCollision(GameObject& other);
 
     bool Is(std::string type);
-
-    static int zombieCounter;
 private:
     int hitpoints;
     Sound deathSound;

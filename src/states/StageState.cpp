@@ -44,6 +44,7 @@ void StageState::LoadAssets() {
     AddObject(character);
 
     // Shadows
+
     GameObject* scc = new GameObject("[ShadowCasterController");
     scc->AddComponent(new ShadowCaster::Controller(*scc));
     scc->box.z = SHADOW_LAYER;
@@ -222,6 +223,24 @@ void StageState::Update(float dt) {
         DialogueHUD::RequestDialogue("prologoPreRitual");
         DialogueHUD::RequestDialogue("prologoRitual");
         DialogueHUD::RequestDialogue("prologoPosRitual");
+    }
+
+    // Custcene Boss
+    if (!openUI && INPUT_MANAGER.KeyPress('k')) {
+        Character::player->associated.box.x = 2257;
+        Character::player->associated.box.y = 2500;
+
+        GameObject* aneleh = new GameObject("[Aneleh]");
+        aneleh->box.x = 2100;
+        aneleh->box.y = 2303;
+        aneleh->AddComponent(new Boss(*aneleh));
+        AddObject(aneleh);
+        Boss::startBoss = true;
+    }
+
+    if(Boss::startBoss){
+        DialogueHUD::RequestDialogue("boss_battle");
+        Boss::startBoss = false;
     }
     
     // Spawn locker puzzle

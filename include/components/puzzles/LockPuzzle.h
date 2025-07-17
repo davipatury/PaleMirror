@@ -4,6 +4,7 @@
 #include <string>
 #include "utils/TextHUD.h"
 #include "math/Rect.h"
+#include "components/Sound.h"
 
 class LockPuzzle : public Component {
 public:
@@ -23,6 +24,8 @@ public:
     TextHUD* digit3;
 
     Rect selectedRect;
+    Sound* rolling;
+    Sound* openLock;
 
 private:
     std::string expected;

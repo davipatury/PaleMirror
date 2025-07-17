@@ -1,11 +1,10 @@
 #include "entities/characters/ZombieFast.h"
 #include "entities/projectiles/HitAttack.h"
+#include "entities/characters/Boss.h"
 #include "core/Game.h"
 #include "core/GameData.h"
 
-int ZombieFast::zombieCounter;
-
-ZombieFast::ZombieFast(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/sounds/monster/hit1.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
+ZombieFast::ZombieFast(GameObject& associated) : Component(associated), deathSound("Recursos/audio/sounds/monster/zombiefastDead.wav"), hitSound("Recursos/audio/sounds/monster/fasthit.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
     hitpoints = 100;
     SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/zombiefastidle.png", 1, 1);
     associated.AddComponent(sprite);
@@ -20,11 +19,14 @@ ZombieFast::ZombieFast(GameObject& associated) : Component(associated), deathSou
     animator->SetAnimation("idle");
     currentSprite = "idle";
     
-    zombieCounter++;
     hit = false;
     hitTimer.Restart();
     deathTimer.Restart();
     monsterSoundTimer.Restart();
+}
+
+ZombieFast::~ZombieFast() {
+    Boss::currentzombies--;
 }
 
 void ZombieFast::Start() {
@@ -134,7 +136,6 @@ void ZombieFast::Update(float dt) {
         }
     } else{
         if (deathTimer.Get() > 3) {
-            zombieCounter--;
             associated.RequestDelete();
         } else {
             auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
@@ -268,9 +269,8 @@ void ZombieFast::NotifyCollision(GameObject& other) {
         colA->box = after;
         associated.box = associated.box.Add(diff);
     }
-
     if (auto* hitAttack = static_cast<HitAttack*>(other.GetComponent("HitAttack"))) {
-        Damage(hitAttack->GetDamage() + 20);
+        Damage(hitAttack->GetDamage());
     }
 }
 

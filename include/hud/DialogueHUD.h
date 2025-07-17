@@ -23,6 +23,8 @@ public:
     void Render();
     bool Is(std::string type);
 
+    static bool isEmpty();
+
     static void RequestDialogue(std::string dialogueKey, std::function<void ()> func = nullptr);
 private:
     class DialogueLine {

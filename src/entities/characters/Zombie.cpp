@@ -2,12 +2,11 @@
 #include "entities/projectiles/HitAttack.h"
 #include "core/Game.h"
 #include "core/GameData.h"
-
-int Zombie::zombieCounter;
+#include "entities/characters/Boss.h"
 
 #define OFFSET_TOPLAYER Vec2(-10, 30)
 
-Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/sounds/monster/hit1.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
+Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/sounds/monster/zombieDead.wav"), hitSound("Recursos/audio/sounds/monster/hit2.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
     hitpoints = 100;
     SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/monster.png", 4, 1);
     associated.AddComponent(sprite);
@@ -20,11 +19,14 @@ Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recu
     animator->AddAnimation("dead", Animation(0, 5, 0.5));
     animator->SetAnimation("walking");
     
-    zombieCounter++;
     hit = false;
     hitTimer.Restart();
     deathTimer.Restart();
     monsterSoundTimer.Restart();
+}
+
+Zombie::~Zombie() {
+    Boss::currentzombies--;
 }
 
 void Zombie::Start() {
@@ -114,7 +116,6 @@ void Zombie::Update(float dt) {
         }
     } else{
         if (deathTimer.Get() > 3) {
-            zombieCounter--;
             associated.RequestDelete();
         } else {
             auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));

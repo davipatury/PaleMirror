@@ -19,6 +19,8 @@ LockPuzzle::LockPuzzle(GameObject& associated, std::string expectedPassword): Co
     bg2("Recursos/img/lock_puzzle/lock2.png", 1, 1, true), bg3("Recursos/img/lock_puzzle/lock3.png", 1, 1, true),
     bgunlocked("Recursos/img/lock_puzzle/unlock.png", 1, 1, true)
 {
+    rolling = new Sound("Recursos/audio/sounds/puzzle/rolling.wav");
+    openLock = new Sound("Recursos/audio/sounds/puzzle/open-lock.wav");
     selectedRect = EMPTY_RECT;
     current = {1, 6, 3, 7};
 
@@ -44,6 +46,7 @@ void LockPuzzle::Update(float dt) {
     
     if (IsSolved()) {
         // Solved
+        openLock->Play();
         DialogueHUD::RequestDialogue("lockPuzzle_solved", [this]() {
             associated.RequestDelete();
         });
@@ -100,13 +103,14 @@ void LockPuzzle::Update(float dt) {
                 animOffsetY[idx] = 0.0f;
                 animFrom[idx]    = current[idx];
                 animTo[idx] = (animFrom[idx] + (isUp ? +1 : -1) + 10) % 10;
+
+                rolling->Play();
             }
         }
     }
 
     for (int i = 0; i < 4; i++) {
         if (!animating[i]) continue;
-        // direção: up → offset negativo, down → offset positivo
         int dir = (animTo[i] == (animFrom[i]+1)%10) ? -1 : +1;
         animOffsetY[i] += dir * animSpeed * dt;
 
@@ -132,7 +136,7 @@ void LockPuzzle::Render() {
         return;
     }
 
-    if(!solved) bg2.Render(0, bg1.GetHeight()+1, bg2.GetWidth(), bg2.GetHeight());
+    if(!solved) bg2.Render(0, bg1.GetHeight(), bg2.GetWidth(), bg2.GetHeight());
 
     // Animação de cada dígito
     TextHUD* digits[4] = {digit0, digit1, digit2, digit3};
@@ -159,7 +163,7 @@ void LockPuzzle::Render() {
     }
 
     if(!solved) bg1.Render(0, 0, bg1.GetWidth(), bg1.GetHeight());
-    if(!solved) bg3.Render(0, bg1.GetHeight()+bg2.GetHeight()+1, bg3.GetWidth(), bg3.GetHeight());
+    if(!solved) bg3.Render(0, bg1.GetHeight()+bg2.GetHeight(), bg3.GetWidth(), bg3.GetHeight());
 
     // Selection
     if (INPUT_MANAGER.HasController()) {

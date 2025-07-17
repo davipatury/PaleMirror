@@ -16,6 +16,8 @@
 #include "components/Sound.h"
 #include "utils/Timer.h"
 
+
+
 class Boss : public Component
 {
 public:
@@ -29,12 +31,16 @@ public:
 
     bool Is(std::string type);
 
-    int zombies;
+    static bool startBoss;
+    static int currentzombies;
+
+    Sound* summonSound;
+    
 private:
+    int maxzombies = 15;
 
-    Sound summonSound;
     bool summoning;
-
+    bool firstsummon;
     Timer summonTimer;
     Timer summoningTimer;
 };

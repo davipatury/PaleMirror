@@ -1,20 +1,28 @@
 #include "entities/characters/Boss.h"
 #include "core/Game.h"
 #include "core/GameData.h"
+#include "entities/characters/Zombie.h"
+#include "entities/characters/ZombieFast.h"
+#include "hud/DialogueHUD.h"
+
+bool Boss::startBoss = false;
+int Boss::currentzombies = 0;
 
 Boss::Boss(GameObject& associated) : Component(associated){
     SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/aneleh.png", 8, 1);
     associated.AddComponent(sprite);
+    summonSound = new Sound("Recursos/audio/sounds/monster/summon.wav");
 
     Animator* animator = new Animator(associated);
     associated.AddComponent(animator);
-    animator->AddAnimation("summon", Animation(0, 7, 0.5));
+    animator->AddAnimation("summon", Animation(0, 7, 0.400));
     animator->AddAnimation("idle", Animation(0, 0, 0));
     animator->SetAnimation("idle");
     
     summonTimer.Restart();
-    summoning = false;
     summoningTimer.Restart();
+    summoning = false;
+    firstsummon = true;
 }
 
 void Boss::Start() {
@@ -25,20 +33,22 @@ void Boss::Start() {
 }
 
 void Boss::Update(float dt) {
+    if(!DialogueHUD::isEmpty()) return;
     summonTimer.Update(dt);
     summoningTimer.Update(dt);
 
-    if(summonTimer.Get() >= 2){
+    if((summonTimer.Get() >= 5 or firstsummon) and currentzombies<maxzombies){
         summonTimer.Restart();
         auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
         animator->SetAnimation("summon");
         summoning = true;
+        firstsummon = false;
         summoningTimer.Restart();
 
-        // summonSound.Play(0);
+        summonSound->Play();
     }
 
-    if(summoning and summoningTimer.Get() >= 3){
+    if(summoning and summoningTimer.Get() >= 3 ){
         summoning = false;
         summoningTimer.Restart();
         auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
@@ -46,19 +56,38 @@ void Boss::Update(float dt) {
         
         // Summon zombies
 
-        /*
-        for(int i = 0; i < 5; i++){
-            GameObject* zombieGO = new GameObject();
-            zombieGO->box.x = associated.box.x + (i * 50);
-            zombieGO->box.y = associated.box.y + (i * 50);
-            Zombie* zombie = new Zombie(*zombieGO);
-            zombieGO->AddComponent(zombie);
-            CURRENT_STATE.AddObject(zombieGO);
-        }
-        */
-    }
+        int numZombies = 4;
+        float radius = 100.0f;
+        float angleStep = 360.0f / numZombies;
 
-    
+        for (int i = 0; i < numZombies && currentzombies<maxzombies; i++) {
+            float angle = angleStep * i;
+            float rad = angle * M_PI / 180.0f;
+
+            auto col = dynamic_cast<IsoCollider*>(associated.GetComponent("IsoCollider"));
+
+            float zombieX = col->box.Center().ToCart().x + radius * cos(rad);
+            float zombieY = col->box.Center().ToCart().y + radius * sin(rad);
+
+            GameObject* zombieGO = new GameObject();
+            if(i < numZombies-1){
+                Zombie* zombie = new Zombie(*zombieGO);
+                zombieGO->AddComponent(zombie);
+                CURRENT_STATE.AddObject(zombieGO);
+            }else{
+                ZombieFast* zombie = new ZombieFast(*zombieGO);
+                zombieGO->AddComponent(zombie);
+                CURRENT_STATE.AddObject(zombieGO);
+            }
+            auto spt = dynamic_cast<SpriteRenderer*>(associated.GetComponent("SpriteRenderer"));
+            zombieGO->box.x = zombieX - spt->sprite.GetWidth()/2;
+            zombieGO->box.y = zombieY - spt->sprite.GetHeight();
+            
+            currentzombies++;
+        }
+
+        CURRENT_STATE.Pause();
+    }
 }
 
 void Boss::NotifyCollision(GameObject& other) {
