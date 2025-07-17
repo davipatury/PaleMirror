@@ -69,6 +69,22 @@ float Vec2::Angle() const {
     return atan2(y, x);
 }
 
+float Vec2::AngleW() const {
+    return atan2(y, x);
+}
+
+float Vec2::AngleN() const {
+    return atan2(x, y);
+}
+
+float Vec2::AngleE() const {
+    return atan2(-y, -x);
+}
+
+float Vec2::AngleS() const {
+    return atan2(-x, -y);
+}
+
 float Vec2::Angle(Vec2 vec) const {
     Vec2 sub = Sub(vec);
     return sub.Angle();

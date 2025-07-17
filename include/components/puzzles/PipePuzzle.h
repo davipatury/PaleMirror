@@ -58,7 +58,7 @@ public:
     std::vector<float> pipeTargetAngles;
 
     Sound* pipePressed;
-    int selectedPiece;
+    int selectedPiece = 0;
     bool solved = false;
 
     Sprite bg;

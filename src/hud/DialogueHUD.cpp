@@ -286,8 +286,8 @@ void DialogueHUD::Render() {
         dialogueText->Render();
         charNameText->Render();
 
-        if (INPUT_MANAGER.HasController()) cbuttonA.Render(700 - cbuttonA.GetWidth() / 2, 815, cbuttonA.GetWidth(), cbuttonA.GetHeight());
-        else keySpace.Render(700 - keySpace.GetWidth() / 2, 815, keySpace.GetWidth(), keySpace.GetHeight());
+        if (INPUT_MANAGER.HasController()) cbuttonA.Render(700 - cbuttonA.GetWidth() / 2, 810, cbuttonA.GetWidth(), cbuttonA.GetHeight());
+        else keySpace.Render(700 - keySpace.GetWidth() / 2, 810, keySpace.GetWidth(), keySpace.GetHeight());
     }
 }
 

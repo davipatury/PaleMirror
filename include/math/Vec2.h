@@ -32,6 +32,11 @@ public:
     float Angle(Vec2 vec) const;
     Vec2 Rotate(float angle);
 
+    float AngleW() const;
+    float AngleN() const;
+    float AngleE() const;
+    float AngleS() const;
+
     float operator^(Vec2 const& vec);
     int PointLine(Line l);
 

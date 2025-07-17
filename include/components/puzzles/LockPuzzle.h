@@ -36,4 +36,6 @@ private:
     int animTo[4];
     static constexpr float animSpeed = 300.0f;
     static constexpr float digitHeight = 200.0f;
+
+    void RenderTriangle(Rect rect);
 };

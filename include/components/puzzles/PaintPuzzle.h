@@ -47,7 +47,7 @@ public:
     PaintState estadoAtual;
     PaintColor corCerta;
     PaintColor corAtual;
-    Sprite bg;
+    Sprite bg, tintaVermelha, tintaAzul, tintaAmarela, pano;
     Sprite tinta;
     Sound* splash;
 

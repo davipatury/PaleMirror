@@ -31,17 +31,28 @@ void PipePuzzle::Update(float dt) {
         }
     }
 
-    if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
+    if (INPUT_MANAGER.HasController()) {
+        int mod4 = selectedPiece % 4;
+        if (LEFT_CHECK && mod4 > 0) selectedPiece--;
+        if (RIGHT_CHECK && mod4 < 3) selectedPiece++;
+        if (UP_CHECK && selectedPiece > 3) selectedPiece -= 4;
+        if (DOWN_CHECK && selectedPiece < 12) selectedPiece += 4;
+        if (CONFIRM_CHECK) PipePressed(selectedPiece);
+    } else {
+        selectedPiece = 0;
         Vec2 mousePos = {(float) INPUT_MANAGER.GetMouseX(), (float) INPUT_MANAGER.GetMouseY()};
         for (int i = 0; i < pipes.size(); i++) {
             Rect PipeRect = pipes[i].GetRect().Add(Vec2{PIPE_PUZZLE_RECT_X, PIPE_PUZZLE_RECT_Y});
             if (PipeRect.Contains(mousePos)) {
-                PipePressed(i);
+                selectedPiece = i;
+                break;
             }
         }
+
+        if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) PipePressed(selectedPiece);
     }
 
-    if (ESCAPE_CHECK) {
+    if (ESCAPE_CHECK || BACK_CHECK) {
         CURRENT_STATE.openUI = false;
         associated.RequestDelete();
     }
@@ -64,6 +75,8 @@ void PipePuzzle::Render() {
     for (int i = 0; i < pipes.size(); i++) {
         float x = pipes[i].pos.x + bgRect.x;
         float y = pipes[i].pos.y + bgRect.y;
+        if (selectedPiece == i) SDL_SetTextureColorMod(pipes[i].sprite.texture, 150, 150, 150);
+        else                    SDL_SetTextureColorMod(pipes[i].sprite.texture, 255, 255, 255);
         pipes[i].sprite.Render(x, y, pipes[i].GetWidth(), pipes[i].GetHeight(), fmod(pipeAngles[i], 360.0f));
     }
 }

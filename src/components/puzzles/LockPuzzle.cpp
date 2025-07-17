@@ -19,10 +19,6 @@ LockPuzzle::LockPuzzle(GameObject& associated, std::string expectedPassword): Co
     bg2("Recursos/img/lock_puzzle/lock2.png", 1, 1, true), bg3("Recursos/img/lock_puzzle/lock3.png", 1, 1, true),
     bgunlocked("Recursos/img/lock_puzzle/unlock.png", 1, 1, true)
 {
-    bg1.SetCameraFollower(true);
-    bg2.SetCameraFollower(true);
-    bg3.SetCameraFollower(true);
-    bgunlocked.SetCameraFollower(true);
     selectedRect = EMPTY_RECT;
     current = {1, 6, 3, 7};
 
@@ -54,52 +50,59 @@ void LockPuzzle::Update(float dt) {
         solved = true;
     }
 
-    if (ESCAPE_CHECK) {
+    if (ESCAPE_CHECK || BACK_CHECK) {
         CURRENT_STATE.openUI = false;
         associated.RequestDelete();
     }
 
-    Vec2 mousePos = INPUT_MANAGER.GetMousePos();
+    if (INPUT_MANAGER.HasController()) {
+        if (LEFT_CHECK && selectedIndex > 0) selectedIndex--;
+        if (RIGHT_CHECK && selectedIndex < 3) selectedIndex++;
 
-    selectedRect = EMPTY_RECT;
-    if (ARROW_UP_1.Contains(mousePos)) {
-        selectedRect = ARROW_UP_1;
-    } else if (ARROW_UP_2.Contains(mousePos)) {
-        selectedRect = ARROW_UP_2;
-    } else if (ARROW_UP_3.Contains(mousePos)) {
-        selectedRect = ARROW_UP_3;
-    } else if( ARROW_UP_4.Contains(mousePos)) {
-        selectedRect = ARROW_UP_4;
-    } else if (ARROW_DOWN_1.Contains(mousePos)) {
-        selectedRect = ARROW_DOWN_1;
-    } else if (ARROW_DOWN_2.Contains(mousePos)) {
-        selectedRect = ARROW_DOWN_2;
-    } else if (ARROW_DOWN_3.Contains(mousePos)) {
-        selectedRect = ARROW_DOWN_3;
-    } else if (ARROW_DOWN_4.Contains(mousePos)) {
-        selectedRect = ARROW_DOWN_4;
-    }
-    
+        if (UP_CHECK && !animating[selectedIndex]) {
+            animating[selectedIndex]   = true;
+            animOffsetY[selectedIndex] = 0.0f;
+            animFrom[selectedIndex]    = current[selectedIndex];
+            animTo[selectedIndex] = (animFrom[selectedIndex] + 1 + 10) % 10;
+        }
 
-    if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON) && selectedRect != EMPTY_RECT) {
-        int idx = -1; bool isUp = false;
-        if (selectedRect == ARROW_UP_1)   { idx=0; isUp=true; }
-        else if (selectedRect == ARROW_UP_2) { idx=1; isUp=true; }
-        else if (selectedRect == ARROW_UP_3) { idx=2; isUp=true; }
-        else if (selectedRect == ARROW_UP_4) { idx=3; isUp=true; }
-        else if (selectedRect == ARROW_DOWN_1) { idx=0; isUp=false; }
-        else if (selectedRect == ARROW_DOWN_2) { idx=1; isUp=false; }
-        else if (selectedRect == ARROW_DOWN_3) { idx=2; isUp=false; }
-        else if (selectedRect == ARROW_DOWN_4) { idx=3; isUp=false; }
+        if (DOWN_CHECK && !animating[selectedIndex]) {
+            animating[selectedIndex]   = true;
+            animOffsetY[selectedIndex] = 0.0f;
+            animFrom[selectedIndex]    = current[selectedIndex];
+            animTo[selectedIndex] = (animFrom[selectedIndex] - 1 + 10) % 10;
+        }
+    } else {
+        selectedRect = EMPTY_RECT;
+        Vec2 mousePos = INPUT_MANAGER.GetMousePos();
+        if      (ARROW_UP_1.Contains(mousePos))    selectedRect = ARROW_UP_1;
+        else if (ARROW_UP_2.Contains(mousePos))    selectedRect = ARROW_UP_2;
+        else if (ARROW_UP_3.Contains(mousePos))    selectedRect = ARROW_UP_3;
+        else if (ARROW_UP_4.Contains(mousePos))    selectedRect = ARROW_UP_4;
+        else if (ARROW_DOWN_1.Contains(mousePos))  selectedRect = ARROW_DOWN_1;
+        else if (ARROW_DOWN_2.Contains(mousePos))  selectedRect = ARROW_DOWN_2;
+        else if (ARROW_DOWN_3.Contains(mousePos))  selectedRect = ARROW_DOWN_3;
+        else if (ARROW_DOWN_4.Contains(mousePos))  selectedRect = ARROW_DOWN_4;
 
-        if (idx >= 0 && !animating[idx]) {
-            animating[idx]   = true;
-            animOffsetY[idx] = 0.0f;
-            animFrom[idx]    = current[idx];
-            animTo[idx] = (animFrom[idx] + (isUp ? +1 : -1) + 10) % 10;
+        if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON) && selectedRect != EMPTY_RECT) {
+            int idx = -1; bool isUp = false;
+            if (selectedRect == ARROW_UP_1)         { idx=0; isUp=true; }
+            else if (selectedRect == ARROW_UP_2)    { idx=1; isUp=true; }
+            else if (selectedRect == ARROW_UP_3)    { idx=2; isUp=true; }
+            else if (selectedRect == ARROW_UP_4)    { idx=3; isUp=true; }
+            else if (selectedRect == ARROW_DOWN_1)  { idx=0; isUp=false; }
+            else if (selectedRect == ARROW_DOWN_2)  { idx=1; isUp=false; }
+            else if (selectedRect == ARROW_DOWN_3)  { idx=2; isUp=false; }
+            else if (selectedRect == ARROW_DOWN_4)  { idx=3; isUp=false; }
+
+            if (idx >= 0 && !animating[idx]) {
+                animating[idx]   = true;
+                animOffsetY[idx] = 0.0f;
+                animFrom[idx]    = current[idx];
+                animTo[idx] = (animFrom[idx] + (isUp ? +1 : -1) + 10) % 10;
+            }
         }
     }
-    
 
     for (int i = 0; i < 4; i++) {
         if (!animating[i]) continue;
@@ -129,7 +132,7 @@ void LockPuzzle::Render() {
         return;
     }
 
-    if(!solved)bg2.Render(0, bg1.GetHeight()+1, bg2.GetWidth(), bg2.GetHeight());
+    if(!solved) bg2.Render(0, bg1.GetHeight()+1, bg2.GetWidth(), bg2.GetHeight());
 
     // Animação de cada dígito
     TextHUD* digits[4] = {digit0, digit1, digit2, digit3};
@@ -139,46 +142,67 @@ void LockPuzzle::Render() {
         TextHUD* d = digits[i];
         if (animating[i]) {
             d->SetText(std::to_string(animFrom[i]));
-            d->SetPos({ bases[i].x, (int)(bases[i].y + animOffsetY[i]) });
+            d->SetPos({ (float) bases[i].x, (float) (bases[i].y + animOffsetY[i]) });
             d->Render();
 
             bool up = (animTo[i] == (animFrom[i]+1)%10);
             int extraY = up ? +digitHeight : -digitHeight;
             d->SetText(std::to_string(animTo[i]));
-            d->SetPos({ bases[i].x, (int)(bases[i].y + animOffsetY[i] + extraY) });
+            d->SetPos({ (float) bases[i].x, (float) (bases[i].y + animOffsetY[i] + extraY) });
             d->Render();
 
             d->SetText(std::to_string(current[i]));
-        }else {
-            d->SetPos({ bases[i].x, bases[i].y });
+        } else {
+            d->SetPos({ (float) bases[i].x, (float) bases[i].y });
             d->Render();
         }
     }
 
-    if(!solved)bg1.Render(0, 0, bg1.GetWidth(), bg1.GetHeight());
-    if(!solved)bg3.Render(0, bg1.GetHeight()+bg2.GetHeight()+1, bg3.GetWidth(), bg3.GetHeight());
+    if(!solved) bg1.Render(0, 0, bg1.GetWidth(), bg1.GetHeight());
+    if(!solved) bg3.Render(0, bg1.GetHeight()+bg2.GetHeight()+1, bg3.GetWidth(), bg3.GetHeight());
 
     // Selection
-    if (selectedRect != EMPTY_RECT and !solved) {
-        SDL_Rect sel = selectedRect.ToSDLRect();
-        int cx = sel.x + sel.w/2;
-        int cy = sel.y + sel.h/2;
-        int halfW = sel.w/2;
-        int halfH = sel.h/2;
-        // ARROW_UP
-        SDL_Point triUp[4] = {
-            { cx, sel.y}, { sel.x, sel.y + sel.h }, { sel.x + sel.w, sel.y + sel.h }, { cx, sel.y}
-        };
-        // ARROW_DOWN
-        SDL_Point triDown[4] = {
-            { sel.x, sel.y }, { sel.x + sel.w, sel.y}, { cx, sel.y + sel.h }, { sel.x, sel.y }
-        };
-        SDL_SetRenderDrawColor(GAME_RENDERER, 127, 127, 127, 255);
-        if (selectedRect == ARROW_UP_1 || selectedRect == ARROW_UP_2|| selectedRect == ARROW_UP_3 || selectedRect == ARROW_UP_4) {
-            SDL_RenderDrawLines(GAME_RENDERER, triUp, 4);
-        } else {
-            SDL_RenderDrawLines(GAME_RENDERER, triDown, 4);
+    if (INPUT_MANAGER.HasController()) {
+        if (selectedIndex == 0) {
+            RenderTriangle(ARROW_UP_1);
+            RenderTriangle(ARROW_DOWN_1);
         }
+        if (selectedIndex == 1) {
+            RenderTriangle(ARROW_UP_2);
+            RenderTriangle(ARROW_DOWN_2);
+        }
+        if (selectedIndex == 2) {
+            RenderTriangle(ARROW_UP_3);
+            RenderTriangle(ARROW_DOWN_3);
+        }
+        if (selectedIndex == 3) {
+            RenderTriangle(ARROW_UP_4);
+            RenderTriangle(ARROW_DOWN_4);
+        }
+    } else if (selectedRect != EMPTY_RECT and !solved) {
+        RenderTriangle(selectedRect);
+    }
+}
+
+void LockPuzzle::RenderTriangle(Rect rect) {
+    SDL_Rect sel = rect.ToSDLRect();
+    int cx = sel.x + sel.w/2;
+    int cy = sel.y + sel.h/2;
+    int halfW = sel.w/2;
+    int halfH = sel.h/2;
+    // ARROW_UP
+    SDL_Point triUp[4] = {
+        { cx, sel.y}, { sel.x, sel.y + sel.h }, { sel.x + sel.w, sel.y + sel.h }, { cx, sel.y}
+    };
+    // ARROW_DOWN
+    SDL_Point triDown[4] = {
+        { sel.x, sel.y }, { sel.x + sel.w, sel.y}, { cx, sel.y + sel.h }, { sel.x, sel.y }
+    };
+    SDL_SetRenderDrawColor(GAME_RENDERER, 127, 127, 127, 255);
+    if (rect == ARROW_UP_1 || rect == ARROW_UP_2|| rect == ARROW_UP_3 || rect == ARROW_UP_4) {
+        SDL_RenderDrawLines(GAME_RENDERER, triUp, 4);
+    } else {
+        SDL_RenderDrawLines(GAME_RENDERER, triDown, 4);
     }
 }
 

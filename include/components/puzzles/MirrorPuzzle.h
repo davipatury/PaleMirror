@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <stdlib.h>
+#include <functional>
 
 #include "core/Game.h"
 #include "utils/InputManager.h"
@@ -32,6 +33,10 @@ public:
             return Rect(pos.x, pos.y, sprite.GetWidth(), sprite.GetHeight());
         }
 
+        Vec2 Center() {
+            return GetRect().Center();
+        }
+
         int GetWidth() {
             return sprite.GetWidth();
         }
@@ -49,10 +54,13 @@ public:
     bool Is(std::string type);
 
     bool IsSolved();
+    int ClosestPiece(Vec2 joystick);
+    void RenderPiece(int i);
 
     bool solved = false;
     std::vector<Piece> pieces;
-    int selectedPiece;
+    int selectedPiece = -1;
+    int hoverPiece = 0;
     Sprite bg;
     bool background = false;
 };

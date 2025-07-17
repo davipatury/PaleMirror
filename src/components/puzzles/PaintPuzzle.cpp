@@ -20,15 +20,21 @@ PaintPuzzle::PaintColor PaintPuzzle::solution;
 
 PaintPuzzle::PaintPuzzle(GameObject& associated) : Component(associated),
     bg("Recursos/img/paint_puzzle/cavalete.png", 1, 1, true),
-    tinta("Recursos/img/paint_puzzle/paint.png", 1, 1, true)
+    tinta("Recursos/img/paint_puzzle/paint.png", 1, 1, true),
+    tintaVermelha("Recursos/img/paint_puzzle/tinta_vermelha.png", 1, 1, true),
+    tintaAzul("Recursos/img/paint_puzzle/tinta_azul.png", 1, 1, true),
+    tintaAmarela("Recursos/img/paint_puzzle/tinta_amarela.png", 1, 1, true),
+    pano("Recursos/img/paint_puzzle/pano.png", 1, 1, true)
 {
     splash = new Sound("Recursos/audio/sounds/puzzle/splash-tinta-2.wav");
     corAtual = COR_VAZIA;
     estadoAtual = QUADRO_VAZIO;
-    selectedRect = EMPTY_RECT;
+    selectedRect = RECT_VERMELHO;
 
-    bg.SetCameraFollower(true);
-    tinta.SetCameraFollower(true);
+    SDL_SetTextureColorMod(tintaVermelha.texture, 150, 150, 150);
+    SDL_SetTextureColorMod(tintaAzul.texture, 150, 150, 150);
+    SDL_SetTextureColorMod(tintaAmarela.texture, 150, 150, 150);
+    SDL_SetTextureColorMod(pano.texture, 150, 150, 150);
 }
 
 void PaintPuzzle::Update(float dt) {
@@ -52,36 +58,60 @@ void PaintPuzzle::Update(float dt) {
     }
 
     // Selection
-    Vec2 mousePos = INPUT_MANAGER.GetMousePos();
-    selectedRect = EMPTY_RECT;
-    if (estadoAtual != QUADRO_ERRADO) {
-        if (RECT_VERMELHO.Contains(mousePos) && corAtual != VERMELHO) {
-            selectedRect = RECT_VERMELHO;
-        } else if (RECT_AZUL.Contains(mousePos) && corAtual != AZUL) {
-            selectedRect = RECT_AZUL;
-        } else if (RECT_AMARELO.Contains(mousePos) && corAtual != AMARELO) {
-            selectedRect = RECT_AMARELO;
+    if (INPUT_MANAGER.HasController()) {
+        if (LEFT_CHECK) {
+            if (selectedRect == RECT_AZUL) selectedRect = RECT_VERMELHO;
+            else if (selectedRect == RECT_AMARELO) selectedRect = RECT_AZUL;
+            else if (selectedRect == RECT_LIMPAR) selectedRect = RECT_AMARELO;
         }
-    }
-    if (RECT_LIMPAR.Contains(mousePos)) {
-        selectedRect = RECT_LIMPAR;
-    }
+        if (RIGHT_CHECK) {
+            if (selectedRect == RECT_VERMELHO) selectedRect = RECT_AZUL;
+            else if (selectedRect == RECT_AZUL) selectedRect = RECT_AMARELO;
+            else if (selectedRect == RECT_AMARELO) selectedRect = RECT_LIMPAR;
+        }
+        if (BACK_CHECK) selectedRect = RECT_LIMPAR;
+        if (CONFIRM_CHECK) {
+            splash->Play();
+            if (selectedRect == RECT_VERMELHO) {
+                Pintar(VERMELHO);
+            } else if (selectedRect == RECT_AZUL) {
+                Pintar(AZUL);
+            } else if (selectedRect == RECT_AMARELO) {
+                Pintar(AMARELO);
+            } else if (selectedRect == RECT_LIMPAR) {
+                corAtual = COR_VAZIA;
+                estadoAtual = QUADRO_VAZIO;
+            }
+        }
+    } else {
+        selectedRect = EMPTY_RECT;
+        Vec2 mousePos = INPUT_MANAGER.GetMousePos();
+        if (estadoAtual != QUADRO_ERRADO) {
+            if (RECT_VERMELHO.Contains(mousePos) && corAtual != VERMELHO) {
+                selectedRect = RECT_VERMELHO;
+            } else if (RECT_AZUL.Contains(mousePos) && corAtual != AZUL) {
+                selectedRect = RECT_AZUL;
+            } else if (RECT_AMARELO.Contains(mousePos) && corAtual != AMARELO) {
+                selectedRect = RECT_AMARELO;
+            }
+        }
+        if (RECT_LIMPAR.Contains(mousePos)) {
+            selectedRect = RECT_LIMPAR;
+        }
 
-    if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
         // Check if mouse is inside rects
-        if (selectedRect == RECT_VERMELHO) {
+        if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON) && selectedRect != EMPTY_RECT) {
             splash->Play();
-            Pintar(VERMELHO);
-        } else if (selectedRect == RECT_AZUL) {
-            splash->Play();
-            Pintar(AZUL);
-        } else if (selectedRect == RECT_AMARELO) {
-            splash->Play();
-            Pintar(AMARELO);
-        } else if (selectedRect == RECT_LIMPAR) {
-            splash->Play();
-            corAtual = COR_VAZIA;
-            estadoAtual = QUADRO_VAZIO;
+            if (selectedRect == RECT_VERMELHO) {
+                Pintar(VERMELHO);
+            } else if (selectedRect == RECT_AZUL) {
+                Pintar(AZUL);
+            } else if (selectedRect == RECT_AMARELO) {
+                Pintar(AMARELO);
+            } else if (selectedRect == RECT_LIMPAR) {
+                corAtual = COR_VAZIA;
+                estadoAtual = QUADRO_VAZIO;
+            }
         }
     }
 
@@ -102,11 +132,10 @@ void PaintPuzzle::Render() {
     bg.Render(PAINT_BG_OFFSET_X, PAINT_BG_OFFSET_Y, bg.GetWidth(), bg.GetHeight());
 
     // Selection
-    if (selectedRect != EMPTY_RECT) {
-        SDL_Rect selRect = selectedRect.ToSDLRect();
-        SDL_SetRenderDrawColor(GAME_RENDERER, 127, 127, 127, 255);
-        SDL_RenderDrawRect(GAME_RENDERER, &selRect);
-    }
+    if (selectedRect == RECT_VERMELHO)      tintaVermelha.Render(PAINT_BG_OFFSET_X, PAINT_BG_OFFSET_Y + 455, tintaVermelha.GetWidth(), tintaVermelha.GetHeight());
+    else if (selectedRect == RECT_AZUL)     tintaAzul.Render(PAINT_BG_OFFSET_X + 108, PAINT_BG_OFFSET_Y + 449, tintaAzul.GetWidth(), tintaAzul.GetHeight());
+    else if (selectedRect == RECT_AMARELO)  tintaAmarela.Render(PAINT_BG_OFFSET_X + 216, PAINT_BG_OFFSET_Y + 439, tintaAmarela.GetWidth(), tintaAmarela.GetHeight());
+    else if (selectedRect == RECT_LIMPAR)   pano.Render(PAINT_BG_OFFSET_X + 541, PAINT_BG_OFFSET_Y + 119, pano.GetWidth(), pano.GetHeight());
 
     // Splash de tinta
     if (corAtual == COR_VAZIA) return;

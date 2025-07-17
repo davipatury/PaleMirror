@@ -144,7 +144,7 @@ void Game::Run() {
             CalculateDeltaTime();
             SDL_RenderClear(renderer);
             SDL_GetWindowSize(window, &windowWidth, &windowHeight);
-            INPUT_MANAGER.Update();
+            INPUT_MANAGER.Update(dt);
             stateStack.top()->Update(dt);
             stateStack.top()->Render();
             SDL_RenderPresent(renderer);
