@@ -16,21 +16,13 @@ void PauseHUD::Update(float dt) {
     if (ESCAPE_CHECK) TogglePause();
 
     if (paused) {
-        bool topPressed = INPUT_MANAGER.KeyPress(UP_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_w) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_UP);
-        bool bottomPressed = INPUT_MANAGER.KeyPress(DOWN_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_s) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_DOWN);
-        if (INPUT_MANAGER.HasController()) {
-            Vec2 leftAxis = INPUT_MANAGER.ControllerAxis(LEFT_JOYSTICK);
-            topPressed = topPressed || leftAxis.y < 0;
-            bottomPressed = bottomPressed || leftAxis.y > 0;
-        }
-
-        if (topPressed) selectedOption = 0;
-        if (bottomPressed) selectedOption = 1;
-
+        if (UP_CHECK)   selectedOption = 0;
+        if (DOWN_CHECK) selectedOption = 1;
         if (CONFIRM_CHECK) {
             if (selectedOption == 0) TogglePause();
             else CURRENT_STATE.RequestPop();
         }
+        if (BACK_CHECK) TogglePause();
     }
 }
 

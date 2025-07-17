@@ -45,21 +45,8 @@ void TitleState::Update(float dt) {
     if (tutorial) {
         if (CONFIRM_CHECK) Game::GetInstance().Push(new StageState());
     } else {
-        bool leftPressed = INPUT_MANAGER.KeyPress(LEFT_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_a) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_LEFT);
-        bool rightPressed = INPUT_MANAGER.KeyPress(RIGHT_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_d) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
-        if (INPUT_MANAGER.HasController()) {
-            Vec2 leftAxis = INPUT_MANAGER.ControllerAxis(LEFT_JOYSTICK);
-            leftPressed = leftPressed || leftAxis.x < 0;
-            rightPressed = rightPressed || leftAxis.x > 0;
-        }
-
-        if (leftPressed) {
-            selectedOption = 0;
-        }
-        if (rightPressed) {
-            selectedOption = 1;
-        }
-
+        if (LEFT_CHECK) selectedOption = 0;
+        if (RIGHT_CHECK) selectedOption = 1;
         if (CONFIRM_CHECK) {
             if (selectedOption == 0) {
                 SpriteRenderer* sr = (SpriteRenderer*) bg->GetComponent("SpriteRenderer");

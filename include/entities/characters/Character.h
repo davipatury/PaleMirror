@@ -20,6 +20,8 @@
 
 #define RENDER_HITBOX 1  // Define para controlar a renderização da hitbox
 
+#define PLAYER Character::player
+
 class Character : public Component
 {
 public:
@@ -43,6 +45,7 @@ public:
 
     void Hit(int damage);
     Vec2 Pos();
+    bool IsDying();
 
     int GetHP();
 
@@ -58,6 +61,7 @@ private:
     Vec2 lastMoveDirection;
     float linearSpeed;
     int hp;
+    bool dying = false;
     Timer deathTimer;
     Timer hitTimer;
     Timer attackTimer;
@@ -71,11 +75,6 @@ private:
     Sound* attackSound;
     Sound* walkSound;
 
-    std::vector<std::string> idleSprites;
-    std::vector<std::string> walkSprites;
-    std::vector<std::string> attackSprites;
-    std::vector<std::string> hitSprites;
-    std::string currentSprite;
     int currentDirection;
 
     SDL_Rect attackBox;

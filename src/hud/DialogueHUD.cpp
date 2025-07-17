@@ -153,7 +153,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelanaNeutra", "Helena", {101, 38, 141, 255},
         "Err, te entendo bem.", true
         },
-        {"AnelehFeliz", "Aneleh", {101, 38, 141, 255},
+        {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
         "Fico muito feliz de ter te conhecido Helena.", true
         },
         {"AnelehInocente", "Aneleh", {199, 90, 15, 255},
@@ -169,8 +169,49 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     // Pipe puzzle
     dialogueLines["lockPuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
-            "abriu a porta :)"
+            "Abriu!! Que complicação. Como alguém sequer chega nessa idéia?"
         }
+    };
+
+    // Boss Battle
+    dialogueLines["boss_battle"] = {
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "Ué"
+        },
+        {"AnelehInocente", "Aneleh", {199, 90, 15, 255},
+            "Ué"
+        },
+        {"HelenaBrava", "Helena", {101, 38, 141, 255},
+            "..."
+        },
+        {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
+            "Você não tinha percebido?"
+        },
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "Percebido o quê?"
+        },
+        {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
+            "Eu meio que usei o seu estado entre-espaço-tempo pra me libertar do espelho..."
+        },
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "???????????????"
+        },
+        {"AnelehBrava", "Aneleh", {199, 90, 15, 255},
+            "Agora você precisa morrer."
+        },
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "Mas eu preciso voltar!"
+        },
+        {"AnelehInocente", "Aneleh", {199, 90, 15, 255},
+            "Você não precisa, e você não quer. Pensa bem: Todo mundo fala de você nas suas costas, nem você gosta de si mesma. Sua existência no outro lado só era peso. Se eu for no seu lugar, vai ser melhor pra todo mundo!"
+        },
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "Mas eu preciso continuar vivendo."
+        },
+        {"AnelehBrava", "Aneleh", {199, 90, 15, 255},
+            "Isso não é você quem decide agora."
+        },
+
     };
 
     // Para adicionar um novo dialogo é só repetir a estrutura acima mudando o que for necessário e para chamar o dialogo é só usar DialogueHUD::RequestDialogue("nova_chave");
@@ -286,9 +327,13 @@ void DialogueHUD::Render() {
         dialogueText->Render();
         charNameText->Render();
 
-        if (INPUT_MANAGER.HasController()) cbuttonA.Render(700 - cbuttonA.GetWidth() / 2, 815, cbuttonA.GetWidth(), cbuttonA.GetHeight());
-        else keySpace.Render(700 - keySpace.GetWidth() / 2, 815, keySpace.GetWidth(), keySpace.GetHeight());
+        if (INPUT_MANAGER.HasController()) cbuttonA.Render(700 - cbuttonA.GetWidth() / 2, 810, cbuttonA.GetWidth(), cbuttonA.GetHeight());
+        else keySpace.Render(700 - keySpace.GetWidth() / 2, 810, keySpace.GetWidth(), keySpace.GetHeight());
     }
+}
+
+bool DialogueHUD::isEmpty() {
+    return dialogueQueue.empty();
 }
 
 bool DialogueHUD::Is(std::string type) {

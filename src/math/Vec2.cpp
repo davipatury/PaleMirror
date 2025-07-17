@@ -27,6 +27,14 @@ bool Vec2::operator!=(Vec2 const& o){
     return !(*this == o);
 }
 
+bool Vec2::operator<(Vec2 const& o){
+    if(o.x == x){
+        return y < o.y;
+    }else{
+        return x < o.x;
+    }
+}
+
 Vec2 Vec2::Sub(Vec2 vec) const {
     return Vec2(x - vec.x, y - vec.y);
 }
@@ -59,6 +67,22 @@ float Vec2::Distance(Vec2 vec) const {
 
 float Vec2::Angle() const {
     return atan2(y, x);
+}
+
+float Vec2::AngleW() const {
+    return atan2(y, x);
+}
+
+float Vec2::AngleN() const {
+    return atan2(x, y);
+}
+
+float Vec2::AngleE() const {
+    return atan2(-y, -x);
+}
+
+float Vec2::AngleS() const {
+    return atan2(-x, -y);
 }
 
 float Vec2::Angle(Vec2 vec) const {

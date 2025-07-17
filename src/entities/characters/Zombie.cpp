@@ -2,12 +2,12 @@
 #include "entities/projectiles/HitAttack.h"
 #include "core/Game.h"
 #include "core/GameData.h"
+#include "entities/characters/Boss.h"
 
-int Zombie::zombieCounter;
+#define OFFSET_TOPLAYER Vec2(-10, 30)
 
-Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/Dead.wav"), hitSound("Recursos/audio/sounds/monster/hit1.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
+Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recursos/audio/sounds/monster/zombieDead.wav"), hitSound("Recursos/audio/sounds/monster/hit2.wav"), monsterSound("Recursos/audio/sounds/monster/monstro500-2.wav") {
     hitpoints = 100;
-
     SpriteRenderer* sprite = new SpriteRenderer(associated,"Recursos/img/Monster/monster.png", 4, 1);
     associated.AddComponent(sprite);
 
@@ -15,13 +15,18 @@ Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recu
     associated.AddComponent(animator);
     animator->AddAnimation("walking", Animation(0, 3, 0.3));
     animator->AddAnimation("walkingFlip", Animation(0, 3, 0.3, SDL_FLIP_HORIZONTAL));
+    animator->AddAnimation("hit", Animation(0, 1, 0.250));
+    animator->AddAnimation("dead", Animation(0, 5, 0.5));
     animator->SetAnimation("walking");
     
-    zombieCounter++;
     hit = false;
     hitTimer.Restart();
     deathTimer.Restart();
     monsterSoundTimer.Restart();
+}
+
+Zombie::~Zombie() {
+    Boss::currentzombies--;
 }
 
 void Zombie::Start() {
@@ -43,8 +48,11 @@ void Zombie::Damage(int damage) {
         hit = true;
         hitTimer.Restart();
 
-        // Animação de Hit
-
+        auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
+        SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+        spriteRdr->Open("Recursos/img/Monster/monsterHit.png");
+        spriteRdr->SetFrameCount(2, 1);
+        animator->SetAnimation("hit");
     }
 }
 
@@ -69,16 +77,12 @@ void Zombie::Update(float dt) {
 
     if(hit and hitpoints and hitTimer.Get() > 1.5f){
         auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
-        if (animator) {
-            /*
-            if (moveLeft) {
-                animator->SetAnimation("hitLeft");
-            } else {
-                animator->SetAnimation("hit");
-            }
-            */
-        }
+        SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
         hit = false;
+
+        spriteRdr->Open("Recursos/img/Monster/monster.png");
+        spriteRdr->SetFrameCount(4, 1);
+        animator->SetAnimation("walking");
     }
 
     if (hitpoints > 0) {
@@ -110,20 +114,20 @@ void Zombie::Update(float dt) {
                 anim->SetAnimation(left ? "walking" : "walkingFlip");
             }
         }
-    } else if (deathTimer.Get() >= 2) {
-        zombieCounter--;
-        associated.RequestDelete();
+    } else{
+        if (deathTimer.Get() > 3) {
+            associated.RequestDelete();
+        } else {
+            auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
+            if(animator->GetAnimation() == "dead") return;
+            SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+            spriteRdr->Open("Recursos/img/Monster/monsterDead.png");
+            spriteRdr->SetFrameCount(5, 1);
+            animator->SetAnimation("dead");
+        }
     }
 
-    
-
     // std::cout << "Zombie position: " << associated.box.x << ", " << associated.box.y << std::endl;
-}
-
-static inline int64_t pointKey(const Vec2& v, float step) {
-    int ix = int(std::floor(v.x / step));
-    int iy = int(std::floor(v.y / step));
-    return (int64_t(ix) << 32) | uint32_t(iy);
 }
 
 bool Zombie::checkCollision(float x, float y) {
@@ -137,66 +141,91 @@ bool Zombie::checkCollision(float x, float y) {
         GameObject* go = oA[i].get();
         if (go == &associated) continue;
         IsoCollider* colliderA = (IsoCollider*) go->GetComponent("IsoCollider");
-        if(colliderA != nullptr and colliderA->box.Collides(isoBox) and (go->GetComponent("Character") == nullptr)) {
+        if(colliderA != nullptr and !colliderA->passable and colliderA->box.Collides(isoBox) and (go->GetComponent("Character") == nullptr)) {
             return true;
         }
     }
     return false;
 }
 
+static inline int64_t pointKey(const Vec2& v, float step) {
+    int ix = int(std::floor(v.x / step));
+    int iy = int(std::floor(v.y / step));
+    return (int64_t(ix) << 32) | uint32_t(iy);
+}
+
 std::vector<Vec2> Zombie::computePath(const Vec2& target) {
     Vec2 start = associated.box.Center();
 
-    std::queue<Vec2> q;
+    auto cmp = [&target](const Vec2& a, const Vec2& b) {
+        return a.Distance(target) > b.Distance(target);
+    };
+    std::priority_queue<Vec2, std::vector<Vec2>, decltype(cmp)> pq(cmp);
+    
     std::unordered_map<int64_t, Vec2> parent;
+    std::unordered_map<int64_t, float> cost_so_far; 
     std::unordered_set<int64_t> visited;
     
     int64_t startKey = pointKey(start, searchStep);
-    q.push(start);
+    pq.push(start);
     visited.insert(startKey);
     parent[startKey] = start;
+    cost_so_far[startKey] = 0;
 
-    const Vec2 dirs[8] = {Vec2(1,1), Vec2(1,-1), Vec2(-1,1), Vec2(-1,-1),Vec2(1,0), Vec2(-1,0), Vec2(0,1), Vec2(0,-1)};
+    const Vec2 dirs[8] = {
+        Vec2(1,1), Vec2(1,-1), Vec2(-1,1), Vec2(-1,-1),
+        Vec2(1,0), Vec2(-1,0), Vec2(0,1), Vec2(0,-1)
+    };
 
     bool found = false;
     Vec2 goalQuant;
 
-    while (!q.empty() && !found) {
-        Vec2 cur = q.front(); q.pop();
+    while (!pq.empty() && !found) {
+        Vec2 cur = pq.top();
+        pq.pop();
+        
         for (auto d : dirs) {
             Vec2 nxt = cur.Add(d.Normalized().MulScalar(searchStep));
-            // limite pelo raio de busca
+            
+            // Limite pelo raio de busca
             if (nxt.Distance(start) > chaseRadius) continue;
+            
             int64_t k = pointKey(nxt, searchStep);
-            if (visited.count(k)) continue;
-            // teste de colisão em coord real
+            float new_cost = cost_so_far[pointKey(cur, searchStep)] + cur.Distance(nxt);
+            
+            // Se já visitado com custo menor, pula
+            if (visited.count(k) && new_cost >= cost_so_far[k]) continue;
+            
+            // Teste de colisão
             if (checkCollision(nxt.x, nxt.y)) continue;
+            
             visited.insert(k);
+            cost_so_far[k] = new_cost;
             parent[k] = cur;
-            if (nxt.Distance(target) < 2*searchStep) {
+            pq.push(nxt);
+
+            if (nxt.Distance(target) < searchStep) {
                 found = true;
                 goalQuant = nxt;
-                parent[pointKey(goalQuant, searchStep)] = cur;
                 break;
             }
-            q.push(nxt);
         }
     }
+
     if (!found) return {};
 
-    // reconstrói caminho de goalQuant → start
     std::vector<Vec2> rev;
     int64_t curKey = pointKey(goalQuant, searchStep);
     int64_t startKey2 = startKey;
     while (curKey != startKey2) {
         Vec2 v = parent[curKey];
-        curKey = pointKey(v, searchStep);
-        if(curKey != startKey2) rev.push_back(v);
+        rev.push_back(goalQuant);
+        goalQuant = v;
+        curKey = pointKey(goalQuant, searchStep);
     }
     std::reverse(rev.begin(), rev.end());
-
-    // adiciona target exato ao fim
     rev.push_back(target);
+    
     return rev;
 }
 

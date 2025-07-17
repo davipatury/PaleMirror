@@ -19,6 +19,7 @@ public:
     Vec2 operator+(Vec2 const& vec);
     bool operator==(Vec2 const& o);
     bool operator!=(Vec2 const& o);
+    bool operator<(Vec2 const& o);
     Vec2 Sub(Vec2 vec) const;
     Vec2 operator-(Vec2 const& vec);
     Vec2 MulScalar(float scalar);
@@ -30,6 +31,11 @@ public:
     float Angle() const;
     float Angle(Vec2 vec) const;
     Vec2 Rotate(float angle);
+
+    float AngleW() const;
+    float AngleN() const;
+    float AngleE() const;
+    float AngleS() const;
 
     float operator^(Vec2 const& vec);
     int PointLine(Line l);

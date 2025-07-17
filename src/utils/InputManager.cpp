@@ -21,6 +21,7 @@ InputManager::InputManager() {
     std::cout << "[InputManager] Total joysticks found: " << SDL_NumJoysticks() << std::endl;
     ConfigureController();
 
+    joystickDirTimer = Timer();
     updateCounter = 0;
     quitRequested = false;
     anyKeyPress = false;
@@ -32,12 +33,13 @@ InputManager::~InputManager() {
     if (HasController()) SDL_GameControllerClose(controller);
 }
 
-void InputManager::Update() {
+void InputManager::Update(float dt) {
     updateCounter++;
     SDL_GetMouseState(&mouseX, &mouseY);
     quitRequested = false;
     anyKeyPress = false;
     mouseWheel = 0;
+    joystickDirTimer.Update(dt);
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -186,22 +188,65 @@ bool InputManager::IsCButtonDown(int button) {
     return controllerState[button];
 }
 
-Vec2 InputManager::ControllerAxis(int joystick) {
+Vec2 InputManager::ControllerAxis(int joystick, float deadzone) {
     if (joystick == LEFT_JOYSTICK) {
         int x = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX);
         int y = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY);
-        return Vec2(ParseAxis(x), ParseAxis(y));
+        return Vec2(ParseAxis(x, deadzone), ParseAxis(y, deadzone));
     } else {
         int x = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX);
         int y = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY);
-        return Vec2(ParseAxis(x), ParseAxis(y));
+        return Vec2(ParseAxis(x, deadzone), ParseAxis(y, deadzone));
     }
 }
 
-float InputManager::ParseAxis(int value) {
-    if (abs(value) < JOYSTICK_DEADZONE) return 0.0f;
-    float actualValue = value > 0 ? value - JOYSTICK_DEADZONE : value + JOYSTICK_DEADZONE;
+float InputManager::ParseAxis(int value, float deadzone) {
+    if (abs(value) < deadzone) return 0.0f;
+    float actualValue = value > 0 ? value - deadzone : value + deadzone;
     return actualValue / JOYSTICK_MAX_VALUE;
+}
+
+/*
+ * General
+ */
+bool InputManager::UpPressed(float delay) {
+    bool upPressed = INPUT_MANAGER.KeyPress(UP_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_w) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_UP);
+    if (!upPressed && INPUT_MANAGER.HasController() & joystickDirTimer.Get() > delay) {
+        Vec2 leftAxis = INPUT_MANAGER.ControllerAxis(LEFT_JOYSTICK, 15000);
+        upPressed = leftAxis.y < 0;
+        if (upPressed) joystickDirTimer.Restart();
+    }
+    return upPressed;
+}
+
+bool InputManager::DownPressed(float delay) {
+    bool downPressed = INPUT_MANAGER.KeyPress(DOWN_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_s) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_DOWN);
+    if (!downPressed && INPUT_MANAGER.HasController() && joystickDirTimer.Get() > delay) {
+        Vec2 leftAxis = INPUT_MANAGER.ControllerAxis(LEFT_JOYSTICK, 15000);
+        downPressed = leftAxis.y > 0;
+        if (downPressed) joystickDirTimer.Restart();
+    }
+    return downPressed;
+}
+
+bool InputManager::LeftPressed(float delay) {
+    bool leftPressed = INPUT_MANAGER.KeyPress(LEFT_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_a) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+    if (!leftPressed && INPUT_MANAGER.HasController() && joystickDirTimer.Get() > delay) {
+        Vec2 leftAxis = INPUT_MANAGER.ControllerAxis(LEFT_JOYSTICK, 15000);
+        leftPressed = leftAxis.x < 0;
+        if (leftPressed) joystickDirTimer.Restart();
+    }
+    return leftPressed;
+}
+
+bool InputManager::RightPressed(float delay) {
+    bool rightPressed = INPUT_MANAGER.KeyPress(RIGHT_ARROW_KEY) || INPUT_MANAGER.KeyPress(SDLK_d) || INPUT_MANAGER.CButtonPress(SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+    if (!rightPressed && INPUT_MANAGER.HasController() && joystickDirTimer.Get() > delay) {
+        Vec2 leftAxis = INPUT_MANAGER.ControllerAxis(LEFT_JOYSTICK, 15000);
+        rightPressed = leftAxis.x > 0;
+        if (rightPressed) joystickDirTimer.Restart();
+    }
+    return rightPressed;
 }
 
 /*

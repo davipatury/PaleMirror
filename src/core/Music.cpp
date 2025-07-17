@@ -18,6 +18,25 @@ void Music::Play(int times) {
     }
 }
 
+void Music::FadeInPos(double pos, int times, int ms) {
+    if (music != nullptr) {
+        Mix_FadeInMusicPos(music, times, ms, pos);
+    }
+}
+
+void Music::SetPosition(double pos) {
+    if (music != nullptr && Mix_PlayingMusic()) {
+        Mix_SetMusicPosition(pos);
+    }
+}
+
+double Music::GetPosition() {
+    if (music != nullptr && Mix_PlayingMusic()) {
+        return Mix_GetMusicPosition(music);
+    }
+    return 0.0d;
+}
+
 void Music::Stop(int msToStop) {
     Mix_FadeOutMusic(msToStop);
 }

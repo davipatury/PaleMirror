@@ -19,9 +19,11 @@ Interactable::Interactable(GameObject& associated, std::function<void (State*, G
 }
 
 void Interactable::Update(float dt) {
-    if (Character::player == nullptr) return;
-    if (action == nullptr) return;
-    if (associated.IsDead()) return;
+    if (Character::player == nullptr ||
+        action == nullptr ||
+        associated.IsDead() ||
+        activationDistance <= 0.0f
+    ) return;
 
     // Player center coordinates
     IsoCollider* playerCol = (IsoCollider*) Character::player->associated.GetComponent("IsoCollider");
@@ -50,7 +52,7 @@ void Interactable::Update(float dt) {
 
 void Interactable::Render() {
 #ifdef DEBUG_INTERACT_RANGE
-    //if (!canInteract) return;
+    if (activationDistance <= 0.0f) return;
 
     IsoCollider* objCol = (IsoCollider*) associated.GetComponent("IsoCollider");
     Vec2 objectCoord;

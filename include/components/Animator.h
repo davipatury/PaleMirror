@@ -21,6 +21,7 @@ public:
 
     void SetAnimation(std::string name);
     void AddAnimation(std::string name, Animation anim);
+    std::string GetAnimation();
 private:
     std::unordered_map<std::string, Animation> animations;
     int frameStart;

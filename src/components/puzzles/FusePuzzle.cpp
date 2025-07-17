@@ -26,17 +26,29 @@ void FusePuzzle::FusePressed(int idx){
 void FusePuzzle::Update(float dt) {
     if (solved) return;
 
-    if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON)) {
+    if (INPUT_MANAGER.HasController()) {
+        int mod3 = selectedPiece % 3;
+        if (UP_CHECK && selectedPiece > 2) selectedPiece -= 3;
+        if (DOWN_CHECK && selectedPiece < 6) selectedPiece += 3;
+        if (LEFT_CHECK && mod3) selectedPiece--;
+        if (RIGHT_CHECK && mod3 < 2) selectedPiece++;
+
+        if (CONFIRM_CHECK) FusePressed(selectedPiece);
+    } else {
+        selectedPiece = -1;
         Vec2 mousePos = {(float) INPUT_MANAGER.GetMouseX(), (float) INPUT_MANAGER.GetMouseY()};
         for (int i = 0; i < fuses.size(); i++) {
             Rect fuseRect = fuses[i].GetRect().Add(Vec2{FUSE_PUZZLE_RECT_X, FUSE_PUZZLE_RECT_Y});
             if (fuseRect.Contains(mousePos)) {
-                FusePressed(i);
+                selectedPiece = i;
+                break;
             }
         }
+
+        if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON) && selectedPiece != -1) FusePressed(selectedPiece);
     }
 
-    if (ESCAPE_CHECK) {
+    if (ESCAPE_CHECK || BACK_CHECK) {
         CURRENT_STATE.openUI = false;
         associated.RequestDelete();
     }
@@ -63,6 +75,11 @@ void FusePuzzle::Render() {
     for (int i = 0; i < fuses.size(); i++) {
         float x = fuses[i].pos.x + bgRect.x;
         float y = fuses[i].pos.y + bgRect.y;
+
+        // Selected fuse highlight
+        if (selectedPiece == i) SDL_SetTextureColorMod(fuses[i].sprite.texture, 150, 150, 150);
+        else                    SDL_SetTextureColorMod(fuses[i].sprite.texture, 255, 255, 255);
+
         fuses[i].sprite.Render(x, y, fuses[i].GetWidth(), fuses[i].GetHeight());
     }
 }

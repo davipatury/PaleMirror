@@ -12,6 +12,7 @@
 #include "core/Sprite.h"
 #include "math/Vec2.h"
 #include "hud/DialogueHUD.h"
+#include "utils/Timer.h"
 
 class FusePuzzle : public Component
 {
@@ -54,7 +55,7 @@ public:
     bool IsSolved();
 
     std::vector<Fuse> fuses;
-    int selectedPiece;
+    int selectedPiece = 0;
     bool solved = false;
 
     Sprite bg;

@@ -36,25 +36,27 @@ void StageState::LoadAssets() {
     Character* charCmp = new Character((*character), "Recursos/img/Player.png");
     character->AddComponent(new PlayerController(*character));
     character->AddComponent(charCmp);
-    character->box.x = 1639;
-    character->box.y = 1656;
+    character->box.x = 2002;
+    character->box.y = 1988;
     character->box.z = OBJECT_LAYER;
     Character::player = charCmp;
     Camera::Follow(character);
     AddObject(character);
 
     // Shadows
+
     GameObject* scc = new GameObject("[ShadowCasterController");
     scc->AddComponent(new ShadowCaster::Controller(*scc));
     scc->box.z = SHADOW_LAYER;
     scc->lazyRender = false;
     scc->pauseOnOpenUI = false;
     AddObject(scc);
-
     // HUD
     // Flashlight
     GameObject* flHUD = new GameObject("[FlashlightHUD]");
-    flHUD->AddComponent(new FlashlightHUD(*flHUD));
+    FlashlightHUD* flComp = new FlashlightHUD(*flHUD);
+    FlashlightHUD::instance = flComp;
+    flHUD->AddComponent(flComp);
     flHUD->box.z = FLASHLIGHT_LAYER;
     flHUD->lazyRender = false;
     flHUD->pauseOnOpenUI = false;
@@ -68,10 +70,12 @@ void StageState::LoadAssets() {
     InventoryHUD* inv = new InventoryHUD(*hud);
     InventoryHUD::instance = inv;
     hud->AddComponent(inv);
-    // IntactableHUD
+    // InteractableHUD
     InteractableHUD* intr = new InteractableHUD(*hud);
     InteractableHUD::instance = intr;
     hud->AddComponent(intr);
+    // DebugHUD
+    hud->AddComponent(new DebugHUD(*hud));
     hud->box.z = HUD_LAYER;
     hud->lazyRender = false;
     hud->pauseOnOpenUI = false;
@@ -124,6 +128,7 @@ void StageState::LoadAssets() {
 
     // Give flashlight on begin (REMOVE LATER)
     INVENTORY->Collect(ITEM_LANTERNA);
+    INVENTORY->Collect(ITEM_CANO);
 }
 
 void StageState::Start() {
@@ -219,6 +224,27 @@ void StageState::Update(float dt) {
         //DialogueHUD::RequestDialogue("prologoRitual");
         //DialogueHUD::RequestDialogue("prologoPosRitual");
     }
+
+
+    if(Boss::startBoss){
+        DialogueHUD::RequestDialogue("boss_battle");
+        Boss::startBoss = false;
+    }
+    
+    // Custcene Boss
+    if (!openUI && INPUT_MANAGER.KeyPress('k')) {
+        Character::player->associated.box.x = 2257;
+        Character::player->associated.box.y = 2500;
+
+        GameObject* aneleh = new GameObject("[Aneleh]");
+        aneleh->box.x = 2100;
+        aneleh->box.y = 2303;
+        aneleh->AddComponent(new Boss(*aneleh));
+        AddObject(aneleh);
+        Boss::startBoss = true;
+    }
+
+    
     
     // Spawn locker puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('l')) {
@@ -331,6 +357,10 @@ void StageState::ChangeRoom(std::string room) {
     if (currentRoom != nullptr) currentRoom->Leave();
     currentRoom = rooms[room];
     currentRoom->Enter();
+}
+
+Room* StageState::GetCurrentRoom() {
+    return currentRoom;
 }
 
 Room* StageState::GetRoom(std::string room) {

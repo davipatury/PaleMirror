@@ -20,6 +20,7 @@ class Zombie : public Component
 {
 public:
     Zombie(GameObject& associated);
+    ~Zombie() override;
 
     void Damage(int damage);
     void Start();
@@ -45,7 +46,7 @@ private:
     float chaseRadius = 500.f;
     std::vector<Vec2> path;
     int pathIndex = 0;
-    const float speed = 75.f;
+    const float speed = 100.f;
     const float searchStep = 64.f;
 
     Rect isoB;

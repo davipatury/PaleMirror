@@ -28,9 +28,13 @@ MainRoom::MainRoom(State* state) : Room(state) {
 void MainRoom::Build() {
     Room::Build();
 
-    GameObject* zombie = createGO("[Monster]", 1000, 1300);
+    GameObject* zombie = createGO("[MonsterSlow]", 1000, 1300);
     zombie->AddComponent(new Zombie(*zombie));
     state->AddObject(zombie);
+
+    GameObject* zombief = createGO("[MonsterFast]", 1200, 1600);
+    zombief->AddComponent(new ZombieFast(*zombief));
+    state->AddObject(zombief);
 
     // Arvores
     GameObject* tree1 = createGO("[OBJ] Tree1", 540, 1299);

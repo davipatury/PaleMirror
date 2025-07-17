@@ -19,7 +19,7 @@ void Room::Build() {
 
 void Room::Enter() {
     if (bgMusic.IsOpen()) {
-        bgMusic.Play();
+        bgMusic.FadeInPos(lastMusicPosition);
     }
 
     if (lockCameraOnRoom && bgGO != nullptr) {
@@ -32,7 +32,10 @@ void Room::Enter() {
 }
 
 void Room::Leave() {
-    if (bgMusic.IsOpen()) bgMusic.Stop();
+    if (bgMusic.IsOpen()) {
+        lastMusicPosition = bgMusic.GetPosition();
+        bgMusic.Stop();
+    }
 }
 
 GameObject* Room::createGO(std::string name, float x, float y) {

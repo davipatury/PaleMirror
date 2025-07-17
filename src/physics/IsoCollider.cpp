@@ -76,6 +76,15 @@ void IsoCollider::SetScale(Vec2 scale) {
 void IsoCollider::SetOffset(Vec2 offset) {
     this->offset = offset;
 }
+
+Vec2 IsoCollider::GetScale() {
+    return scale;
+}
+
+Vec2 IsoCollider::GetOffset() {
+    return offset;
+}
+
 bool IsoCollider::Is(std::string type) {
     return type == "IsoCollider";
 }

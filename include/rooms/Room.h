@@ -17,6 +17,7 @@ public:
 
     GameObject* bgGO;
     Music bgMusic;
+    double lastMusicPosition = 0.0d;
     bool lockCameraOnRoom;
 
     Vec2 basePos;
