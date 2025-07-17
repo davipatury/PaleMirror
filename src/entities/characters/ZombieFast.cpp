@@ -16,6 +16,7 @@ ZombieFast::ZombieFast(GameObject& associated) : Component(associated), deathSou
     animator->AddAnimation("walkingFlip", Animation(0, 3, 0.1));
     animator->AddAnimation("walking", Animation(0, 3, 0.1, SDL_FLIP_HORIZONTAL));
     animator->AddAnimation("hit", Animation(0, 1, 0.250));
+    animator->AddAnimation("dead", Animation(0, 5, 0.5));
     animator->SetAnimation("idle");
     currentSprite = "idle";
     
@@ -45,13 +46,11 @@ void ZombieFast::Damage(int damage) {
         hit = true;
         hitTimer.Restart();
 
-        /*
         auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
         SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
-        spriteRdr->Open("Recursos/img/Monster/monsterHit.png");
+        spriteRdr->Open("Recursos/img/Monster/zombiefastHit.png");
         spriteRdr->SetFrameCount(2, 1);
         animator->SetAnimation("hit");
-        */
     }
 }
 
@@ -133,9 +132,18 @@ void ZombieFast::Update(float dt) {
                 }
             }
         }
-    } else if (deathTimer.Get() >= 2) {
-        zombieCounter--;
-        associated.RequestDelete();
+    } else{
+        if (deathTimer.Get() > 3) {
+            zombieCounter--;
+            associated.RequestDelete();
+        } else {
+            auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
+            if(animator->GetAnimation() == "dead") return;
+            SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+            spriteRdr->Open("Recursos/img/Monster/zombiefastDead.png");
+            spriteRdr->SetFrameCount(5, 1);
+            animator->SetAnimation("dead");
+        }
     }
 
     

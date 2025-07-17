@@ -44,6 +44,7 @@
 #include "components/WaveSpawner.h"
 #include "entities/characters/Zombie.h"
 #include "entities/characters/ZombieFast.h"
+#include "entities/characters/Boss.h"
 #include "entities/projectiles/HitAttack.h"
 #include "rooms/MainRoom.h"
 #include "rooms/HistoryClassRoom.h"

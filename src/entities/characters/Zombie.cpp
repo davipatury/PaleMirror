@@ -17,6 +17,7 @@ Zombie::Zombie(GameObject& associated) : Component(associated), deathSound("Recu
     animator->AddAnimation("walking", Animation(0, 3, 0.3));
     animator->AddAnimation("walkingFlip", Animation(0, 3, 0.3, SDL_FLIP_HORIZONTAL));
     animator->AddAnimation("hit", Animation(0, 1, 0.250));
+    animator->AddAnimation("dead", Animation(0, 5, 0.5));
     animator->SetAnimation("walking");
     
     zombieCounter++;
@@ -111,12 +112,19 @@ void Zombie::Update(float dt) {
                 anim->SetAnimation(left ? "walking" : "walkingFlip");
             }
         }
-    } else if (deathTimer.Get() >= 2) {
-        zombieCounter--;
-        associated.RequestDelete();
+    } else{
+        if (deathTimer.Get() > 3) {
+            zombieCounter--;
+            associated.RequestDelete();
+        } else {
+            auto animator = dynamic_cast<Animator*>(associated.GetComponent("Animator"));
+            if(animator->GetAnimation() == "dead") return;
+            SpriteRenderer* spriteRdr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+            spriteRdr->Open("Recursos/img/Monster/monsterDead.png");
+            spriteRdr->SetFrameCount(5, 1);
+            animator->SetAnimation("dead");
+        }
     }
-
-    
 
     // std::cout << "Zombie position: " << associated.box.x << ", " << associated.box.y << std::endl;
 }

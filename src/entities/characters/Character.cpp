@@ -93,16 +93,16 @@ Character::Character(GameObject& associated, const char* sprite) : Component(ass
         }
 
         if(i+1 == 5 || i+1 == 6 || i+1 == 7) {
-            animator->AddAnimation("hit" + std::to_string(i+1), Animation(0, 2, 0.150, SDL_FLIP_HORIZONTAL));
+            animator->AddAnimation("hit" + std::to_string(i+1), Animation(0, 2, 0.180, SDL_FLIP_HORIZONTAL));
         } else {
-            animator->AddAnimation("hit" + std::to_string(i+1), Animation(0, 2, 0.150));
+            animator->AddAnimation("hit" + std::to_string(i+1), Animation(0, 2, 0.180));
         }
 
         //animator->AddAnimation("idle" + std::to_string(i+1), Animation(0, 3, 0.250));
         //animator->AddAnimation("attack" + std::to_string(i+1), Animation(0, 14, 0.1));
     }
 
-    animator->AddAnimation("dead", Animation(0, 0, 0.5));
+    animator->AddAnimation("dead", Animation(0, 5, 0.5));
     animator->SetAnimation("idle1");
 
     isAttacking = false;
@@ -258,7 +258,14 @@ void Character::Update(float dt) {
         if (deathTimer.Get() > 3) {
             associated.RequestDelete();
         } else {
-            animator->SetAnimation("dead");
+            spriteRdr->SetScale(1, 1);
+            if(spriteRdr && currentSprite != "Recursos/img/Helena/dead.png") {
+                currentSprite = "Recursos/img/Helena/dead.png";
+                spriteRdr->Open("Recursos/img/Helena/dead.png");
+                spriteRdr->SetFrameCount(6, 1);
+                spriteRdr->SetScale(1, 1);
+                animator->SetAnimation("dead");
+            }
         }
     }
     /*
