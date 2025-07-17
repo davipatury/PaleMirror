@@ -21,6 +21,8 @@ public:
 
     void SetScale(Vec2 scale);
     void SetOffset(Vec2 offset);
+    Vec2 GetScale();
+    Vec2 GetOffset();
 
     void UpdateBox();
 

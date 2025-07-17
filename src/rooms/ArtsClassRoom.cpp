@@ -73,6 +73,14 @@ void ArtsClassRoom::Build() {
     mesa->AddComponent(new IsoCollider(*mesa, {1, 1}, {0, -17}));
     state->AddObject(mesa);
 
+    // Cavalete
+    GameObject* cavalete = createGO("[OBJ] Cavalete", 875, 636);
+    SpriteRenderer* cavaleteSprite = new SpriteRenderer(*cavalete, "Recursos/img/objetos/cavalete.png");
+    cavaleteSprite->SetScale(2, 2);
+    cavalete->AddComponent(cavaleteSprite);
+    cavalete->AddComponent(new IsoCollider(*cavalete, {0.5, 0.5}, {-17, -17}));
+    state->AddObject(cavalete);
+
     // Velas
     GameObject* vela = createGO("[OBJ] Vela", 851, 685);
     vela->AddComponent(new SpriteRenderer(*vela, "Recursos/img/items/vela.png"));
@@ -83,12 +91,6 @@ void ArtsClassRoom::Build() {
     vela2->AddComponent(new SpriteRenderer(*vela2, "Recursos/img/items/vela.png"));
     vela2->AddComponent(new Interactable(*vela2, Actions::CollectItem(ITEM_VELA), ITEM_COLLECT_DIST, nullptr, {-35, -35}, "Pegar"));
     state->AddObject(vela2);
-
-    // Balde
-    GameObject* baldeTinta = createGO("[OBJ] Balde de Tinta", 791, 685);
-    baldeTinta->AddComponent(new SpriteRenderer(*baldeTinta, "Recursos/img/items/balde.png"));
-    baldeTinta->AddComponent(new Interactable(*baldeTinta, Actions::CollectItem(ITEM_BALDE_TINTA), ITEM_COLLECT_DIST, nullptr, {-35, -35}, "Pegar"));
-    state->AddObject(baldeTinta);
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);

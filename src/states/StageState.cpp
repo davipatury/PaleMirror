@@ -68,10 +68,12 @@ void StageState::LoadAssets() {
     InventoryHUD* inv = new InventoryHUD(*hud);
     InventoryHUD::instance = inv;
     hud->AddComponent(inv);
-    // IntactableHUD
+    // InteractableHUD
     InteractableHUD* intr = new InteractableHUD(*hud);
     InteractableHUD::instance = intr;
     hud->AddComponent(intr);
+    // DebugHUD
+    hud->AddComponent(new DebugHUD(*hud));
     hud->box.z = HUD_LAYER;
     hud->lazyRender = false;
     hud->pauseOnOpenUI = false;
@@ -332,6 +334,10 @@ void StageState::ChangeRoom(std::string room) {
     if (currentRoom != nullptr) currentRoom->Leave();
     currentRoom = rooms[room];
     currentRoom->Enter();
+}
+
+Room* StageState::GetCurrentRoom() {
+    return currentRoom;
 }
 
 Room* StageState::GetRoom(std::string room) {

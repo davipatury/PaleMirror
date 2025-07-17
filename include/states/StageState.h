@@ -38,6 +38,7 @@
 #include "hud/FlashlightHUD.h"
 #include "hud/InventoryHUD.h"
 #include "hud/PauseHUD.h"
+#include "hud/DebugHUD.h"
 #include "utils/Text.h"
 #include "math/Vec2.h"
 #include "components/WaveSpawner.h"
@@ -68,6 +69,7 @@ public:
 
     void ChangeRoom(std::string room);
     Room* GetRoom(std::string room);
+    Room* GetCurrentRoom();
 
     float pauseX;
     float pauseY;
