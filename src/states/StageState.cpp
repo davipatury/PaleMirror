@@ -225,6 +225,12 @@ void StageState::Update(float dt) {
         DialogueHUD::RequestDialogue("prologoPosRitual");
     }
 
+
+    if(Boss::startBoss){
+        DialogueHUD::RequestDialogue("boss_battle");
+        Boss::startBoss = false;
+    }
+    
     // Custcene Boss
     if (!openUI && INPUT_MANAGER.KeyPress('k')) {
         Character::player->associated.box.x = 2257;
@@ -238,10 +244,7 @@ void StageState::Update(float dt) {
         Boss::startBoss = true;
     }
 
-    if(Boss::startBoss){
-        DialogueHUD::RequestDialogue("boss_battle");
-        Boss::startBoss = false;
-    }
+    
     
     // Spawn locker puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('l')) {
