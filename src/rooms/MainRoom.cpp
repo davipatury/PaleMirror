@@ -36,6 +36,10 @@ void MainRoom::Build() {
     zombief->AddComponent(new ZombieFast(*zombief));
     state->AddObject(zombief);
 
+    GameObject* aneleh = createGO("[Aneleh]", 1700, 1800);
+    aneleh->AddComponent(new Boss(*aneleh));
+    state->AddObject(aneleh);
+
     // Arvores
     GameObject* tree1 = createGO("[OBJ] Tree1", 540, 1299);
     tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/objetos/tree.png"));
