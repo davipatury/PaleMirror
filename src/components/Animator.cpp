@@ -47,6 +47,10 @@ void Animator::AddAnimation(std::string name, Animation anim) {
     }
 }
 
+std::string Animator::GetAnimation() {
+    return current;
+}
+
 bool Animator::Is(std::string type) {
     return type == "Animator";
 }
