@@ -50,33 +50,36 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     // Paint puzzle lines
     dialogueLines["paintPuzzle_corErrada"] = {
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
-        "errei familia fui mlk"
+        "Quem se importa se duas ou três cores formam outra. Será que alguém já inventou alguma cor nunca vista antes?"
         }
     };
     dialogueLines["paintPuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
-        "acertei porra"
+        "Quem diria que consegui. Sempre fui medíocre nas artes."
+        },
+        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+        "Acabei de me lembrar da última vez que a Madu veio me perturbar. Ela tentou roubar meu casaco e jogar essa mesma tinta vermelha nele. Com isso, foram 6 vezes que elas tentaram me tirar do sério."
         }
     };
 
     // Mirror puzzle
     dialogueLines["mirrorPuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
-            "ta arrumado o espelho"
+            "Mesmo sendo satisfatório fazer isso, não sei se ver meu próprio reflexo é tão gratificante. Bem, o espelho foi quebrado em 6 pedaços."
         }
     };
 
     // Fuse puzzle
     dialogueLines["fusePuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
-            "ta arrumado a caixa de fusivel"
+            "Energia desligada, agora posso mexer nos canos de água."
         }
     };
 
     // Pipe puzzle
     dialogueLines["pipePuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
-            "ta arrumado os canos (que cano o.O)"
+            "Finamente parei essa água. Sobrou um cano, acho que pode ser útil."
         }
     };
 
@@ -166,7 +169,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "Pode deixar comigo!"}
     };
 
-    // Pipe puzzle
+    // Lock puzzle
     dialogueLines["lockPuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
             "Abriu!! Que complicação. Como alguém sequer chega nessa idéia?"
