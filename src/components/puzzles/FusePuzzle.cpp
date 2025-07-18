@@ -128,11 +128,11 @@ void FusePuzzle::Initiator::Update(float dt) {
     puzzleClosed = nullptr;
 
     if (GameData::fusePuzzleSolved) {
-        sr->SetFrame(1);
+        sr->SetFrame(1, SDL_FLIP_HORIZONTAL);
         intr->SetActivationDistance(0.0f);
         light->SetEnabledAll(true);
     } else {
-        sr->SetFrame(0);
+        sr->SetFrame(0, SDL_FLIP_HORIZONTAL);
         intr->SetActivationDistance(100.0f);
         intr->SetType(InteractableHUD::INTERACT);
         intr->SetHUDText("Interagir");

@@ -91,8 +91,11 @@ void HistoryClassRoom::Build() {
     mesa21->AddComponent(new IsoCollider(*mesa21, {0.8, 1}, {0, -17}));
     state->AddObject(mesa21);
 
-// 479, 579
-
+    // Velas
+    GameObject* vela = createGO("[OBJ] Vela", 851, 685);
+    vela->AddComponent(new SpriteRenderer(*vela, "Recursos/img/items/vela.png"));
+    vela->AddComponent(new Interactable(*vela, Actions::CollectItem(ITEM_VELA), ITEM_COLLECT_DIST, nullptr, {-35, -35}, "Pegar"));
+    state->AddObject(vela);
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
