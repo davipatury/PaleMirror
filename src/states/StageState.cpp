@@ -274,7 +274,7 @@ void StageState::Update(float dt) {
     }
 
     // Custcene Boss
-    if (!openUI && INPUT_MANAGER.KeyPress('k')) {
+    if (!openUI && (INPUT_MANAGER.KeyPress('k') || (GameData::runeState == GameData::RUNA_LIGADA && GameData::mirrorPuzzleSolved))) {
         Character::player->associated.box.x = 2257;
         Character::player->associated.box.y = 2500;
 

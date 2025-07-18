@@ -123,11 +123,21 @@ void PipePuzzle::Initiator::Update(float dt) {
     StageState* stage = (StageState*) &CURRENT_STATE;
     if (stage->openUI) return;
 
+    if(!GameData::fusePuzzleSolved) {
+        intr->SetActivationDistance(70);
+        intr->SetHUDText("Interagir");
+        intr->SetAction([this, intr](State* state, GameObject* go) {
+            
+            // Chama o Diálogo.
+        });
+        return;
+    } 
     if (GameData::pipePuzzleSolved) {
         intr->SetActivationDistance(0);
     } else {
         intr->SetActivationDistance(70);
         intr->SetHUDText("Interagir");
+
         intr->SetAction([this, intr](State* state, GameObject* go) {
             openSound->Play();
 

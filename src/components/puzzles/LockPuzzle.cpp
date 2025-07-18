@@ -277,6 +277,11 @@ void LockPuzzle::Initiator::Update(float dt) {
     StageState* stage = (StageState*) &CURRENT_STATE;
     if (stage->openUI) return;
 
+    if(GameData::runeState == GameData::RUNA_LIGADA) {
+        
+        
+    } 
+
     intr->SetActivationDistance(40.0f);
     if (GameData::lockPuzzleSolved) {
         intr->SetHUDText("Entrar");
