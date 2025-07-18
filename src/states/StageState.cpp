@@ -127,9 +127,8 @@ void StageState::LoadAssets() {
     rooms["professores"] = professoresRoom;
 
     currentRoom = mainRoom;
-    //mainRoom->bgMusic.FadeInPos(0.0);
+    mainRoom->bgMusic.FadeInPos(0.0);
     mainRoom->Enter();
-
 
     Actions::ChangeRoom("banheiroIntro")(this, nullptr);
     FLASHLIGHT->SetDark(false);
