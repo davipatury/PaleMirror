@@ -38,22 +38,61 @@ void HistoryClassRoom::Build() {
     state->AddObject(blGO);
 
     // Cadeira
-    GameObject* cadeira = createGO("[OBJ] CadeiraAzul", 700, 680);
-    SpriteRenderer* cadeiraSprite = new SpriteRenderer(*cadeira, "Recursos/img/objetos/CADEIRAM.png");
-    cadeiraSprite->SetScale(1.25, 1.25);
-    cadeiraSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
-    cadeira->AddComponent(cadeiraSprite);
-    cadeira->AddComponent(new IsoCollider(*cadeira, {0.7, 0.7}, {0, -17}));
-    state->AddObject(cadeira);
+    GameObject* cadeira11 = createGO("[OBJ] CadeiraAzul", 696, 676);
+    SpriteRenderer* cadeira11Sprite = new SpriteRenderer(*cadeira11, "Recursos/img/objetos/CADEIRAM.png");
+    cadeira11Sprite->SetScale(1.65, 1.65);
+    cadeira11Sprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    cadeira11->AddComponent(cadeira11Sprite);
+    cadeira11->AddComponent(new IsoCollider(*cadeira11, {0.7, 0.7}, {0, -17}));
+    state->AddObject(cadeira11);
 
     // Mesa
-    GameObject* mesa = createGO("[OBJ] MesaAzul", 713, 690);
-    SpriteRenderer* mesaSprite = new SpriteRenderer(*mesa, "Recursos/img/objetos/MESAazul.png");
-    mesaSprite->SetScale(1.25, 1.25);
-    mesaSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
-    mesa->AddComponent(mesaSprite);
-    mesa->AddComponent(new IsoCollider(*mesa, {1, 1}, {0, -17}));
-    state->AddObject(mesa);
+    GameObject* mesa11 = createGO("[OBJ] MesaAzul", 696+36, 676+11);
+    SpriteRenderer* mesa11Sprite = new SpriteRenderer(*mesa11, "Recursos/img/objetos/MESAazul.png");
+    mesa11Sprite->SetScale(1.65, 1.65);
+    mesa11Sprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesa11->AddComponent(mesa11Sprite);
+    mesa11->AddComponent(new IsoCollider(*mesa11, {0.8, 1}, {0, -17}));
+    state->AddObject(mesa11);
+
+    // Cadeira
+    GameObject* cadeira12 = createGO("[OBJ] CadeiraAzul", 566, 596);
+    SpriteRenderer* cadeira12Sprite = new SpriteRenderer(*cadeira12, "Recursos/img/objetos/CADEIRAM.png");
+    cadeira12Sprite->SetScale(1.65, 1.65);
+    cadeira12Sprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    cadeira12->AddComponent(cadeira12Sprite);
+    cadeira12->AddComponent(new IsoCollider(*cadeira12, {0.7, 0.7}, {0, -17}));
+    state->AddObject(cadeira12);
+
+    // Mesa
+    GameObject* mesa12 = createGO("[OBJ] MesaAzul", 566+36, 598+12);
+    SpriteRenderer* mesa12Sprite = new SpriteRenderer(*mesa12, "Recursos/img/objetos/MESAazul.png");
+    mesa12Sprite->SetScale(1.65, 1.65);
+    mesa12Sprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesa12->AddComponent(mesa12Sprite);
+    mesa12->AddComponent(new IsoCollider(*mesa12, {0.8, 1}, {0, -17}));
+    state->AddObject(mesa12);
+
+    // Cadeira
+    GameObject* cadeira21 = createGO("[OBJ] CadeiraAzul", 690, 495);
+    SpriteRenderer* cadeira21Sprite = new SpriteRenderer(*cadeira21, "Recursos/img/objetos/CADEIRAM.png");
+    cadeira21Sprite->SetScale(1.65, 1.65);
+    cadeira21Sprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    cadeira21->AddComponent(cadeira21Sprite);
+    cadeira21->AddComponent(new IsoCollider(*cadeira21, {0.7, 0.7}, {0, -17}));
+    state->AddObject(cadeira21);
+
+    // Mesa
+    GameObject* mesa21 = createGO("[OBJ] MesaAzul", 690+36, 495+21);
+    SpriteRenderer* mesa21Sprite = new SpriteRenderer(*mesa21, "Recursos/img/objetos/MESAazul.png");
+    mesa21Sprite->SetScale(1.65, 1.65);
+    mesa21Sprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesa21->AddComponent(mesa21Sprite);
+    mesa21->AddComponent(new IsoCollider(*mesa21, {0.8, 1}, {0, -17}));
+    state->AddObject(mesa21);
+
+// 479, 579
+
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
@@ -61,8 +100,11 @@ void HistoryClassRoom::Build() {
     state->AddObject(roomDoorBack);
 
     // Filtro
+
+    /*
     GameObject* filtro = createGO("[OBJ-HISTORIA] Filtro", 0, 0);
     filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_sala.png"));
     filtro->box.z = 1;
     state->AddObject(filtro);
+    */
 }
