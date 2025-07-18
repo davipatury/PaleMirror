@@ -13,6 +13,7 @@
 #include "utils/Timer.h"
 #include "utils/Animation.h"
 #include "hud/FlashlightHUD.h"
+#include "states/StageState.h"
 
 #define CHARACTER_SIZE 112
 
@@ -130,7 +131,25 @@ void Character::Update(float dt) {
                 if (moveSpeed.x != 0 && moveSpeed.y == 0) {
                     moveSpeed.x *= 1.1;
                 }
-                associated.box = associated.box.Add(moveSpeed);
+
+                // Room limits
+                StageState* state = (StageState*) &CURRENT_STATE;
+                Rect limits = state->GetCurrentRoom()->cameraLimits;
+                Vec2 targetPos = associated.box.TopLeft().Add(moveSpeed);
+
+                if (limits.w != 0) {
+                    float minX = limits.x;
+                    float maxX = limits.BottomRight().x - associated.box.w;
+                    float minY = limits.y;
+                    float maxY = limits.BottomRight().y - associated.box.h;
+                    if (targetPos.x < minX) targetPos.x = minX;
+                    if (targetPos.y < minY) targetPos.y = minY;
+                    if (targetPos.x > maxX) targetPos.x = maxX;
+                    if (targetPos.y > maxY) targetPos.y = maxY;
+                }
+
+                associated.box.x = targetPos.x;
+                associated.box.y = targetPos.y;
                 moving = true;
                 if (moveSpeed.x != 0 || moveSpeed.y != 0) {
                     lastMoveDirection = task.pos.Normalized();

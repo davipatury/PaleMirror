@@ -36,6 +36,25 @@ void MainRoom::Build() {
     zombief->AddComponent(new ZombieFast(*zombief));
     state->AddObject(zombief);
 
+    // Muro e grades
+    GameObject* muro = createGO("[OBJ] MuroBR", 1905, 1620);
+    muro->AddComponent(new SpriteRenderer(*muro, "Recursos/img/objetos/muro.png"));
+    muro->AddComponent(new IsoCollider(*muro, {0.025, 1.75}, {1102, -615}));
+    muro->AddComponent(new ShadowCaster(*muro, {0, 0}, true));
+    state->AddObject(muro);
+    GameObject* gradeTl = createGO("[OBJ] GradeTL", 0, 99);
+    gradeTl->AddComponent(new SpriteRenderer(*gradeTl, "Recursos/img/objetos/grade_tl.png"));
+    gradeTl->AddComponent(new IsoCollider(*gradeTl, {0.025, 1.8}, {1072, -644}));
+    state->AddObject(gradeTl);
+    GameObject* gradeTr = createGO("[OBJ] GradeTR", 2531, 120);
+    gradeTr->AddComponent(new SpriteRenderer(*gradeTr, "Recursos/img/objetos/grade_tr.png"));
+    gradeTr->AddComponent(new IsoCollider(*gradeTr, {1.8, 0.025}, {-1138, -496}));
+    state->AddObject(gradeTr);
+    GameObject* gradeBl = createGO("[OBJ] GradeBL", 0, 2042);
+    gradeBl->AddComponent(new SpriteRenderer(*gradeBl, "Recursos/img/objetos/grade_bl.png"));
+    gradeBl->AddComponent(new IsoCollider(*gradeBl, {1.75, 0.1}, {-1121, -426}));
+    state->AddObject(gradeBl);
+
     // Arvores
     GameObject* tree1 = createGO("[OBJ] Tree1", 540, 1299);
     tree1->AddComponent(new SpriteRenderer(*tree1, "Recursos/img/objetos/tree.png"));

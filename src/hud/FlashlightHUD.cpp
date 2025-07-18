@@ -13,6 +13,8 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
     flashlightOn = true;
     angle = 0;
 
+    toggleSound = new Sound("Recursos/audio/sounds/items/toggle_lanterna.wav");
+
     SDL_BlendMode bm = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD);
     int bmRet = SDL_SetTextureBlendMode(backlight.texture, bm);
     if (bmRet != 0) std::cout << "[Flashlight] Error on SDL_SetTextureBlendMode: " << SDL_GetError() << std::endl;
@@ -37,18 +39,18 @@ FlashlightHUD::FlashlightHUD(GameObject& associated) : Component(associated), ba
 FlashlightHUD::~FlashlightHUD() {}
 
 void FlashlightHUD::Update(float dt) {
-    if (!PLAYER ||
-        !isDark ||
-        CURRENT_STATE.openUI ||
-        !INVENTORY->HasItemInHand(ITEM_LANTERNA) ||
-        PLAYER->IsDying()
-    ) return;
+    if (!PLAYER || PLAYER->IsDying() || !isDark || CURRENT_STATE.openUI) return;
 
     // Update origin
     origin = PLAYER->associated.box.Center() - Camera::pos;
 
+    if (!INVENTORY->HasItemInHand(ITEM_LANTERNA)) return;
+
     // Use flashlight (already know flashlight's in hand based on the check above)
-    if (USE_CHECK) ToggleFlashlight();
+    if (USE_CHECK) {
+        toggleSound->Play();
+        ToggleFlashlight();
+    }
 
     if (!flashlightOn) return;
     if (INPUT_MANAGER.HasController()) {

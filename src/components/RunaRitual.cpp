@@ -7,8 +7,7 @@
 RunaRitual::RunaRitual(GameObject &associated) : Component(associated), velas("Recursos/img/objetos/velas.png", 4, 1) {
     // Set color
     SpriteRenderer* sr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
-    SDL_Color corRitual = PaintPuzzle::GetSolutionColor();
-    sr->SetColorMod(corRitual.r, corRitual.g, corRitual.b);
+    SDL_SetTextureBlendMode(sr->sprite.texture, SDL_BLENDMODE_BLEND);
 
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     intr->SetHUDOffset({65, 10});
@@ -65,14 +64,14 @@ void RunaRitual::Update(float dt) {
 
     switch (GameData::runeState) {
     case GameData::RUNA_ALAGADA: {
-        sr->SetVisible(false);
+        sr->SetFrame(2);
         velas.SetFrame(0);
         intr->SetHUDText("Inspecionar");
         intr->SetAction(RunaAlagada);
         break;
     }
     case GameData::RUNA_VAZIA: {
-        sr->SetVisible(false);
+        sr->SetFrame(0);
         velas.SetFrame(0);
         if (INVENTORY->HasItemInHand(ITEM_BALDE_TINTA)) {
             intr->SetType(InteractableHUD::USE_ITEM);
@@ -86,7 +85,9 @@ void RunaRitual::Update(float dt) {
         break;
     }
     case GameData::RUNA_DESENHADA: {
-        sr->SetVisible(true);
+        sr->SetFrame(1);
+        SDL_Color corRitual = PaintPuzzle::GetSolutionColor();
+        sr->SetColorMod(corRitual.r, corRitual.g, corRitual.b);
         velas.SetFrame(0);
         if (INVENTORY->HasItemInHand(ITEM_VELA)) {
             intr->SetType(InteractableHUD::USE_ITEM);
@@ -100,7 +101,7 @@ void RunaRitual::Update(float dt) {
         break;
     }
     case GameData::RUNA_COM_UMA_VELA: {
-        sr->SetVisible(true);
+        sr->SetFrame(1);
         velas.SetFrame(1);
         if (INVENTORY->HasItemInHand(ITEM_VELA)) {
             intr->SetType(InteractableHUD::USE_ITEM);
@@ -114,7 +115,7 @@ void RunaRitual::Update(float dt) {
         break;
     }
     case GameData::RUNA_FINALIZADA: {
-        sr->SetVisible(true);
+        sr->SetFrame(1);
         velas.SetFrame(2);
         intr->SetType(InteractableHUD::INTERACT);
         intr->SetHUDText("Finalizar");
@@ -122,7 +123,7 @@ void RunaRitual::Update(float dt) {
         break;
     }
     case GameData::RUNA_LIGADA: {
-        sr->SetVisible(true);
+        sr->SetFrame(1);
         velas.SetFrame(3);
         intr->SetActivationDistance(0.0f);
         light->SetEnabledAll(true);

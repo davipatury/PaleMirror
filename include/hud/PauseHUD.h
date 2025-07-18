@@ -9,6 +9,7 @@
 #include "entities/characters/Character.h"
 #include "core/Component.h"
 #include "utils/TextHUD.h"
+#include "components/Sound.h"
 
 class PauseHUD : public Component
 {
@@ -27,6 +28,7 @@ private:
     Sprite button, activeButton;
     TextHUD* resumeButtonText;
     TextHUD* quitButtonText;
+    Sound* changeSound;
 };
 
 #endif // PAUSEHUD_H

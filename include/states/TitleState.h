@@ -1,6 +1,8 @@
 #ifndef TITLESTATE_H
 #define TITLESTATE_H
 
+#include <stdlib.h>
+
 #include "core/Game.h"
 #include "core/GameObject.h"
 #include "components/SpriteRenderer.h"
@@ -8,6 +10,7 @@
 #include "utils/TextHUD.h"
 #include "core/Music.h"
 #include "utils/Timer.h"
+#include "components/Sound.h"
 
 class TitleState : public State
 {
@@ -23,9 +26,13 @@ public:
     void Resume();
 
     private:
+    Sound* changeSound;
+    Sound* playSound;
     Music titleMusic;
     int selectedOption;
 
+    bool blinking = false;
+    Timer bgBlinkTimer;
     GameObject* bg;
     bool tutorial = false;
 

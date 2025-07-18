@@ -10,6 +10,7 @@
 #include "core/Component.h"
 #include "hud/InventoryHUD.h"
 #include "components/LightEmitter.h"
+#include "components/Sound.h"
 
 #define FLASHLIGHT FlashlightHUD::instance
 
@@ -41,6 +42,8 @@ private:
     bool isDark;
     bool flashlightOn;
     float angle;
+
+    Sound* toggleSound;
 };
 
 #endif // FLASHLIGHTHUD_H

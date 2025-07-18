@@ -6,11 +6,12 @@
 
 SDL_BlendMode blendMode = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ZERO, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 
-ShadowCaster::ShadowCaster(GameObject& associated, Vec2 offset) : Component(associated) {
+ShadowCaster::ShadowCaster(GameObject& associated, Vec2 offset, bool fixedDir) : Component(associated) {
     this->offset = offset;
     fixedVertices = false;
     shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
     SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_BLEND);
+    this->fixedDir = fixedDir;
 }
 
 ShadowCaster::ShadowCaster(GameObject &associated, std::vector<Vec2> offsetVectors) : Component(associated) {
@@ -19,6 +20,7 @@ ShadowCaster::ShadowCaster(GameObject &associated, std::vector<Vec2> offsetVecto
     fixedVertices = true;
     shadow = SDL_CreateTexture(GAME_RENDERER, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
     SDL_SetTextureBlendMode(shadow, SDL_BLENDMODE_BLEND);
+    this->fixedDir = false;
 }
 
 void ShadowCaster::Update(float dt) {
@@ -68,18 +70,20 @@ void ShadowCaster::RenderShadow(Vec2 origin) {
     // angleMul = -y, -x or y, x
     bool invert = false;
     float angleMul = 1;
-    if (relativeAngle < 3*M_PI/4 && M_PI/4 < relativeAngle) {
-        // Baixo = entre 3pi/4 e pi/4
-        invert = true;
-    } else if (3*M_PI/4 < relativeAngle || relativeAngle < -3*M_PI/4) {
-        // Esquerda = >3pi/4 ou <-3pi/4
-        angleMul = -1;
-    } else if (-3*M_PI/4 < relativeAngle && relativeAngle < -M_PI/4) {
-        // Cima = entre -3*M_PI/4 e -pi/4
-        angleMul = -1;
-        invert = true;
-    } else {
-        // Direita = >-pi/4 ou <pi/4
+    if (!fixedDir) {
+        if (relativeAngle < 3*M_PI/4 && M_PI/4 < relativeAngle) {
+            // Baixo = entre 3pi/4 e pi/4
+            invert = true;
+        } else if (3*M_PI/4 < relativeAngle || relativeAngle < -3*M_PI/4) {
+            // Esquerda = >3pi/4 ou <-3pi/4
+            angleMul = -1;
+        } else if (-3*M_PI/4 < relativeAngle && relativeAngle < -M_PI/4) {
+            // Cima = entre -3*M_PI/4 e -pi/4
+            angleMul = -1;
+            invert = true;
+        } else {
+            // Direita = >-pi/4 ou <pi/4
+        }
     }
 
     // Screen vertices and edges

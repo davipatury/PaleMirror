@@ -22,11 +22,6 @@ int MirrorPuzzle::ClosestPiece(Vec2 joystick) {
         else if (3*M_PI/4 < joystickAngle || joystickAngle < -3*M_PI/4) return vec.AngleE();
         else if (-3*M_PI/4 < joystickAngle && joystickAngle < -M_PI/4) return vec.AngleS();
         else return vec.AngleW();
-        /*if (joystick.x <= 0 && joystick.y <= 0) return vec.AngleS();
-        if (joystick.x <= 0 && 0 <= joystick.y) return vec.AngleE();
-        if (0 <= joystick.x && joystick.y <= 0) return vec.AngleW();
-        if (0 <= joystick.x && 0 <= joystick.y) return vec.AngleN();
-        return 0.0f;*/
     };
     joystickAngle = angle(joystick);
     int lowestI = -1;
@@ -67,7 +62,17 @@ void MirrorPuzzle::Update(float dt) {
         } else {
             // Move piece
             Vec2 joystick = INPUT_MANAGER.ControllerAxis(LEFT_JOYSTICK);
-            pieces[selectedPiece].pos = pieces[selectedPiece].pos + (joystick * CONTROLLER_PIECE_SPEED * dt);
+            Vec2 targetPos = pieces[selectedPiece].pos + (joystick * CONTROLLER_PIECE_SPEED * dt);
+            float minX = -MIRROR_PUZZLE_RECT_X;
+            float maxX = WINDOW_WIDTH - pieces[selectedPiece].GetWidth() - MIRROR_PUZZLE_RECT_X;
+            float minY = -MIRROR_PUZZLE_RECT_Y;
+            float maxY = WINDOW_HEIGHT - pieces[selectedPiece].GetHeight() - MIRROR_PUZZLE_RECT_Y;
+            if (targetPos.x < minX) targetPos.x = minX;
+            if (targetPos.y < minY) targetPos.y = minY;
+            if (targetPos.x > maxX) targetPos.x = maxX;
+            if (targetPos.y > maxY) targetPos.y = maxY;
+            pieces[selectedPiece].pos = targetPos;
+
             if (CONFIRM_CHECK || BACK_CHECK) selectedPiece = -1;
         }
     } else {

@@ -17,7 +17,7 @@
 class ShadowCaster : public Component
 {
 public:
-    ShadowCaster(GameObject& associated, Vec2 offset = {0, 0});
+    ShadowCaster(GameObject& associated, Vec2 offset = {0, 0}, bool fixedDir = false);
     ShadowCaster(GameObject& associated, std::vector<Vec2> offsetVectors);
 
     void Update(float dt);
@@ -42,6 +42,7 @@ private:
     bool fixedVertices;
     std::vector<Vec2> offsetVectors;
     SDL_Texture* shadow;
+    bool fixedDir;
 };
 
 #endif // SHADOWCASTER_H
