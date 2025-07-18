@@ -63,16 +63,16 @@ void BanheiroDemRoom::Build() {
     state->AddObject(ritual);*/
 
     // Ritual
-    GameObject* ritual = createGO("[OBJ-BANHEIRO-FEM] Ritual", 433, 730);
-    ritual->AddComponent(new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual.png", 3, 1));
-    ritual->AddComponent(new Interactable(*ritual, nullptr));
-    ritual->AddComponent(new LightEmitter(*ritual, {
+    GameObject* ritualD = createGO("[OBJ-BANHEIRO-DEM] Ritual", 433, 730);
+    ritualD->AddComponent(new SpriteRenderer(*ritualD, "Recursos/img/objetos/simbolo_ritual_2.png", 3, 1));
+    ritualD->AddComponent(new Interactable(*ritualD, nullptr));
+    ritualD->AddComponent(new LightEmitter(*ritualD, {
                                                        // Offset, Scale, Enabled, Sprite path
                                                        {{26, -5}, {0.5, 0.5}, false, "Recursos/img/lighting/backlight_inv_orange.png"},
                                                        {{232, 112}, {0.5, 0.5}, false, "Recursos/img/lighting/backlight_inv_orange.png"}
                                                    }));
-    ritual->AddComponent(new RunaRitual(*ritual, true));
-    state->AddObject(ritual);
+    ritualD->AddComponent(new RunaRitual(*ritualD, true));
+    state->AddObject(ritualD);
 
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-DEM] Espelho", 560, 175);
