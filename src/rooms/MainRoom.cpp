@@ -194,7 +194,7 @@ void MainRoom::Build() {
     caixaFusivel->AddComponent(new Interactable(*caixaFusivel, nullptr));
     caixaFusivel->AddComponent(new LightEmitter(*caixaFusivel, {
         // Offset, Scale, Enabled, Sprite path
-        {{31, 35}, {0.25, 0.25}, true, "Recursos/img/lighting/backlight_inv_yellow.png"}
+        {{41, 35}, {0.25, 0.25}, true, "Recursos/img/lighting/backlight_inv_yellow.png"}
     }));
     caixaFusivel->AddComponent(new FusePuzzle::Initiator(*caixaFusivel));
     state->AddObject(caixaFusivel);
