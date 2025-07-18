@@ -77,6 +77,20 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         }
     };
 
+    // Mirror quebrado
+    dialogueLines["mirrorQuebrado"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Ela quebrou o espelho em migalhas dessa vez... Será que entrar pelo espelho do outro banheiro funciona?"
+        }
+    };
+
+    // Mirror last
+    dialogueLines["mirrorLast"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "É melhor eu fazer o ritual primeiro..."
+        }
+    };
+
     // Fuse puzzle
     dialogueLines["fusePuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},

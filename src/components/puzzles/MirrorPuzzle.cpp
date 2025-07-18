@@ -199,6 +199,15 @@ void MirrorPuzzle::Initiator::Update(float dt) {
 
     intr->SetActivationDistance(250);
     intr->SetHUDOffset({100, 230});
+    if (GameData::runeState != GameData::RUNA_LIGADA){
+        intr->SetHUDText("Inspecionar");
+        intr->SetAction([this](State* state, GameObject* go) {
+            //std::cout << "Dialogo interagir com o espelho depois de montado" << std::endl;
+            DialogueHUD::RequestDialogue((GameData::runeState == GameData::RUNA_SUMMONADA ? "mirrorQuebrado" : "mirrorLast"));
+            // TODO: Dialogo interagir com o espelho depois de montado
+        });
+        return;
+    }
     if (GameData::mirrorPuzzleSolved) {
         intr->SetHUDText("Inspecionar");
         intr->SetAction([this](State* state, GameObject* go) {

@@ -114,9 +114,9 @@ void MirrorzinhoPuzzle::Update(float dt) {
         }
         StageState* state = (StageState*) &CURRENT_STATE;
         Actions::ChangeRoom("banheiroFem", 1)(state, nullptr);
+        associated.RequestDelete();
         DialogueHUD::RequestDialogue("mirrorzinhoPuzzle_solved", [this]() {
             GameData::mirrorzinhoPuzzleSolved = true;
-            associated.RequestDelete();
         });
         solved = true;
     }
