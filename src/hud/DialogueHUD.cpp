@@ -65,14 +65,14 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
         "Quem diria que consegui. Sempre fui medíocre nas artes."
         },
-        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Acabei de me lembrar da última vez que a Madu veio me perturbar. Ela tentou roubar meu casaco e jogar essa mesma tinta vermelha nele. Com isso, foram 6 vezes que elas tentaram me tirar do sério."
         }
     };
 
     // Mirror puzzle
     dialogueLines["mirrorPuzzle_solved"] = {
-        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
             "Mesmo sendo satisfatório fazer isso, não sei se ver meu próprio reflexo é tão gratificante. Bem, o espelho foi quebrado em 6 pedaços."
         }
     };
@@ -198,8 +198,8 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         }
     };
 
-    // Begin dialogo
-    dialogueLines["beginDialogue"] = {
+    // Mirrorzinho puzzle
+    dialogueLines["mirrorzinhoPuzzle_solved"] = {
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
             "AAAAAAAAAA ELA ME PUXOU PRA DENTRO DO ESPELHO????", true
         },

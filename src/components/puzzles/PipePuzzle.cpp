@@ -128,7 +128,7 @@ void PipePuzzle::Initiator::Update(float dt) {
         intr->SetHUDText("Interagir");
         intr->SetAction([this, intr](State* state, GameObject* go) {
             
-            // Chama o Diálogo.
+        DialogueHUD::RequestDialogue("fuseOn");
         });
         return;
     } 
