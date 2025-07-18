@@ -35,9 +35,11 @@ void MainRoom::Build() {
     zombie->AddComponent(new Zombie(*zombie));
     state->AddObject(zombie);
 
+    /*
     GameObject* zombief = createGO("[MonsterFast]", 1200, 1600);
     zombief->AddComponent(new ZombieFast(*zombief));
     state->AddObject(zombief);
+    */
 
     // Muro e grades
     GameObject* muro = createGO("[OBJ] MuroBR", 1905, 1620);
@@ -132,7 +134,6 @@ void MainRoom::Build() {
     door22->AddComponent(door22sr);
     door22->AddComponent(new IsoCollider(*door22, {0.5, 0.4}, {-20, -20}));
     door22->AddComponent(new Interactable(*door22, Actions::ChangeRoom("arts"), DOOR_INTERACT_DIST, door22sr));
-    door22->AddComponent(new LockPuzzle::Initiator(*door22, "1234", "arts"));
     state->AddObject(door22);
 
     // Bloco de salas 3
@@ -179,6 +180,7 @@ void MainRoom::Build() {
     auto doorBanMascSR = new SpriteRenderer(*doorBanMasc, "Recursos/img/objetos/porta_highlight.png");
     doorBanMascSR->sprite.SetFlip(SDL_FLIP_HORIZONTAL);
     doorBanMasc->AddComponent(doorBanMascSR);
+    doorBanMasc->AddComponent(new LockPuzzle::Initiator(*doorBanMasc, "1234", "banheiroMasc"));
     doorBanMasc->AddComponent(new IsoCollider(*doorBanMasc, {0.5, 0.4}, {-12, -18}));
     doorBanMasc->AddComponent(new Interactable(*doorBanMasc, Actions::ChangeRoom("banheiroMasc"), DOOR_INTERACT_DIST, doorBanMascSR));
     state->AddObject(doorBanMasc);

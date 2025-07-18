@@ -73,6 +73,11 @@ void ScienceClassRoom::Build() {
     mesa->AddComponent(new IsoCollider(*mesa, {1, 1}, {0, -17}));
     state->AddObject(mesa);
 
+    GameObject* vela2 = createGO("[OBJ] Vela", 851, 615);
+    vela2->AddComponent(new SpriteRenderer(*vela2, "Recursos/img/items/lanterna.png"));
+    vela2->AddComponent(new Interactable(*vela2, Actions::CollectItem(ITEM_LANTERNA), ITEM_COLLECT_DIST, nullptr, {-35, -35}, "Pegar"));
+    state->AddObject(vela2);
+
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 1), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));
