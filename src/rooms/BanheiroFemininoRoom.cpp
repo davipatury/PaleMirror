@@ -88,7 +88,7 @@ void BanheiroFemininoRoom::Build() {
 
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-FEM] Espelho", 560, 175);
-    espelho->AddComponent(new SpriteRenderer(*espelho, "Recursos/img/objetos/espelho_banheiro.png"));
+    espelho->AddComponent(new SpriteRenderer(*espelho, "Recursos/img/objetos/espelho_banheiro_quebrado.png"));
     espelho->AddComponent(new Interactable(*espelho, nullptr));
     espelho->AddComponent(new MirrorPuzzle::Initiator(*espelho));
     state->AddObject(espelho);

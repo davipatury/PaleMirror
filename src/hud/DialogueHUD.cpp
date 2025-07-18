@@ -207,6 +207,49 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
             "Talvez fazendo o ritual novamente eu consiga ativar esse espelho e sair desse inferno"
         }
     };
+    
+    // Locker antes do boss
+    dialogueLines["lockPuzzle_agoraNao"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Não tem nada para eu fazer aqui agora, mas pode ser uma boa rota de fuga", true
+        }
+    };
+
+    // Runa sem balde
+    dialogueLines["runaSemBalde"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Preciso de um balde de tinta para desenhar as runas do ritual...", true
+        }
+    };
+
+    // Runa com balde
+    dialogueLines["runaComBalde"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Perfeito! Falta usar esse balde para pintar agora", true
+        }
+    };
+
+    // Runa sem vela
+    dialogueLines["runaSemVela"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Preciso de duas velas...", true
+        }
+    };
+
+
+    // Runa com vela
+    dialogueLines["runaComVela"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Falta colocar essas duas velas aqui...", true
+        }
+    };
+
+    // Runa ligada
+    dialogueLines["runaLigada"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Af, agora falta consertar o espelho que aquela songamonga quebrou", true
+        }
+    };
 
     // Boss Battle
     dialogueLines["boss_battle"] = {
