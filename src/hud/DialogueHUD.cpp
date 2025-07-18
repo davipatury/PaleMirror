@@ -176,6 +176,16 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         }
     };
 
+    // Begin dialogo
+    dialogueLines["beginDialogue"] = {
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "AAAAAAAAAA ELA ME PUXOU PRA DENTRO DO ESPELHO????", true
+        },
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "Talvez fazendo o ritual novamente eu consiga ativar esse espelho e sair desse inferno"
+        }
+    };
+
     // Boss Battle
     dialogueLines["boss_battle"] = {
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
