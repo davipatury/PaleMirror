@@ -4,13 +4,14 @@
 
 #
 
-RunaRitual::RunaRitual(GameObject &associated) : Component(associated), velas("Recursos/img/objetos/velas.png", 4, 1) {
+RunaRitual::RunaRitual(GameObject &associated, bool sempreCompleto) : Component(associated), velas("Recursos/img/objetos/velas.png", 4, 1) {
     // Set color
     SpriteRenderer* sr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
     SDL_SetTextureBlendMode(sr->sprite.texture, SDL_BLENDMODE_BLEND);
 
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     intr->SetHUDOffset({65, 10});
+    this->sempreCompleto = sempreCompleto;
 }
 
 // States actions
@@ -60,6 +61,14 @@ void RunaRitual::Update(float dt) {
     SpriteRenderer* sr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     LightEmitter* light = (LightEmitter*) associated.GetComponent("LightEmitter");
+    if (sempreCompleto && sr && light) {
+        sr->SetFrame(1);
+        SDL_Color corRitual = PaintPuzzle::GetSolutionColor();
+        sr->SetColorMod(corRitual.r, corRitual.g, corRitual.b);
+        velas.SetFrame(3);
+        light->SetEnabledAll(true);
+        return;
+    }
     if (!sr || !intr || !light) return;
 
     switch (GameData::runeState) {

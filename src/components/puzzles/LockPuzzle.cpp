@@ -274,8 +274,8 @@ LockPuzzle::Initiator::Initiator(GameObject& associated, std::string password, s
 void LockPuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
-    if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
-    puzzleClosed = nullptr;
+    StageState* stage = (StageState*) &CURRENT_STATE;
+    if (stage->openUI) return;
 
     intr->SetActivationDistance(40.0f);
     if (GameData::lockPuzzleSolved) {
@@ -294,7 +294,6 @@ void LockPuzzle::Initiator::Update(float dt) {
             state->AddObject(lp);
 
             intr->SetActivationDistance(0);
-            puzzleClosed = &lp->isDead;
         });
     }
 }

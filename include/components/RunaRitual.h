@@ -16,13 +16,14 @@
 class RunaRitual : public Component
 {
 public:
-    RunaRitual(GameObject& associated);
+    RunaRitual(GameObject& associated, bool sempreCompleto = false);
     void Start();
     void Update (float dt);
     void Render();
     bool Is (std::string type);
 private:
     Sprite velas;
+    bool sempreCompleto = false;
 };
 
 #endif // RUNARITUAL_H

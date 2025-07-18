@@ -120,8 +120,8 @@ PipePuzzle::Initiator::Initiator(GameObject& associated) : Component(associated)
 void PipePuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
-    if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
-    puzzleClosed = nullptr;
+    StageState* stage = (StageState*) &CURRENT_STATE;
+    if (stage->openUI) return;
 
     if (GameData::pipePuzzleSolved) {
         intr->SetActivationDistance(0);
@@ -138,7 +138,6 @@ void PipePuzzle::Initiator::Update(float dt) {
             pip->pauseOnOpenUI = false;
             state->AddObject(pip);
 
-            puzzleClosed = &pip->isDead;
             intr->SetActivationDistance(0);
         });
     }

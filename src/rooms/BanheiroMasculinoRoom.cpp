@@ -59,6 +59,10 @@ void BanheiroMasculinoRoom::Build() {
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-MASC] Espelho", 560, 175);
     espelho->AddComponent(new SpriteRenderer(*espelho, "Recursos/img/objetos/espelho_banheiro.png"));
+    espelho->AddComponent(new Interactable(*espelho, [this](State* state, GameObject* go) {
+        GameData::playerVictory = true;
+        Game::GetInstance().Push(new EndState());
+    }, 250, nullptr, {100, 230}, "Interagir"));
     state->AddObject(espelho);
 
     // Porta

@@ -8,6 +8,7 @@
 #include "components/SpriteRenderer.h"
 #include "core/State.h"
 #include "utils/Text.h"
+#include "utils/TextHUD.h"
 
 class EndState : public State
 {
@@ -23,6 +24,7 @@ public:
     void Resume();
 private:
     Music backgroundMusic;
+    TextHUD* text;
 };
 
 #endif // ENDSTATE_H

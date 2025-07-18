@@ -124,8 +124,8 @@ void FusePuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     LightEmitter* light = (LightEmitter*) associated.GetComponent("LightEmitter");
     if (!sr || !intr || !light) return;
-    if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
-    puzzleClosed = nullptr;
+    StageState* stage = (StageState*) &CURRENT_STATE;
+    if (stage->openUI) return;
 
     if (GameData::fusePuzzleSolved) {
         sr->SetFrame(1);
@@ -146,7 +146,6 @@ void FusePuzzle::Initiator::Update(float dt) {
             fp->pauseOnOpenUI = false;
             state->AddObject(fp);
 
-            puzzleClosed = &fp->isDead;
             intr->SetActivationDistance(0.0f);
         });
         light->SetEnabledAll(false);
