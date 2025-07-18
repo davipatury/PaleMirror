@@ -107,6 +107,8 @@ void StageState::LoadAssets() {
     banheiroMascRoom->Build();
     BanheiroIntroRoom* banheiroIntroRoom = new BanheiroIntroRoom(this);
     banheiroIntroRoom->Build();
+    BanheiroDemRoom* banheiroDemRoom = new BanheiroDemRoom(this);
+    banheiroDemRoom->Build();
 
     rooms["main"] = mainRoom;
     rooms["history"] = historyRoom;
@@ -116,6 +118,7 @@ void StageState::LoadAssets() {
     rooms["banheiroFem"] = banheiroFemRoom;
     rooms["banheiroMasc"] = banheiroMascRoom;
     rooms["banheiroIntro"] = banheiroIntroRoom;
+    rooms["banheiroDem"] = banheiroDemRoom;
 
     currentRoom = mainRoom;
     //mainRoom->bgMusic.FadeInPos(0.0);
@@ -214,7 +217,6 @@ void StageState::Update(float dt) {
 
     //  Scenes
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
-        std::cout << "entrou" << std::endl;
         Actions::ChangeRoom("banheiroIntro")(this, nullptr);
         FLASHLIGHT->SetDark(false);
         DialogueHUD::RequestDialogue("prologoPreRitual");
@@ -223,14 +225,13 @@ void StageState::Update(float dt) {
     }
 
     if (scene == RITUAL_BEFORE && DialogueHUD::isEmpty()){
-        std::cout << "before" << std::endl;
-        FLASHLIGHT->SetDark(true);
-        DialogueHUD::RequestDialogue("prologoPosRitual");
+        Actions::ChangeRoom("banheiroDem")(this, nullptr);
         scene = RITUAL_DURING;
+        FLASHLIGHT->SetDark(true);
     }
 
     if(scene == RITUAL_DURING && DialogueHUD::isEmpty){
-        std::cout << "during" << std::endl;
+
     }
 
     if(introplaying and !Mix_PlayingMusic()){
