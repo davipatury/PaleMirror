@@ -65,14 +65,14 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
         "Quem diria que consegui. Sempre fui medíocre nas artes."
         },
-        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Acabei de me lembrar da última vez que a Madu veio me perturbar. Ela tentou roubar meu casaco e jogar essa mesma tinta vermelha nele. Com isso, foram 6 vezes que elas tentaram me tirar do sério."
         }
     };
 
     // Mirror puzzle
     dialogueLines["mirrorPuzzle_solved"] = {
-        {"HelenaFeliz", "Helena", {101, 38, 141, 255},
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
             "Mesmo sendo satisfatório fazer isso, não sei se ver meu próprio reflexo é tão gratificante. Bem, o espelho foi quebrado em 6 pedaços."
         }
     };
@@ -84,10 +84,24 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         }
     };
 
+    // Water
+    dialogueLines["fuseOn"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "É melhor desligar a energia do banheiro antes de mexer nesses canos de água."
+        }
+    };
+
     // Pipe puzzle
     dialogueLines["pipePuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
-            "Finamente parei essa água. Sobrou um cano, acho que pode ser útil."
+            "Finamente drenei essa água podre. Sobrou um cano, acho que pode ser útil."
+        }
+    };
+
+    // Water
+    dialogueLines["waterOn"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Ah não, que nojeira. É impossível fazer o desenho do ritual nesse chão com essa água podre."
         }
     };
 
@@ -181,6 +195,16 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     dialogueLines["lockPuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
             "Abriu!! Que complicação. Como alguém sequer chega nessa idéia?"
+        }
+    };
+
+    // Mirrorzinho puzzle
+    dialogueLines["mirrorzinhoPuzzle_solved"] = {
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "AAAAAAAAAA ELA ME PUXOU PRA DENTRO DO ESPELHO????", true
+        },
+        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
+            "Talvez fazendo o ritual novamente eu consiga ativar esse espelho e sair desse inferno"
         }
     };
 

@@ -120,6 +120,10 @@ void HistoryClassRoom::Build() {
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 2), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));
     state->AddObject(roomDoorBack);
 
+    GameObject* zombief = createGO("[MonsterFast]", 675, 500);
+    zombief->AddComponent(new ZombieFast(*zombief));
+    state->AddObject(zombief);
+
     // Filtro
 
     /*

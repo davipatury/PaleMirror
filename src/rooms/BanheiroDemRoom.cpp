@@ -57,7 +57,7 @@ void BanheiroDemRoom::Build() {
 
     // Simbolo ritual
     /*GameObject* ritual = createGO("[OBJ-BANHEIRO-DEM] Ritual", 433, 730);
-    SpriteRenderer* ritualSR = new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual_1.png");
+    SpriteRenderer* ritualSR = new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual.png");
     ritualSR->SetColorMod(255, 82, 0);
     ritual->AddComponent(ritualSR);
     state->AddObject(ritual);*/

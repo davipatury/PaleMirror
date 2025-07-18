@@ -265,7 +265,8 @@ void PaintPuzzle::Initiator::Update(float dt) {
     if (GameData::paintPuzzleSolved) {
         intr->SetHUDText("Inspecionar");
         intr->SetAction([this](State* state, GameObject* go) {
-            std::cout << "Dialogo interagir com o cavalete depois de completado" << std::endl;
+            //std::cout << "Dialogo interagir com o cavalete depois de completado" << std::endl;
+            DialogueHUD::RequestDialogue("paintPuzzle_solved");
             // TODO: Dialogo interagir com o cavalete depois de completado
         });
     } else {

@@ -16,7 +16,8 @@ RunaRitual::RunaRitual(GameObject &associated, bool sempreCompleto) : Component(
 
 // States actions
 void RunaAlagada(State* state, GameObject* associated) {
-    std::cout << "Preciso remover essa agua" << std::endl;
+    DialogueHUD::RequestDialogue("waterOn");
+    //std::cout << "Preciso remover essa agua" << std::endl;
 }
 
 void RunaVazia(State* state, GameObject* associated) {

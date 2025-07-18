@@ -202,7 +202,8 @@ void MirrorPuzzle::Initiator::Update(float dt) {
     if (GameData::mirrorPuzzleSolved) {
         intr->SetHUDText("Inspecionar");
         intr->SetAction([this](State* state, GameObject* go) {
-            std::cout << "Dialogo interagir com o espelho depois de montado" << std::endl;
+            //std::cout << "Dialogo interagir com o espelho depois de montado" << std::endl;
+            DialogueHUD::RequestDialogue("mirrorPuzzle_solved");
             // TODO: Dialogo interagir com o espelho depois de montado
         });
     } else {
