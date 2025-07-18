@@ -84,10 +84,17 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         }
     };
 
+    // Water
+    dialogueLines["fuseOn"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "É melhor desligar a energia do banheiro antes de mexer nesses canos de água."
+        }
+    };
+
     // Pipe puzzle
     dialogueLines["pipePuzzle_solved"] = {
         {"HelenaFeliz", "Helena", {101, 38, 141, 255},
-            "Finamente parei essa água. Sobrou um cano, acho que pode ser útil."
+            "Finamente drenei essa água podre. Sobrou um cano, acho que pode ser útil."
         }
     };
 
