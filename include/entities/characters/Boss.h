@@ -37,7 +37,7 @@ public:
     Sound* summonSound;
     
 private:
-    int maxzombies = 15;
+    int maxzombies = 13;
 
     bool summoning;
     bool firstsummon;

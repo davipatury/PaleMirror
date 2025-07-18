@@ -78,6 +78,7 @@ public:
     bool zombieFarAway = false;
     Timer zombieFarAwayTimer;
     Sound* zombieFarAwaySound;
+    bool introplaying = false;
 private:
     Music backgroundMusic;
 
