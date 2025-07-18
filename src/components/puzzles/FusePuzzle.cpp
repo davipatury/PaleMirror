@@ -125,6 +125,7 @@ void FusePuzzle::Initiator::Update(float dt) {
     LightEmitter* light = (LightEmitter*) associated.GetComponent("LightEmitter");
     if (!sr || !intr || !light) return;
     if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
+    puzzleClosed = nullptr;
 
     if (GameData::fusePuzzleSolved) {
         sr->SetFrame(1);

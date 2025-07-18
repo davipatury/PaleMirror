@@ -38,6 +38,8 @@ public:
     bool Is(std::string type);
 
     static SDL_Color GetColor(PaintColor cor);
+    static std::string GetColorName(PaintColor cor);
+    static std::string GetSolutionName();
     static SDL_Color GetSolutionColor();
     static void GenerateRandomSolution();
     void Pintar(PaintColor cor);
@@ -51,6 +53,7 @@ public:
     Sprite tinta;
     Sound* splash;
     Sound* clearSound;
+    bool dicaInicio = false;
 
     static PaintColor solution;
     static PaintColor possibleSolutions[];

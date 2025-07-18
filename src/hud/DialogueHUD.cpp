@@ -1,6 +1,8 @@
 #include "hud/DialogueHUD.h"
 #include "core/Game.h"
 
+#include "components/puzzles/PaintPuzzle.h"
+
 #define DEBUG_DIALOGUE
 
 #define DIALOGUE_WRAP_LEN 910
@@ -48,6 +50,12 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     };
 
     // Paint puzzle lines
+    std::string puzzleColor = PaintPuzzle::GetSolutionName();
+    dialogueLines["paintPuzzle_start"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+         "Se me lembro bem, a cor do ritual era " + puzzleColor + "..."
+        }
+    };
     dialogueLines["paintPuzzle_corErrada"] = {
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Quem se importa se duas ou três cores formam outra. Será que alguém já inventou alguma cor nunca vista antes?"

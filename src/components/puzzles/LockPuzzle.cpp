@@ -275,8 +275,9 @@ void LockPuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
     if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
+    puzzleClosed = nullptr;
 
-    intr->SetActivationDistance(30.0f);
+    intr->SetActivationDistance(40.0f);
     if (GameData::lockPuzzleSolved) {
         intr->SetHUDText("Entrar");
         intr->SetAction(Actions::ChangeRoom(targetRoom, entryIndex));
@@ -292,7 +293,7 @@ void LockPuzzle::Initiator::Update(float dt) {
             lp->pauseOnOpenUI = false;
             state->AddObject(lp);
 
-            intr->SetActivationDistance(0.0f);
+            intr->SetActivationDistance(0);
             puzzleClosed = &lp->isDead;
         });
     }

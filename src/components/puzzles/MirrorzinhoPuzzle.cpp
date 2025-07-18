@@ -197,6 +197,7 @@ void MirrorzinhoPuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
     if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
+    puzzleClosed = nullptr;
 
     intr->SetActivationDistance(250);
     intr->SetHUDOffset({100, 230});

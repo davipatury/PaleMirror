@@ -42,6 +42,14 @@ PaintPuzzle::PaintPuzzle(GameObject& associated) : Component(associated),
 
 void PaintPuzzle::Update(float dt) {
     if (estadoAtual == QUADRO_SOLVED) return;
+    if (!dicaInicio) {
+        associated.pauseOnOpenUI = true;
+        DialogueHUD::RequestDialogue("paintPuzzle_start", [this]() {
+            associated.pauseOnOpenUI = false;
+            CURRENT_STATE.openUI = true;
+        });
+        dicaInicio = true;
+    }
     if (IsSolved()) {
         // Solved
         DialogueHUD::RequestDialogue("paintPuzzle_solved", [this]() {
@@ -212,6 +220,22 @@ SDL_Color PaintPuzzle::GetColor(PaintColor cor) {
     return SDL_Color{0, 0, 0, SDL_ALPHA_OPAQUE};
 }
 
+std::string PaintPuzzle::GetColorName(PaintColor cor) {
+    // Terciarias
+    if (cor == VERMELHO_ARROXEADO)     return "vermelho arroxeado";
+    if (cor == VERMELHO_ALARANJADO)    return "vermelho alaranjado";
+    if (cor == AMARELO_ESVERDEADO)     return "amarelo esverdeado";
+    if (cor == AMARELO_ALARANJADO)     return "amarelo alaranjado";
+    if (cor == AZUL_ROXEADO)           return "azul roxeado";
+    if (cor == AZUL_ESVERDEADO)        return "azul esverdeado";
+    // Nao eh pra chegar aqui
+    return "SEI LA";
+}
+
+std::string PaintPuzzle::GetSolutionName() {
+    return GetColorName(solution);
+}
+
 SDL_Color PaintPuzzle::GetSolutionColor() {
     return GetColor(solution);
 }
@@ -235,6 +259,7 @@ void PaintPuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
     if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
+    puzzleClosed = nullptr;
 
     intr->SetActivationDistance(50);
     if (GameData::paintPuzzleSolved) {
