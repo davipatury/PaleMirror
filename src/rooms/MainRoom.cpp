@@ -182,7 +182,7 @@ void MainRoom::Build() {
     auto doorBanMascSR = new SpriteRenderer(*doorBanMasc, "Recursos/img/objetos/porta_highlight.png");
     doorBanMascSR->sprite.SetFlip(SDL_FLIP_HORIZONTAL);
     doorBanMasc->AddComponent(doorBanMascSR);
-    doorBanMasc->AddComponent(new LockPuzzle::Initiator(*doorBanMasc, "1234", "banheiroMasc"));
+    doorBanMasc->AddComponent(new LockPuzzle::Initiator(*doorBanMasc, "6616", "banheiroMasc"));
     doorBanMasc->AddComponent(new IsoCollider(*doorBanMasc, {0.5, 0.4}, {-12, -18}));
     doorBanMasc->AddComponent(new Interactable(*doorBanMasc, Actions::ChangeRoom("banheiroMasc"), DOOR_INTERACT_DIST, doorBanMascSR));
     state->AddObject(doorBanMasc);

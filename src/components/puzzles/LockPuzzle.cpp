@@ -277,9 +277,12 @@ void LockPuzzle::Initiator::Update(float dt) {
     StageState* stage = (StageState*) &CURRENT_STATE;
     if (stage->openUI) return;
 
-    if(GameData::runeState == GameData::RUNA_LIGADA) {
-        
-        
+    if(GameData::runeState != GameData::RUNA_SUMMONADA) {
+        intr->SetHUDText("Interagir");
+        intr->SetAction([this, intr](State* state, GameObject* go) {
+            DialogueHUD::RequestDialogue("lockPuzzle_agoraNao");
+        });
+        return;
     } 
 
     intr->SetActivationDistance(40.0f);
