@@ -22,39 +22,37 @@ void RunaAlagada(State* state, GameObject* associated) {
 
 void RunaVazia(State* state, GameObject* associated) {
     if (INVENTORY->HasItem(ITEM_BALDE_TINTA)) {
-        std::cout << "Preciso usar balde de tinta" << std::endl;
+        DialogueHUD::RequestDialogue("runaComBalde");
     } else {
-        std::cout << "Preciso encontrar balde de tinta" << std::endl;
+        DialogueHUD::RequestDialogue("runaSemBalde");
     }
 }
 
 void PintarRuna(State* state, GameObject* associated) {
     INVENTORY->Remove(ITEM_BALDE_TINTA);
     GameData::runeState = GameData::RUNA_DESENHADA;
-    std::cout << "Runa pintada" << std::endl;
+    DialogueHUD::RequestDialogue("runaDesenhada");
 }
 
 void RunaSemVela(State* state, GameObject* associated) {
     if (INVENTORY->HasItem(ITEM_VELA)) {
-        std::cout << "Preciso usar vela" << std::endl;
+        DialogueHUD::RequestDialogue("runaComVela");
     } else {
-        std::cout << "Preciso encontrar vela" << std::endl;
+        DialogueHUD::RequestDialogue("runaSemVela");
     }
 }
 
 void ColocarVela(State* state, GameObject* associated) {
     INVENTORY->Remove(ITEM_VELA);
     if (GameData::runeState == GameData::RUNA_DESENHADA) {
-        std::cout << "Falta 1 vela" << std::endl;
         GameData::runeState = GameData::RUNA_COM_UMA_VELA;
     } else {
-        std::cout << "Tudo ok pro ritual" << std::endl;
         GameData::runeState = GameData::RUNA_FINALIZADA;
     }
 }
 
 void LigarRuna(State* state, GameObject* associated) {
-    std::cout << "Runa ligada" << std::endl;
+    DialogueHUD::RequestDialogue("runaLigada");
     GameData::runeState = GameData::RUNA_LIGADA;
 }
 
