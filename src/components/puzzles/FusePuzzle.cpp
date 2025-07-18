@@ -124,6 +124,7 @@ void FusePuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     LightEmitter* light = (LightEmitter*) associated.GetComponent("LightEmitter");
     if (!sr || !intr || !light) return;
+    if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
 
     if (GameData::fusePuzzleSolved) {
         sr->SetFrame(1);
@@ -134,7 +135,7 @@ void FusePuzzle::Initiator::Update(float dt) {
         intr->SetActivationDistance(100.0f);
         intr->SetType(InteractableHUD::INTERACT);
         intr->SetHUDText("Interagir");
-        intr->SetAction([this](State* state, GameObject* go) {
+        intr->SetAction([intr, this](State* state, GameObject* go) {
             openSound->Play();
 
             GameObject* fp = new GameObject();
@@ -143,6 +144,9 @@ void FusePuzzle::Initiator::Update(float dt) {
             fp->lazyRender = false;
             fp->pauseOnOpenUI = false;
             state->AddObject(fp);
+
+            puzzleClosed = &fp->isDead;
+            intr->SetActivationDistance(0.0f);
         });
         light->SetEnabledAll(false);
     }

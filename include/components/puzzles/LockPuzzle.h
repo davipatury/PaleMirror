@@ -43,6 +43,7 @@ public:
         std::string targetRoom;
         int entryIndex;
         Sound* openSound;
+        bool* puzzleClosed = nullptr;
     };
 private:
     std::string expected;

@@ -73,6 +73,7 @@ public:
         bool Is(std::string type);
 
         Sound* openSound;
+        bool* puzzleClosed = nullptr;
     };
 };
 

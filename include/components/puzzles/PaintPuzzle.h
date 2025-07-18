@@ -63,6 +63,7 @@ public:
         void Render();
         void Start();
         bool Is(std::string type);
+        bool* puzzleClosed = nullptr;
     };
 };
 

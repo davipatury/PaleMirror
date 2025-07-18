@@ -274,14 +274,15 @@ LockPuzzle::Initiator::Initiator(GameObject& associated, std::string password, s
 void LockPuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
+    if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
 
+    intr->SetActivationDistance(30.0f);
     if (GameData::lockPuzzleSolved) {
         intr->SetHUDText("Entrar");
         intr->SetAction(Actions::ChangeRoom(targetRoom, entryIndex));
     } else {
         intr->SetHUDText("Abrir");
-        intr->SetAction([this](State* state, GameObject* go) {
-            std::cout << "puzzle aberto" << std::endl;
+        intr->SetAction([this, intr](State* state, GameObject* go) {
             openSound->Play();
 
             GameObject* lp = new GameObject();
@@ -290,6 +291,9 @@ void LockPuzzle::Initiator::Update(float dt) {
             lp->lazyRender = false;
             lp->pauseOnOpenUI = false;
             state->AddObject(lp);
+
+            intr->SetActivationDistance(0.0f);
+            puzzleClosed = &lp->isDead;
         });
     }
 }

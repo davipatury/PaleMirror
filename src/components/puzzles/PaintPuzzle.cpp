@@ -234,6 +234,7 @@ PaintPuzzle::Initiator::Initiator(GameObject& associated) : Component(associated
 void PaintPuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
+    if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
 
     intr->SetActivationDistance(50);
     if (GameData::paintPuzzleSolved) {
@@ -244,13 +245,16 @@ void PaintPuzzle::Initiator::Update(float dt) {
         });
     } else {
         intr->SetHUDText("Interagir");
-        intr->SetAction([this](State* state, GameObject* go) {
+        intr->SetAction([this, intr](State* state, GameObject* go) {
             GameObject* pp = new GameObject();
             pp->AddComponent(new PaintPuzzle(*pp));
             pp->box.z = PUZZLE_LAYER;
             pp->lazyRender = false;
             pp->pauseOnOpenUI = false;
             state->AddObject(pp);
+
+            puzzleClosed = &pp->isDead;
+            intr->SetActivationDistance(0);
         });
     }
 }
