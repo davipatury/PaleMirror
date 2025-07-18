@@ -130,7 +130,7 @@ void FusePuzzle::Initiator::Update(float dt) {
     if (GameData::fusePuzzleSolved) {
         sr->SetFrame(1, SDL_FLIP_HORIZONTAL);
         intr->SetActivationDistance(0.0f);
-        light->SetEnabledAll(true);
+        light->SetEnabledAll(false);
     } else {
         sr->SetFrame(0, SDL_FLIP_HORIZONTAL);
         intr->SetActivationDistance(100.0f);
@@ -148,7 +148,7 @@ void FusePuzzle::Initiator::Update(float dt) {
 
             intr->SetActivationDistance(0.0f);
         });
-        light->SetEnabledAll(false);
+        light->SetEnabledAll(true);
     }
 }
 

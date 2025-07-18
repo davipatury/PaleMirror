@@ -184,4 +184,18 @@ void MainRoom::Build() {
     doorBanMasc->AddComponent(new IsoCollider(*doorBanMasc, {0.5, 0.4}, {-12, -18}));
     doorBanMasc->AddComponent(new Interactable(*doorBanMasc, Actions::ChangeRoom("banheiroMasc"), DOOR_INTERACT_DIST, doorBanMascSR));
     state->AddObject(doorBanMasc);
+
+    // Caixa Fusivel - FusePuzzle
+    GameObject* caixaFusivel = createGO("[OBJ] Caixa Fusivel", 1211, 1505);
+    SpriteRenderer* caixaFusivelSprite = new SpriteRenderer(*caixaFusivel, "Recursos/img/objetos/caixa_energia.png", 2, 1);
+    caixaFusivelSprite->SetScale(1.25, 1.25);
+    caixaFusivel->AddComponent(caixaFusivelSprite);
+    caixaFusivel->AddComponent(new IsoCollider(*caixaFusivel, {1, 1}, {0, 0}));
+    caixaFusivel->AddComponent(new Interactable(*caixaFusivel, nullptr));
+    caixaFusivel->AddComponent(new LightEmitter(*caixaFusivel, {
+        // Offset, Scale, Enabled, Sprite path
+        {{31, 35}, {0.25, 0.25}, true, "Recursos/img/lighting/backlight_inv_yellow.png"}
+    }));
+    caixaFusivel->AddComponent(new FusePuzzle::Initiator(*caixaFusivel));
+    state->AddObject(caixaFusivel);
 }
