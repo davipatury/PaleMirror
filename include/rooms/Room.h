@@ -17,7 +17,7 @@ public:
 
     GameObject* bgGO;
     Music bgMusic;
-    double lastMusicPosition = 0.0d;
+    double lastMusicPosition = 0.0;
     bool lockCameraOnRoom;
 
     Vec2 basePos;
@@ -31,6 +31,7 @@ public:
     void Enter();
     void Leave();
     GameObject* createGO(std::string name, float x, float y);
+    bool isOut = false;
 };
 
 #endif // ROOM_H

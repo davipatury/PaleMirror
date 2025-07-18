@@ -4,6 +4,7 @@ MainRoom::MainRoom(State* state) : Room(state) {
     bgFile = "Recursos/img/rooms/escola.png";
     bgMusicFile = "Recursos/audio/Mapa.mp3";
     lockCameraOnRoom = false;
+    isOut = true;
     basePos = Vec2{0, 0};
 
     cameraLimits = Rect(basePos.x, basePos.y, 4500, 3375);

@@ -124,6 +124,7 @@ void StageState::LoadAssets() {
     rooms["banheiroIntro"] = banheiroIntroRoom;
 
     currentRoom = mainRoom;
+    mainRoom->bgMusic.FadeInPos(0.0);
     mainRoom->Enter();
 
     // Give flashlight on begin (REMOVE LATER)
@@ -225,12 +226,21 @@ void StageState::Update(float dt) {
         DialogueHUD::RequestDialogue("prologoPosRitual");
     }
 
+    if(introplaying and !Mix_PlayingMusic()){
+        backgroundMusic.Open("Recursos/audio/music/boss-loop.wav");
+        backgroundMusic.Play();
+        Mix_VolumeMusic(70);
+    }
 
     if(Boss::startBoss){
+        Mix_VolumeMusic(80);
+        backgroundMusic.Open("Recursos/audio/music/boss-intro.wav");
+        backgroundMusic.Play(1);
+        introplaying = true;
         DialogueHUD::RequestDialogue("boss_battle");
         Boss::startBoss = false;
     }
-    
+
     // Custcene Boss
     if (!openUI && INPUT_MANAGER.KeyPress('k')) {
         Character::player->associated.box.x = 2257;
