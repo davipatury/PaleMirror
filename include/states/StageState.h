@@ -82,9 +82,21 @@ public:
     float pauseX;
     float pauseY;
 
+    enum scenes{
+        RITUAL_NONE,
+        RITUAL_BEFORE,
+        RITUAL_DURING,
+        RITUAL_AFTER,
+        RITUAL_DONE,
+        BOSS_BATTLE
+    };
+
+    scenes scene = RITUAL_NONE;
+
     bool zombieFarAway = false;
     Timer zombieFarAwayTimer;
     Sound* zombieFarAwaySound;
+    bool introplaying = false;
 private:
     Music backgroundMusic;
 

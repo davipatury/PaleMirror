@@ -100,6 +100,11 @@
         "stack": "cpp",
         "__functional_base": "cpp",
         "__functional_base_03": "cpp",
-        "__tuple": "cpp"
+        "__tuple": "cpp",
+        "flat_map": "cpp",
+        "flat_set": "cpp",
+        "generator": "cpp",
+        "print": "cpp",
+        "text_encoding": "cpp"
     }
 }

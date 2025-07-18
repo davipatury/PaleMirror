@@ -1,6 +1,7 @@
 #include "states/StageState.h"
 #include "components/Interactable.h"
 #include "actions/Actions.h"
+#include "hud/FlashlightHUD.h"
 #include <memory>
 #include "core/GameData.h"
 #include "math.h"
@@ -117,6 +118,7 @@ void StageState::LoadAssets() {
     rooms["banheiroIntro"] = banheiroIntroRoom;
 
     currentRoom = mainRoom;
+    mainRoom->bgMusic.FadeInPos(0.0);
     mainRoom->Enter();
 
     // Give flashlight on begin (REMOVE LATER)
@@ -210,20 +212,42 @@ void StageState::Update(float dt) {
         AddObject(pip);
     }
 
-    //  Start cutscene
+    //  Scenes
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
+        std::cout << "entrou" << std::endl;
         Actions::ChangeRoom("banheiroIntro")(this, nullptr);
-        //DialogueHUD::RequestDialogue("prologoPreRitual");
-        //DialogueHUD::RequestDialogue("prologoRitual");
-        //DialogueHUD::RequestDialogue("prologoPosRitual");
+        FLASHLIGHT->SetDark(false);
+        DialogueHUD::RequestDialogue("prologoPreRitual");
+        DialogueHUD::RequestDialogue("prologoRitual");
+        scene = RITUAL_BEFORE;
     }
 
+    if (scene == RITUAL_BEFORE && DialogueHUD::isEmpty()){
+        std::cout << "before" << std::endl;
+        FLASHLIGHT->SetDark(true);
+        DialogueHUD::RequestDialogue("prologoPosRitual");
+        scene = RITUAL_DURING;
+    }
+
+    if(scene == RITUAL_DURING && DialogueHUD::isEmpty){
+        std::cout << "during" << std::endl;
+    }
+
+    if(introplaying and !Mix_PlayingMusic()){
+        backgroundMusic.Open("Recursos/audio/music/boss-loop.wav");
+        backgroundMusic.Play();
+        Mix_VolumeMusic(70);
+    }
 
     if(Boss::startBoss){
+        Mix_VolumeMusic(80);
+        backgroundMusic.Open("Recursos/audio/music/boss-intro.wav");
+        backgroundMusic.Play(1);
+        introplaying = true;
         DialogueHUD::RequestDialogue("boss_battle");
         Boss::startBoss = false;
     }
-    
+
     // Custcene Boss
     if (!openUI && INPUT_MANAGER.KeyPress('k')) {
         Character::player->associated.box.x = 2257;

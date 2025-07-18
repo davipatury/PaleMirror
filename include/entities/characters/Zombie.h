@@ -30,8 +30,6 @@ public:
     void NotifyCollision(GameObject& other);
 
     bool Is(std::string type);
-
-    static int zombieCounter;
 private:
     int hitpoints;
     Sound deathSound;
