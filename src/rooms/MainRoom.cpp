@@ -142,6 +142,22 @@ void MainRoom::Build() {
     crblock3->AddComponent(new ShadowCaster(*crblock3));
     state->AddObject(crblock3);
 
+    // Bloco de salas 3 - Porta 1
+    GameObject* door31 = createGO("[OBJ] Porta3-1", crblock3->box.x + 181, crblock3->box.y + 431);
+    auto door31sr = new SpriteRenderer(*door31, "Recursos/img/objetos/porta_highlight.png");
+    door31->AddComponent(door31sr);
+    door31->AddComponent(new IsoCollider(*door31, {0.5, 0.4}, {-20, -22}));
+    door31->AddComponent(new Interactable(*door31, Actions::ChangeRoom("diretor"), DOOR_INTERACT_DIST, door31sr));
+    state->AddObject(door31);
+
+    // Bloco de salas 3 - Porta 2
+    GameObject* door32 = createGO("[OBJ] Porta3-2", crblock3->box.x + 433, crblock3->box.y + 564);
+    auto door32sr = new SpriteRenderer(*door32, "Recursos/img/objetos/porta_highlight.png");
+    door32->AddComponent(door32sr);
+    door32->AddComponent(new IsoCollider(*door32, {0.5, 0.4}, {-20, -22}));
+    door32->AddComponent(new Interactable(*door32, Actions::ChangeRoom("professores"), DOOR_INTERACT_DIST, door32sr));
+    state->AddObject(door32);
+
     // Bloco de banheiros
     GameObject* bathblock = createGO("[OBJ] BathRoomBlock", 1055, 908);
     bathblock->AddComponent(new SpriteRenderer(*bathblock, "Recursos/img/objetos/bathroom_block.png"));

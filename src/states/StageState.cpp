@@ -39,6 +39,7 @@ void StageState::LoadAssets() {
 
     // Shadows
 
+    /*
     GameObject* scc = new GameObject("[ShadowCasterController");
     scc->AddComponent(new ShadowCaster::Controller(*scc));
     scc->box.z = SHADOW_LAYER;
@@ -55,6 +56,7 @@ void StageState::LoadAssets() {
     flHUD->lazyRender = false;
     flHUD->pauseOnOpenUI = false;
     AddObject(flHUD);
+    */
 
     // General
     GameObject* hud = new GameObject("[HUD]");
@@ -109,6 +111,10 @@ void StageState::LoadAssets() {
     banheiroIntroRoom->Build();
     BanheiroDemRoom* banheiroDemRoom = new BanheiroDemRoom(this);
     banheiroDemRoom->Build();
+    DiretorRoom* diretorRoom = new DiretorRoom(this);
+    diretorRoom->Build();
+    ProfessoresRoom* professoresRoom = new ProfessoresRoom(this);
+    professoresRoom->Build();
 
     rooms["main"] = mainRoom;
     rooms["history"] = historyRoom;
@@ -119,6 +125,8 @@ void StageState::LoadAssets() {
     rooms["banheiroMasc"] = banheiroMascRoom;
     rooms["banheiroIntro"] = banheiroIntroRoom;
     rooms["banheiroDem"] = banheiroDemRoom;
+    rooms["diretor"] = diretorRoom;
+    rooms["professores"] = professoresRoom;
 
     currentRoom = mainRoom;
     //mainRoom->bgMusic.FadeInPos(0.0);

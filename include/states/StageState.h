@@ -56,6 +56,8 @@
 #include "rooms/BanheiroMasculinoRoom.h"
 #include "rooms/BanheiroIntroRoom.h"
 #include "rooms/BanheiroDemRoom.h"
+#include "rooms/DiretorRoom.h"
+#include "rooms/ProfessoresRoom.h"
 
 #define OBJECT_LAYER 0
 #define SHADOW_LAYER 1
