@@ -220,11 +220,17 @@ void StageState::Update(float dt) {
     //  Start cutscene
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
         Actions::ChangeRoom("banheiroIntro")(this, nullptr);
-        DialogueHUD::RequestDialogue("prologoPreRitual");
-        DialogueHUD::RequestDialogue("prologoRitual");
-        DialogueHUD::RequestDialogue("prologoPosRitual");
+        //DialogueHUD::RequestDialogue("prologoPreRitual");
+        //DialogueHUD::RequestDialogue("prologoRitual");
+        //DialogueHUD::RequestDialogue("prologoPosRitual");
     }
 
+
+    if(Boss::startBoss){
+        DialogueHUD::RequestDialogue("boss_battle");
+        Boss::startBoss = false;
+    }
+    
     // Custcene Boss
     if (!openUI && INPUT_MANAGER.KeyPress('k')) {
         Character::player->associated.box.x = 2257;
@@ -238,10 +244,7 @@ void StageState::Update(float dt) {
         Boss::startBoss = true;
     }
 
-    if(Boss::startBoss){
-        DialogueHUD::RequestDialogue("boss_battle");
-        Boss::startBoss = false;
-    }
+    
     
     // Spawn locker puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('l')) {

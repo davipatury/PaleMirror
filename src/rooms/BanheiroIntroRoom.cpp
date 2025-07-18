@@ -1,12 +1,12 @@
 #include "rooms/BanheiroIntroRoom.h"
+#include "hud/FlashlightHUD.h"
 
 BanheiroIntroRoom::BanheiroIntroRoom(State* state) : Room(state) {
     bgFile = "Recursos/img/rooms/banheiro.png";
     lockCameraOnRoom = false;
     basePos = Vec2{70000, 0};
     cameraLimits = Rect(basePos.x, basePos.y, 1500, 1125);
-
-    entryPos.push_back(Vec2{70245, 718});
+    entryPos.push_back(Vec2{70500, 718});
 }
 
 void BanheiroIntroRoom::Build() {
@@ -56,11 +56,22 @@ void BanheiroIntroRoom::Build() {
     state->AddObject(boxes);
 
     // Simbolo ritual
-    GameObject* ritual = createGO("[OBJ-BANHEIRO-INTRO] Ritual", 433, 730);
+   /* GameObject* ritual = createGO("[OBJ-BANHEIRO-INTRO] Ritual", 433, 730);
     SpriteRenderer* ritualSR = new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual_1.png");
     ritualSR->SetColorMod(255, 82, 0);
     ritual->AddComponent(ritualSR);
-    state->AddObject(ritual);
+    state->AddObject(ritual);*/
+
+    // Vela
+    GameObject* velas = createGO("[OBJ-BANHEIRO-INTRO] velas", 433, 730);
+    velas->AddComponent(new SpriteRenderer(*velas, "Recursos/img/objetos/velasacesas.png"));
+    state->AddObject(velas);
+
+    // Marias
+    GameObject* marias = createGO("[OBJ-BANHEIRO-INTRO] Marias", 310, 700);
+    marias->AddComponent(new SpriteRenderer(*marias, "Recursos/img/objetos/marias.png"));
+    marias->AddComponent(new IsoCollider(*marias, {1.0, 1.0}, {-20, -30}));
+    state->AddObject(marias);
 
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-INTRO] Espelho", 560, 175);

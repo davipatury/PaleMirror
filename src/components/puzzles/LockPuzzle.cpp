@@ -67,6 +67,7 @@ void LockPuzzle::Update(float dt) {
             animOffsetY[selectedIndex] = 0.0f;
             animFrom[selectedIndex]    = current[selectedIndex];
             animTo[selectedIndex] = (animFrom[selectedIndex] + 1 + 10) % 10;
+            rolling->Play();
         }
 
         if (DOWN_CHECK && !animating[selectedIndex]) {
@@ -74,6 +75,7 @@ void LockPuzzle::Update(float dt) {
             animOffsetY[selectedIndex] = 0.0f;
             animFrom[selectedIndex]    = current[selectedIndex];
             animTo[selectedIndex] = (animFrom[selectedIndex] - 1 + 10) % 10;
+            rolling->Play();
         }
     } else {
         selectedRect = EMPTY_RECT;
