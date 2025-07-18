@@ -1,5 +1,7 @@
 #include "components/puzzles/PipePuzzle.h"
 
+#include "states/StageState.h"
+
 #define PIPE_PUZZLE_RECT_X 0
 #define PIPE_PUZZLE_RECT_Y 0
 
@@ -59,6 +61,7 @@ void PipePuzzle::Update(float dt) {
 
     if (IsSolved()) {
         DialogueHUD::RequestDialogue("pipePuzzle_solved", [this]() {
+            GameData::pipePuzzleSolved = true;
             associated.RequestDelete();
         });
         solved = true;
@@ -105,4 +108,39 @@ bool PipePuzzle::IsSolved() {
 
 bool PipePuzzle::Is(std::string type) {
     return type == "PipePuzzle";
+}
+
+// PipePuzzle initiator
+PipePuzzle::Initiator::Initiator(GameObject& associated) : Component(associated) {
+    openSound = new Sound("Recursos/audio/sounds/objetos/cano.wav");
+}
+
+void PipePuzzle::Initiator::Update(float dt) {
+    Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
+    if (!intr) return;
+
+    if (GameData::pipePuzzleSolved) {
+        intr->SetActivationDistance(0);
+    } else {
+        intr->SetActivationDistance(70);
+        intr->SetHUDText("Interagir");
+        intr->SetAction([this](State* state, GameObject* go) {
+            openSound->Play();
+
+            GameObject* pip = new GameObject();
+            pip->AddComponent(new PipePuzzle(*pip));
+            pip->box.z = PUZZLE_LAYER;
+            pip->lazyRender = false;
+            pip->pauseOnOpenUI = false;
+            state->AddObject(pip);
+        });
+    }
+}
+
+void PipePuzzle::Initiator::Render() {}
+
+void PipePuzzle::Initiator::Start() {}
+
+bool PipePuzzle::Initiator::Is(std::string type) {
+    return type == "PipePuzzleInitiator";
 }

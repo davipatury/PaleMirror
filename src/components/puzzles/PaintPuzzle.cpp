@@ -1,6 +1,8 @@
 #include "components/puzzles/PaintPuzzle.h"
 #include "core/Game.h"
 
+#include "states/StageState.h"
+
 #define PAINT_BG_OFFSET_X 233
 #define PAINT_BG_OFFSET_Y 65
 
@@ -27,6 +29,7 @@ PaintPuzzle::PaintPuzzle(GameObject& associated) : Component(associated),
     pano("Recursos/img/paint_puzzle/pano.png", 1, 1, true)
 {
     splash = new Sound("Recursos/audio/sounds/puzzle/splash-tinta-2.wav");
+    clearSound = new Sound("Recursos/audio/sounds/puzzle/limpar_tinta.wav");
     corAtual = COR_VAZIA;
     estadoAtual = QUADRO_VAZIO;
     selectedRect = RECT_VERMELHO;
@@ -43,6 +46,7 @@ void PaintPuzzle::Update(float dt) {
         // Solved
         DialogueHUD::RequestDialogue("paintPuzzle_solved", [this]() {
             INVENTORY->Collect(ITEM_BALDE_TINTA);
+            GameData::paintPuzzleSolved = true;
             associated.RequestDelete();
         });
         estadoAtual = QUADRO_SOLVED;
@@ -71,14 +75,17 @@ void PaintPuzzle::Update(float dt) {
         }
         if (BACK_CHECK) selectedRect = RECT_LIMPAR;
         if (CONFIRM_CHECK) {
-            splash->Play();
             if (selectedRect == RECT_VERMELHO) {
+                splash->Play();
                 Pintar(VERMELHO);
             } else if (selectedRect == RECT_AZUL) {
+                splash->Play();
                 Pintar(AZUL);
             } else if (selectedRect == RECT_AMARELO) {
+                splash->Play();
                 Pintar(AMARELO);
             } else if (selectedRect == RECT_LIMPAR) {
+                clearSound->Play();
                 corAtual = COR_VAZIA;
                 estadoAtual = QUADRO_VAZIO;
             }
@@ -101,14 +108,17 @@ void PaintPuzzle::Update(float dt) {
 
         // Check if mouse is inside rects
         if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON) && selectedRect != EMPTY_RECT) {
-            splash->Play();
             if (selectedRect == RECT_VERMELHO) {
+                splash->Play();
                 Pintar(VERMELHO);
             } else if (selectedRect == RECT_AZUL) {
+                splash->Play();
                 Pintar(AZUL);
             } else if (selectedRect == RECT_AMARELO) {
+                splash->Play();
                 Pintar(AMARELO);
             } else if (selectedRect == RECT_LIMPAR) {
+                clearSound->Play();
                 corAtual = COR_VAZIA;
                 estadoAtual = QUADRO_VAZIO;
             }
@@ -216,4 +226,39 @@ bool PaintPuzzle::Is(std::string type) {
 
 void PaintPuzzle::GenerateRandomSolution() {
     solution = possibleSolutions[std::rand() % (sizeof(possibleSolutions) / sizeof(*possibleSolutions))];
+}
+
+// MirrorPuzzle initiator
+PaintPuzzle::Initiator::Initiator(GameObject& associated) : Component(associated) {}
+
+void PaintPuzzle::Initiator::Update(float dt) {
+    Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
+    if (!intr) return;
+
+    intr->SetActivationDistance(50);
+    if (GameData::paintPuzzleSolved) {
+        intr->SetHUDText("Inspecionar");
+        intr->SetAction([this](State* state, GameObject* go) {
+            std::cout << "Dialogo interagir com o cavalete depois de completado" << std::endl;
+            // TODO: Dialogo interagir com o cavalete depois de completado
+        });
+    } else {
+        intr->SetHUDText("Interagir");
+        intr->SetAction([this](State* state, GameObject* go) {
+            GameObject* pp = new GameObject();
+            pp->AddComponent(new PaintPuzzle(*pp));
+            pp->box.z = PUZZLE_LAYER;
+            pp->lazyRender = false;
+            pp->pauseOnOpenUI = false;
+            state->AddObject(pp);
+        });
+    }
+}
+
+void PaintPuzzle::Initiator::Render() {}
+
+void PaintPuzzle::Initiator::Start() {}
+
+bool PaintPuzzle::Initiator::Is(std::string type) {
+    return type == "PaintPuzzleInitiator";
 }

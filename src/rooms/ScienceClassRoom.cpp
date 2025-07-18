@@ -1,7 +1,7 @@
 #include "rooms/ScienceClassRoom.h"
 
 ScienceClassRoom::ScienceClassRoom(State* state) : Room(state) {
-    bgFile = "Recursos/img/rooms/sala_ciencias.png";
+    bgFile = "Recursos/img/rooms/sala_ciencias_invertida.png";
     lockCameraOnRoom = true;
     basePos = Vec2{30000, 0};
 
@@ -77,4 +77,10 @@ void ScienceClassRoom::Build() {
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 1), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));
     state->AddObject(roomDoorBack);
+
+    // Filtro
+    GameObject* filtro = createGO("[OBJ-CIENCIAS] Filtro", 0, 0);
+    filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_sala.png"));
+    filtro->box.z = 1;
+    state->AddObject(filtro);
 }

@@ -62,7 +62,20 @@ public:
     int selectedPiece = -1;
     int hoverPiece = 0;
     Sprite bg;
+    Sprite espelhoCompleto;
     bool background = false;
+
+    // Initiator component
+    class Initiator : public Component {
+    public:
+        Initiator(GameObject& associated);
+        void Update(float dt);
+        void Render();
+        void Start();
+        bool Is(std::string type);
+
+        Sound* openSound;
+    };
 };
 
 #endif // MIRRORPUZZLE_H

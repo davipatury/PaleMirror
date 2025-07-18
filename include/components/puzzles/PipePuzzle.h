@@ -62,6 +62,18 @@ public:
     bool solved = false;
 
     Sprite bg;
+
+    // Initiator component
+    class Initiator : public Component {
+    public:
+        Initiator(GameObject& associated);
+        void Update(float dt);
+        void Render();
+        void Start();
+        bool Is(std::string type);
+
+        Sound* openSound;
+    };
 };
 
 #endif // PIPEPUZZLE_H

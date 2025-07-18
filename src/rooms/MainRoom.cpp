@@ -1,5 +1,7 @@
 #include "rooms/MainRoom.h"
 
+#include "components/puzzles/LockPuzzle.h"
+
 MainRoom::MainRoom(State* state) : Room(state) {
     bgFile = "Recursos/img/rooms/escola.png";
     bgMusicFile = "Recursos/audio/Mapa.mp3";
@@ -77,6 +79,13 @@ void MainRoom::Build() {
     garden2->AddComponent(new IsoCollider(*garden2, {1.2, 0.6}, {-160, -130}));
     state->AddObject(garden2);
 
+    // Estatua
+    GameObject* estatua = createGO("[OBJ] Estatua", 3393, 1389);
+    estatua->AddComponent(new SpriteRenderer(*estatua, "Recursos/img/objetos/estatua_diretor.png"));
+    estatua->AddComponent(new IsoCollider(*estatua, {0.85, 0.87}, {-37, -120}, false, true));
+    estatua->AddComponent(new ShadowCaster(*estatua));
+    state->AddObject(estatua);
+
     // Bloco de salas 1
     GameObject* crblock1 = createGO("[OBJ] ClassRoomBlock1", 807, 1889);
     crblock1->AddComponent(new SpriteRenderer(*crblock1, "Recursos/img/objetos/classroom_block.png"));
@@ -122,6 +131,7 @@ void MainRoom::Build() {
     door22->AddComponent(door22sr);
     door22->AddComponent(new IsoCollider(*door22, {0.5, 0.4}, {-20, -20}));
     door22->AddComponent(new Interactable(*door22, Actions::ChangeRoom("arts"), DOOR_INTERACT_DIST, door22sr));
+    door22->AddComponent(new LockPuzzle::Initiator(*door22, "1234", "arts"));
     state->AddObject(door22);
 
     // Bloco de salas 3

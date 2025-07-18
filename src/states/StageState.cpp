@@ -5,13 +5,6 @@
 #include "core/GameData.h"
 #include "math.h"
 
-#define OBJECT_LAYER 0
-#define SHADOW_LAYER 1
-#define FLASHLIGHT_LAYER 2
-#define HUD_LAYER 5
-#define PUZZLE_LAYER 6
-#define DIALOGUE_LAYER 7
-
 StageState::StageState() {
     started = false;
     quitRequested = false;

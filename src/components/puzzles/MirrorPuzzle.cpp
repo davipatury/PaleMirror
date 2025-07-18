@@ -1,6 +1,9 @@
 #include "components/puzzles/MirrorPuzzle.h"
 #include "core/Game.h"
 
+#include "states/StageState.h"
+#include "components/Interactable.h"
+
 //#define DEBUG_MIRROR_PUZZLE
 
 #define MIRROR_PUZZLE_RECT_X 475
@@ -9,7 +12,10 @@
 
 #define CONTROLLER_PIECE_SPEED 300
 
-MirrorPuzzle::MirrorPuzzle(GameObject& associated, std::vector<Piece> pieces) : Component(associated), bg("Recursos/img/mirror_puzzle/Azulejos.png", 1, 1, true) {
+MirrorPuzzle::MirrorPuzzle(GameObject& associated, std::vector<Piece> pieces) : Component(associated),
+    bg("Recursos/img/mirror_puzzle/Azulejos.png", 1, 1, true),
+    espelhoCompleto("Recursos/img/mirror_puzzle/espelho_completo.png", 1, 1, true)
+{
     this->pieces = pieces;
     selectedPiece = -1;
 }
@@ -107,6 +113,7 @@ void MirrorPuzzle::Update(float dt) {
             pieces[i].pos = pieces[i].posCerta;
         }
         DialogueHUD::RequestDialogue("mirrorPuzzle_solved", [this]() {
+            GameData::mirrorPuzzleSolved = true;
             associated.RequestDelete();
         });
         solved = true;
@@ -115,6 +122,11 @@ void MirrorPuzzle::Update(float dt) {
 
 void MirrorPuzzle::Render() {
     bg.Render(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    if (solved) {
+        espelhoCompleto.Render(MIRROR_PUZZLE_RECT_X, MIRROR_PUZZLE_RECT_Y, espelhoCompleto.GetWidth(), espelhoCompleto.GetHeight());
+        return;
+    }
 
     // Background rectangle
     SDL_Rect bgRect = {MIRROR_PUZZLE_RECT_X, MIRROR_PUZZLE_RECT_Y, 250, 500};
@@ -172,4 +184,51 @@ bool MirrorPuzzle::IsSolved() {
 
 bool MirrorPuzzle::Is(std::string type) {
     return type == "MirrorPuzzle";
+}
+
+// MirrorPuzzle initiator
+MirrorPuzzle::Initiator::Initiator(GameObject& associated) : Component(associated) {
+    openSound = new Sound("Recursos/audio/sounds/objetos/cacos_espelho.wav");
+}
+
+void MirrorPuzzle::Initiator::Update(float dt) {
+    Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
+    if (!intr) return;
+
+    intr->SetActivationDistance(250);
+    intr->SetHUDOffset({100, 230});
+    if (GameData::mirrorPuzzleSolved) {
+        intr->SetHUDText("Inspecionar");
+        intr->SetAction([this](State* state, GameObject* go) {
+            std::cout << "Dialogo interagir com o espelho depois de montado" << std::endl;
+            // TODO: Dialogo interagir com o espelho depois de montado
+        });
+    } else {
+        intr->SetHUDText("Interagir");
+        intr->SetAction([this](State* state, GameObject* go) {
+            openSound->Play();
+
+            GameObject* mp = new GameObject();
+            mp->AddComponent(new MirrorPuzzle((*mp), std::vector<Piece>{
+                Piece("Recursos/img/mirror_puzzle/1.png", Vec2{0, 0}),
+                Piece("Recursos/img/mirror_puzzle/2.png", Vec2{81, 0}),
+                Piece("Recursos/img/mirror_puzzle/3.png", Vec2{0, 198}),
+                Piece("Recursos/img/mirror_puzzle/4.png", Vec2{57, 148}),
+                Piece("Recursos/img/mirror_puzzle/5.png", Vec2{0, 290}),
+                Piece("Recursos/img/mirror_puzzle/6.png", Vec2{184, 382})
+            }));
+            mp->box.z = PUZZLE_LAYER;
+            mp->lazyRender = false;
+            mp->pauseOnOpenUI = false;
+            state->AddObject(mp);
+        });
+    }
+}
+
+void MirrorPuzzle::Initiator::Render() {}
+
+void MirrorPuzzle::Initiator::Start() {}
+
+bool MirrorPuzzle::Initiator::Is(std::string type) {
+    return type == "MirrorPuzzleInitiator";
 }

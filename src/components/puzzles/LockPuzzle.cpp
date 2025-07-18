@@ -4,6 +4,11 @@
 #include "utils/InputManager.h"
 #include "hud/DialogueHUD.h"
 
+#include "components/Interactable.h"
+#include "core/GameData.h"
+
+class Interactable;
+
 #define ARROW_UP_1 Rect(355, 307, 30, 30)
 #define ARROW_UP_2 Rect(511, 307, 30, 30)
 #define ARROW_UP_3 Rect(661, 307, 30, 30)
@@ -48,6 +53,7 @@ void LockPuzzle::Update(float dt) {
         // Solved
         openLock->Play();
         DialogueHUD::RequestDialogue("lockPuzzle_solved", [this]() {
+            GameData::lockPuzzleSolved = true;
             associated.RequestDelete();
         });
         solved = true;
@@ -224,5 +230,43 @@ bool LockPuzzle::IsSolved() {
     return expected == now;
 }
 
+
+// LockPuzzle initiator
+LockPuzzle::Initiator::Initiator(GameObject& associated, std::string password, std::string targetRoom, int entryIndex) : Component(associated) {
+    openSound = new Sound("Recursos/audio/sounds/objetos/cadeado_trancado.wav");
+    this->password = password;
+    this->targetRoom = targetRoom;
+    this->entryIndex = entryIndex;
+}
+
+void LockPuzzle::Initiator::Update(float dt) {
+    Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
+    if (!intr) return;
+
+    if (GameData::lockPuzzleSolved) {
+        intr->SetHUDText("Entrar");
+        intr->SetAction(Actions::ChangeRoom(targetRoom, entryIndex));
+    } else {
+        intr->SetHUDText("Abrir");
+        intr->SetAction([this](State* state, GameObject* go) {
+            openSound->Play();
+
+            GameObject* lp = new GameObject();
+            lp->AddComponent(new LockPuzzle(*lp, "1234"));
+            lp->box.z = PUZZLE_LAYER;
+            lp->lazyRender = false;
+            lp->pauseOnOpenUI = false;
+            state->AddObject(lp);
+        });
+    }
+}
+
+void LockPuzzle::Initiator::Render() {}
+
+void LockPuzzle::Initiator::Start() {}
+
+bool LockPuzzle::Initiator::Is(std::string type) {
+    return type == "LockPuzzleInitiator";
+}
 
 

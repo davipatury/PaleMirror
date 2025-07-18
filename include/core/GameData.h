@@ -9,6 +9,12 @@ public:
 
     enum RuneState { RUNA_ALAGADA, RUNA_VAZIA, RUNA_DESENHADA, RUNA_COM_UMA_VELA, RUNA_FINALIZADA, RUNA_LIGADA };
     static RuneState runeState;
+
+    static bool fusePuzzleSolved;
+    static bool lockPuzzleSolved;
+    static bool mirrorPuzzleSolved;
+    static bool paintPuzzleSolved;
+    static bool pipePuzzleSolved;
 };
 
 #endif // GAMEDATA_H

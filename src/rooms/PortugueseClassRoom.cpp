@@ -1,7 +1,7 @@
 #include "rooms/PortugueseClassRoom.h"
 
 PortugueseClassRoom::PortugueseClassRoom(State* state) : Room(state) {
-    bgFile = "Recursos/img/rooms/sala_portugues.png";
+    bgFile = "Recursos/img/rooms/sala_portugues_invertida.png";
     lockCameraOnRoom = true;
     basePos = Vec2{40000, 0};
 
@@ -45,4 +45,10 @@ void PortugueseClassRoom::Build() {
     GameObject* zombie = createGO("[Monster]", 675, 500);
     zombie->AddComponent(new Zombie(*zombie));
     state->AddObject(zombie);
+
+    // Filtro
+    GameObject* filtro = createGO("[OBJ-PORTUGUES] Filtro", 0, 0);
+    filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_sala.png"));
+    filtro->box.z = 1;
+    state->AddObject(filtro);
 }

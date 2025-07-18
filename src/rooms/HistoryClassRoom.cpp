@@ -1,7 +1,7 @@
 #include "rooms/HistoryClassRoom.h"
 
 HistoryClassRoom::HistoryClassRoom(State* state) : Room(state) {
-    bgFile = "Recursos/img/rooms/sala_historia.png";
+    bgFile = "Recursos/img/rooms/sala_historia_invertida.png";
     lockCameraOnRoom = true;
     basePos = Vec2{10000, 0};
 
@@ -59,4 +59,10 @@ void HistoryClassRoom::Build() {
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 2), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));
     state->AddObject(roomDoorBack);
+
+    // Filtro
+    GameObject* filtro = createGO("[OBJ-HISTORIA] Filtro", 0, 0);
+    filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_sala.png"));
+    filtro->box.z = 1;
+    state->AddObject(filtro);
 }
