@@ -148,7 +148,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "hihihihi", true
         },
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
-        "O QUE VOCÊS ESTÃO FAZENDO? ABREM A PORTA! POR FAVOR!", true
+        "O QUE VOCÊS ESTÃO FAZENDO? NÃO ME DEIXEM NO ESCURO! ABRAM A PORTA! POR FAVOR!", true
         },
         {"Maju", "Maju", {59, 125, 79, 255},
         "Você sempre têm ideias tão boas Malu!", true
@@ -187,7 +187,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "Assim, estamos trancadas aqui até amanhã, então temos tempo.", true
         },
         {"AnelehInocente", "Aneleh", {199, 90, 15, 255},
-        "Verdadade. Desculpe, é que não estou acostumada com isso. Eu nunca tive uma amiga, sempre fui excluída e zombavam de mim... você entende né?", true
+        "Verdade. Desculpe, é que não estou acostumada com isso. Eu nunca tive uma amiga, sempre fui excluída e zombavam de mim... você entende né?", true
         },
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Err, te entendo bem.", true
@@ -267,29 +267,20 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
 
     // Boss Battle
     dialogueLines["boss_battle"] = {
-        {"HelenaAssustada", "Helena", {101, 38, 141, 255},
-            "Ué"
-        },
-        {"AnelehInocente", "Aneleh", {199, 90, 15, 255},
-            "Ué"
-        },
-        {"HelenaBrava", "Helena", {101, 38, 141, 255},
-            "..."
-        },
-        {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
-            "Você não tinha percebido?"
+        {"AnelehBrava", "Aneleh", {199, 90, 15, 255},
+            "POR QUE VOCÊ ME TROUXE DE VOLTA PRA ESTE MUNDO???"
         },
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
-            "Percebido o quê?"
+            "ME TIRE DAQUI!!!"
         },
         {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
-            "Eu meio que usei o seu estado entre-espaço-tempo pra me libertar do espelho..."
+            "Eu já fiquei muito tempo aqui, agora é a sua vez!"
         },
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
             "???????????????"
         },
         {"AnelehBrava", "Aneleh", {199, 90, 15, 255},
-            "Agora você precisa morrer."
+            "Você precisa morrer!!"
         },
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
             "Mas eu preciso voltar!"
