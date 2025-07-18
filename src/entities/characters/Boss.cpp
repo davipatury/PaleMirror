@@ -70,7 +70,7 @@ void Boss::Update(float dt) {
             float zombieY = col->box.Center().ToCart().y + radius * sin(rad);
 
             GameObject* zombieGO = new GameObject();
-            if(i < numZombies-1){
+            if(i < numZombies-2){
                 Zombie* zombie = new Zombie(*zombieGO);
                 zombieGO->AddComponent(zombie);
                 CURRENT_STATE.AddObject(zombieGO);

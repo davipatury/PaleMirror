@@ -37,6 +37,8 @@ private:
     Sound monsterSound;
 
     Timer deathTimer;
+    Timer pathTimer;
+    const float pathInterval = 0.5f;
     Timer hitTimer;
     Timer monsterSoundTimer;
     bool hit;

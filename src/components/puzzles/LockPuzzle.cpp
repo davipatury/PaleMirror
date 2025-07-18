@@ -3,6 +3,7 @@
 #include "core/Game.h"
 #include "utils/InputManager.h"
 #include "hud/DialogueHUD.h"
+#include "actions/Actions.h"
 
 #define ARROW_UP_1 Rect(355, 307, 30, 30)
 #define ARROW_UP_2 Rect(511, 307, 30, 30)
@@ -14,10 +15,12 @@
 #define ARROW_DOWN_3 Rect(661, 631, 30, 30)
 #define ARROW_DOWN_4 Rect(813, 631, 30, 30)
 
+#define PAGE_ICON Rect(1000, 235, 80, 80)
+
 LockPuzzle::LockPuzzle(GameObject& associated, std::string expectedPassword): Component(associated), 
     expected(expectedPassword), selectedIndex(0), bg1("Recursos/img/lock_puzzle/lock1.png", 1, 1, true),
     bg2("Recursos/img/lock_puzzle/lock2.png", 1, 1, true), bg3("Recursos/img/lock_puzzle/lock3.png", 1, 1, true),
-    bgunlocked("Recursos/img/lock_puzzle/unlock.png", 1, 1, true)
+    bgunlocked("Recursos/img/lock_puzzle/unlock.png", 1, 1, true), pageIcon("Recursos/img/hud/icon-bilhete.png", 1, 1, true)
 {
     rolling = new Sound("Recursos/audio/sounds/puzzle/rolling.wav");
     openLock = new Sound("Recursos/audio/sounds/puzzle/open-lock.wav");
@@ -88,6 +91,7 @@ void LockPuzzle::Update(float dt) {
         else if (ARROW_DOWN_2.Contains(mousePos))  selectedRect = ARROW_DOWN_2;
         else if (ARROW_DOWN_3.Contains(mousePos))  selectedRect = ARROW_DOWN_3;
         else if (ARROW_DOWN_4.Contains(mousePos))  selectedRect = ARROW_DOWN_4;
+        else if (PAGE_ICON.Contains(mousePos))      selectedRect = PAGE_ICON;
 
         if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON) && selectedRect != EMPTY_RECT) {
             int idx = -1; bool isUp = false;
@@ -99,6 +103,11 @@ void LockPuzzle::Update(float dt) {
             else if (selectedRect == ARROW_DOWN_2)  { idx=1; isUp=false; }
             else if (selectedRect == ARROW_DOWN_3)  { idx=2; isUp=false; }
             else if (selectedRect == ARROW_DOWN_4)  { idx=3; isUp=false; }
+
+            if(selectedRect == PAGE_ICON) {
+                Actions::Document("Recursos/img/hud/page.png");
+                return;
+            }
 
             if (idx >= 0 && !animating[idx]) {
                 animating[idx]   = true;
@@ -167,6 +176,8 @@ void LockPuzzle::Render() {
     if(!solved) bg1.Render(0, 0, bg1.GetWidth(), bg1.GetHeight());
     if(!solved) bg3.Render(0, bg1.GetHeight()+bg2.GetHeight(), bg3.GetWidth(), bg3.GetHeight());
 
+    pageIcon.Render(1000, 235, pageIcon.GetWidth(), pageIcon.GetHeight());
+
     // Selection
     if (INPUT_MANAGER.HasController()) {
         if (selectedIndex == 0) {
@@ -186,7 +197,12 @@ void LockPuzzle::Render() {
             RenderTriangle(ARROW_DOWN_4);
         }
     } else if (selectedRect != EMPTY_RECT and !solved) {
-        RenderTriangle(selectedRect);
+        if(selectedRect == PAGE_ICON){
+            SDL_Rect sel = PAGE_ICON.ToSDLRect();
+            SDL_SetRenderDrawColor(GAME_RENDERER, 255, 255, 255, 255);
+            SDL_RenderDrawRect(GAME_RENDERER, &sel);
+        }
+        else {RenderTriangle(selectedRect);}
     }
 }
 

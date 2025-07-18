@@ -99,13 +99,18 @@ void ZombieFast::Update(float dt) {
 
             // calcula ou atualiza caminho
             std::vector<Vec2> maybePath = computePath(playerPos);
-
-            if (!maybePath.size()) return;
-            if (maybePath.size() != path.size() || (path.size() > 0 && maybePath[0] != path[0])) {
-                swap(path, maybePath);
-                pathIndex = 0;
+            if (pathTimer.Get() > pathInterval) {
+                maybePath = computePath(playerPos);
+                pathTimer.Restart();
             }
-            if(hit) return;
+
+            if (!maybePath.empty()) {
+                if (maybePath.size() != path.size() || (path.size() > 0 && maybePath[0] != path[0])) {
+                    swap(path, maybePath);
+                    pathIndex = 0;
+                }
+            }
+            if (hit) return;
             // segue próximo ponto do caminho
             if (pathIndex < path.size()) {
                 Vec2 target = path[pathIndex];
@@ -177,16 +182,19 @@ static inline int64_t pointKey(const Vec2& v, float step) {
 }
 
 std::vector<Vec2> ZombieFast::computePath(const Vec2& target) {
+    static std::unordered_map<int64_t, Vec2> parent;
+    static std::unordered_map<int64_t, float> cost_so_far;
+    static std::unordered_set<int64_t> visited;
+
+    parent.clear(); cost_so_far.clear(); visited.clear();
+    parent.reserve(256); cost_so_far.reserve(256); visited.reserve(256);
+
     Vec2 start = associated.box.Center();
 
     auto cmp = [&target](const Vec2& a, const Vec2& b) {
         return a.Distance(target) > b.Distance(target);
     };
     std::priority_queue<Vec2, std::vector<Vec2>, decltype(cmp)> pq(cmp);
-    
-    std::unordered_map<int64_t, Vec2> parent;
-    std::unordered_map<int64_t, float> cost_so_far;
-    std::unordered_set<int64_t> visited;
     
     int64_t startKey = pointKey(start, searchStep);
     pq.push(start);

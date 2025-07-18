@@ -1,3 +1,6 @@
+#ifndef LOCKPUZZLE_H
+#define LOCKPUZZLE_H
+
 #include "core/Component.h"
 #include "core/Sprite.h"
 #include <array>
@@ -30,7 +33,7 @@ public:
 private:
     std::string expected;
     std::array<int,4> current;
-    Sprite bg1, bg2, bg3, bgunlocked;
+    Sprite bg1, bg2, bg3, bgunlocked, pageIcon;
     int selectedIndex;
 
     bool animating[4];
@@ -42,3 +45,5 @@ private:
 
     void RenderTriangle(Rect rect);
 };
+
+#endif

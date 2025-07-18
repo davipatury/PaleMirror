@@ -39,6 +39,8 @@ private:
     Timer deathTimer;
     Timer hitTimer;
     Timer monsterSoundTimer;
+    Timer pathTimer;
+    const float pathInterval = 0.5f;
     bool hit;
     bool walkingLeft;
     float chaseRadius = 600.f;

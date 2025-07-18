@@ -1,4 +1,5 @@
 #include "actions/Actions.h"
+#include "hud/DocumentHUD.h"
 
 std::function<void (State*, GameObject*)> Actions::ChangeRoom(std::string targetRoom, int entryPosIndex) {
     return [targetRoom, entryPosIndex](State* state, GameObject* associated) {
@@ -11,10 +12,10 @@ std::function<void (State*, GameObject*)> Actions::ChangeRoom(std::string target
     };
 }
 
-std::function<void (State*, GameObject*)> Actions::Document(const std::string& path) {
-    return [path](State* state, GameObject* associated) {
-        // TODO: Create and call DocumentUI
-    };
+void Actions::Document(const std::string& path) {
+    GameObject* uiGO = new GameObject();
+    uiGO->AddComponent(new DocumentHUD(*uiGO, path));
+    CURRENT_STATE.AddObject(uiGO);
 }
 
 std::function<void (State*, GameObject*)> Actions::CollectItem(std::string itemName, int amount, bool deleteSelf) {
