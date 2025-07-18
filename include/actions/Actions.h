@@ -17,6 +17,7 @@ public:
     static void Document(const std::string& path);
     static std::function<void (State*, GameObject*)> ChangeRoom(std::string targetRoom, int entryPosIndex = 0);
     static std::function<void (State*, GameObject*)> CollectItem(std::string itemName, int amount = 1, bool deleteSelf = true);
+    static std::function<void (State*, GameObject*)> OpenDialog(std::string dialogueKey, std::function<void ()> dialogueEndFunc = nullptr);
 };
 
 #endif

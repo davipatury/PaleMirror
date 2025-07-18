@@ -21,11 +21,14 @@ class Interactable;
 #define ARROW_DOWN_4 Rect(813, 631, 30, 30)
 
 #define PAGE_ICON Rect(1000, 235, 80, 80)
+#define PAGE_SPEED 300
+#define PAGE_INDEX 4
 
 LockPuzzle::LockPuzzle(GameObject& associated, std::string expectedPassword): Component(associated), 
     expected(expectedPassword), selectedIndex(0), bg1("Recursos/img/lock_puzzle/lock1.png", 1, 1, true),
     bg2("Recursos/img/lock_puzzle/lock2.png", 1, 1, true), bg3("Recursos/img/lock_puzzle/lock3.png", 1, 1, true),
-    bgunlocked("Recursos/img/lock_puzzle/unlock.png", 1, 1, true), pageIcon("Recursos/img/hud/icon-bilhete.png", 1, 1, true)
+    bgunlocked("Recursos/img/lock_puzzle/unlock.png", 1, 1, true), pageIcon("Recursos/img/hud/icon-bilhete.png", 1, 1, true),
+    page("Recursos/img/hud/page.png", 1, 1, true)
 {
     rolling = new Sound("Recursos/audio/sounds/puzzle/rolling.wav");
     openLock = new Sound("Recursos/audio/sounds/puzzle/open-lock.wav");
@@ -37,6 +40,11 @@ LockPuzzle::LockPuzzle(GameObject& associated, std::string expectedPassword): Co
         animating[i] = false;
         animOffsetY[i] = 0.0f;
     }
+
+    pageRect.x = WINDOW_WIDTH - 100;
+    pageRect.y = 50;
+    pageRect.w = page.GetWidth();
+    pageRect.h = page.GetHeight();
 }   
 
 void LockPuzzle::Start() {
@@ -47,6 +55,11 @@ void LockPuzzle::Start() {
     digit1 = new TextHUD({475, 400}, "Recursos/font/canterbury.regular.ttf", 200, TextHUD::BLENDED, std::to_string(current[1]), {0, 0, 0, 0});
     digit2 = new TextHUD({623, 400}, "Recursos/font/canterbury.regular.ttf", 200, TextHUD::BLENDED, std::to_string(current[2]), {0, 0, 0, 0});
     digit3 = new TextHUD({783, 400}, "Recursos/font/canterbury.regular.ttf", 200, TextHUD::BLENDED, std::to_string(current[3]), {0, 0, 0, 0});
+    pageText = new TextHUD({0, 0}, "Recursos/font/PixelifySans-Regular.ttf", 30, TextHUD::BLENDED, "Senha cadeado \n \
+\n\
+É tão triste que isso tenha acontecido com você… Você não sente raiva? Ressentimento? Não dói o que fizeram com você? Em quantos pedaços eles te quebraram? Quantas vezes elas não te deixaram em paz? Dezesseis anos jogados fora. \
+\n\
+\nVocê precisa reagir.", {0, 0, 0, 0}, 450);
 }
 
 void LockPuzzle::Update(float dt) {
@@ -69,25 +82,28 @@ void LockPuzzle::Update(float dt) {
 
     if (INPUT_MANAGER.HasController()) {
         if (LEFT_CHECK && selectedIndex > 0) selectedIndex--;
-        if (RIGHT_CHECK && selectedIndex < 3) selectedIndex++;
+        if (RIGHT_CHECK && selectedIndex < PAGE_INDEX) selectedIndex++;
 
-        if (UP_CHECK && !animating[selectedIndex]) {
-            animating[selectedIndex]   = true;
-            animOffsetY[selectedIndex] = 0.0f;
-            animFrom[selectedIndex]    = current[selectedIndex];
-            animTo[selectedIndex] = (animFrom[selectedIndex] + 1 + 10) % 10;
-            rolling->Play();
-        }
+        if (selectedIndex != PAGE_INDEX) {
+            if (UP_CHECK && !animating[selectedIndex]) {
+                animating[selectedIndex]   = true;
+                animOffsetY[selectedIndex] = 0.0f;
+                animFrom[selectedIndex]    = current[selectedIndex];
+                animTo[selectedIndex] = (animFrom[selectedIndex] + 1 + 10) % 10;
+                rolling->Play();
+            }
 
-        if (DOWN_CHECK && !animating[selectedIndex]) {
-            animating[selectedIndex]   = true;
-            animOffsetY[selectedIndex] = 0.0f;
-            animFrom[selectedIndex]    = current[selectedIndex];
-            animTo[selectedIndex] = (animFrom[selectedIndex] - 1 + 10) % 10;
-            rolling->Play();
+            if (DOWN_CHECK && !animating[selectedIndex]) {
+                animating[selectedIndex]   = true;
+                animOffsetY[selectedIndex] = 0.0f;
+                animFrom[selectedIndex]    = current[selectedIndex];
+                animTo[selectedIndex] = (animFrom[selectedIndex] - 1 + 10) % 10;
+                rolling->Play();
+            }
         }
     } else {
         selectedRect = EMPTY_RECT;
+        selectedIndex = -1;
         Vec2 mousePos = INPUT_MANAGER.GetMousePos();
         if      (ARROW_UP_1.Contains(mousePos))    selectedRect = ARROW_UP_1;
         else if (ARROW_UP_2.Contains(mousePos))    selectedRect = ARROW_UP_2;
@@ -97,9 +113,9 @@ void LockPuzzle::Update(float dt) {
         else if (ARROW_DOWN_2.Contains(mousePos))  selectedRect = ARROW_DOWN_2;
         else if (ARROW_DOWN_3.Contains(mousePos))  selectedRect = ARROW_DOWN_3;
         else if (ARROW_DOWN_4.Contains(mousePos))  selectedRect = ARROW_DOWN_4;
-        else if (PAGE_ICON.Contains(mousePos))      selectedRect = PAGE_ICON;
+        else if (pageRect.Contains(mousePos))      selectedIndex = PAGE_INDEX;
 
-        if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON) && selectedRect != EMPTY_RECT) {
+        if (INPUT_MANAGER.MousePress(LEFT_MOUSE_BUTTON) && selectedRect != EMPTY_RECT && selectedIndex != PAGE_INDEX) {
             int idx = -1; bool isUp = false;
             if (selectedRect == ARROW_UP_1)         { idx=0; isUp=true; }
             else if (selectedRect == ARROW_UP_2)    { idx=1; isUp=true; }
@@ -109,11 +125,6 @@ void LockPuzzle::Update(float dt) {
             else if (selectedRect == ARROW_DOWN_2)  { idx=1; isUp=false; }
             else if (selectedRect == ARROW_DOWN_3)  { idx=2; isUp=false; }
             else if (selectedRect == ARROW_DOWN_4)  { idx=3; isUp=false; }
-
-            if(selectedRect == PAGE_ICON) {
-                Actions::Document("Recursos/img/hud/page.png");
-                return;
-            }
 
             if (idx >= 0 && !animating[idx]) {
                 animating[idx]   = true;
@@ -125,6 +136,14 @@ void LockPuzzle::Update(float dt) {
             }
         }
     }
+
+    // Page move
+    if (selectedIndex == PAGE_INDEX) {
+        pageRect.x = std::max(pageRect.x - PAGE_SPEED * dt, WINDOW_WIDTH - pageRect.w - 50);
+    } else {
+        pageRect.x = std::min(pageRect.x + PAGE_SPEED * dt, WINDOW_WIDTH - 100);
+    }
+    pageText->SetPos({pageRect.x + 75, pageRect.y + 50});
 
     for (int i = 0; i < 4; i++) {
         if (!animating[i]) continue;
@@ -182,8 +201,6 @@ void LockPuzzle::Render() {
     if(!solved) bg1.Render(0, 0, bg1.GetWidth(), bg1.GetHeight());
     if(!solved) bg3.Render(0, bg1.GetHeight()+bg2.GetHeight(), bg3.GetWidth(), bg3.GetHeight());
 
-    pageIcon.Render(1000, 235, pageIcon.GetWidth(), pageIcon.GetHeight());
-
     // Selection
     if (INPUT_MANAGER.HasController()) {
         if (selectedIndex == 0) {
@@ -202,14 +219,13 @@ void LockPuzzle::Render() {
             RenderTriangle(ARROW_UP_4);
             RenderTriangle(ARROW_DOWN_4);
         }
-    } else if (selectedRect != EMPTY_RECT and !solved) {
-        if(selectedRect == PAGE_ICON){
-            SDL_Rect sel = PAGE_ICON.ToSDLRect();
-            SDL_SetRenderDrawColor(GAME_RENDERER, 255, 255, 255, 255);
-            SDL_RenderDrawRect(GAME_RENDERER, &sel);
-        }
-        else {RenderTriangle(selectedRect);}
+    } else if (selectedRect != EMPTY_RECT and selectedIndex != PAGE_INDEX and !solved) {
+        RenderTriangle(selectedRect);
     }
+
+    // Page
+    page.Render(pageRect.x, pageRect.y, pageRect.w, pageRect.h);
+    pageText->Render();
 }
 
 void LockPuzzle::RenderTriangle(Rect rect) {
@@ -265,10 +281,11 @@ void LockPuzzle::Initiator::Update(float dt) {
     } else {
         intr->SetHUDText("Abrir");
         intr->SetAction([this](State* state, GameObject* go) {
+            std::cout << "puzzle aberto" << std::endl;
             openSound->Play();
 
             GameObject* lp = new GameObject();
-            lp->AddComponent(new LockPuzzle(*lp, "1234"));
+            lp->AddComponent(new LockPuzzle(*lp, this->password));
             lp->box.z = PUZZLE_LAYER;
             lp->lazyRender = false;
             lp->pauseOnOpenUI = false;

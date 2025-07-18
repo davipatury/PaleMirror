@@ -62,6 +62,7 @@ void PipePuzzle::Update(float dt) {
 
     if (IsSolved()) {
         DialogueHUD::RequestDialogue("pipePuzzle_solved", [this]() {
+            INVENTORY->Collect(ITEM_CANO);
             GameData::pipePuzzleSolved = true;
             associated.RequestDelete();
         });

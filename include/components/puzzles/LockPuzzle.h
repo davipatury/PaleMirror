@@ -48,6 +48,9 @@ private:
     std::string expected;
     std::array<int,4> current;
     Sprite bg1, bg2, bg3, bgunlocked, pageIcon;
+    Sprite page;
+    TextHUD* pageText;
+    Rect pageRect;
     int selectedIndex;
 
     bool animating[4];

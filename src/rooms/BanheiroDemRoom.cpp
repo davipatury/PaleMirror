@@ -64,7 +64,14 @@ void BanheiroDemRoom::Build() {
 
     // Vela
     GameObject* velas = createGO("[OBJ-BANHEIRO-DEM] velas", 433, 730);
-    velas->AddComponent(new SpriteRenderer(*velas, "Recursos/img/objetos/velasacesas.png"));
+    SpriteRenderer* velasSR = new SpriteRenderer(*velas, "Recursos/img/objetos/velas.png", 4, 1);
+    velasSR->SetFrame(3);
+    velas->AddComponent(velasSR);
+    velas->AddComponent(new LightEmitter(*velas, {
+        // Offset, Scale, Enabled, Sprite path
+        {{26, -5}, {0.5, 0.5}, true, "Recursos/img/lighting/backlight_inv_orange.png"},
+        {{232, 112}, {0.5, 0.5}, true, "Recursos/img/lighting/backlight_inv_orange.png"}
+    }));
     state->AddObject(velas);
 
     // Espelho

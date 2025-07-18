@@ -25,3 +25,9 @@ std::function<void (State*, GameObject*)> Actions::CollectItem(std::string itemN
         if (deleteSelf) associated->RequestDelete();
     };
 }
+
+std::function<void (State*, GameObject*)> Actions::OpenDialog(std::string dialogueKey, std::function<void ()> dialogueEndFunc) {
+    return [dialogueKey, dialogueEndFunc](State* state, GameObject* associated) {
+        DialogueHUD::RequestDialogue(dialogueKey, dialogueEndFunc);
+    };
+}

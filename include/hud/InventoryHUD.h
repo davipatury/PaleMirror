@@ -55,6 +55,7 @@ public:
     Item* inventory[4] = {nullptr};
     std::unordered_map<std::string, Item*> ITEMS;
 
+    bool enabled = false;
     static InventoryHUD* instance;
 private:
     Sprite toolbar, toolbarSelect;
