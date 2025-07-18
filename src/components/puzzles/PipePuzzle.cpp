@@ -63,6 +63,7 @@ void PipePuzzle::Update(float dt) {
     if (IsSolved()) {
         DialogueHUD::RequestDialogue("pipePuzzle_solved", [this]() {
             INVENTORY->Collect(ITEM_CANO);
+            GameData::runeState = GameData::RUNA_VAZIA;
             GameData::pipePuzzleSolved = true;
             associated.RequestDelete();
         });
