@@ -1,5 +1,7 @@
 #include "rooms/BanheiroFemininoRoom.h"
 
+#include "components/puzzles/MirrorPuzzle.h"
+
 BanheiroFemininoRoom::BanheiroFemininoRoom(State* state) : Room(state) {
     bgFile = "Recursos/img/rooms/banheiro.png";
     lockCameraOnRoom = false;
@@ -70,17 +72,18 @@ void BanheiroFemininoRoom::Build() {
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-FEM] Espelho", 560, 175);
     espelho->AddComponent(new SpriteRenderer(*espelho, "Recursos/img/objetos/espelho_banheiro.png"));
+    espelho->AddComponent(new Interactable(*espelho, nullptr));
+    espelho->AddComponent(new MirrorPuzzle::Initiator(*espelho));
     state->AddObject(espelho);
-
-    // Filtro invertido
-    /*
-    GameObject* filtro = createGO("[OBJ-BANHEIRO-FEM] Filtro", 0, 0);
-    filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_banheiro.png"));
-    filtro->box.z = 1;
-    state->AddObject(filtro);*/
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ--BANHEIRO-FEM] Porta", 278, 815);
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 6), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));
     state->AddObject(roomDoorBack);
+
+    // Filtro
+    GameObject* filtro = createGO("[OBJ-BANHEIRO-FEM] Filtro", 0, 0);
+    filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_banheiro.png"));
+    filtro->box.z = 1;
+    state->AddObject(filtro);
 }

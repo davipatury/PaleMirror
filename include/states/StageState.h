@@ -55,6 +55,13 @@
 #include "rooms/BanheiroMasculinoRoom.h"
 #include "rooms/BanheiroIntroRoom.h"
 
+#define OBJECT_LAYER 0
+#define SHADOW_LAYER 1
+#define FLASHLIGHT_LAYER 2
+#define HUD_LAYER 5
+#define PUZZLE_LAYER 6
+#define DIALOGUE_LAYER 7
+
 class StageState : public State
 {
 public:

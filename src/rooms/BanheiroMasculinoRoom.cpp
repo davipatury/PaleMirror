@@ -65,4 +65,10 @@ void BanheiroMasculinoRoom::Build() {
     GameObject* roomDoorBack = createGO("[OBJ--BANHEIRO-MASC] Porta", 278, 815);
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 7), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));
     state->AddObject(roomDoorBack);
+
+    // Filtro
+    GameObject* filtro = createGO("[OBJ-BANHEIRO-MASC] Filtro", 0, 0);
+    filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_banheiro.png"));
+    filtro->box.z = 1;
+    state->AddObject(filtro);
 }

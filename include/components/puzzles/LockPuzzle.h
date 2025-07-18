@@ -1,3 +1,5 @@
+#pragma once
+
 #include "core/Component.h"
 #include "core/Sprite.h"
 #include <array>
@@ -27,6 +29,20 @@ public:
     Sound* rolling;
     Sound* openLock;
 
+    // Initiator component
+    class Initiator : public Component {
+    public:
+        Initiator(GameObject& associated, std::string password, std::string targetRoom, int entryIndex = 0);
+        void Update(float dt);
+        void Render();
+        void Start();
+        bool Is(std::string type);
+
+        std::string password;
+        std::string targetRoom;
+        int entryIndex;
+        Sound* openSound;
+    };
 private:
     std::string expected;
     std::array<int,4> current;

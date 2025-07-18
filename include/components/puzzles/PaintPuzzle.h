@@ -50,9 +50,20 @@ public:
     Sprite bg, tintaVermelha, tintaAzul, tintaAmarela, pano;
     Sprite tinta;
     Sound* splash;
+    Sound* clearSound;
 
     static PaintColor solution;
     static PaintColor possibleSolutions[];
+
+    // Initiator component
+    class Initiator : public Component {
+    public:
+        Initiator(GameObject& associated);
+        void Update(float dt);
+        void Render();
+        void Start();
+        bool Is(std::string type);
+    };
 };
 
 #endif // PAINTPUZZLE_H

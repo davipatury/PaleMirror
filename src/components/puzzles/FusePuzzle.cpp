@@ -55,6 +55,7 @@ void FusePuzzle::Update(float dt) {
 
     if (IsSolved()) {
         DialogueHUD::RequestDialogue("fusePuzzle_solved", [this]() {
+            GameData::fusePuzzleSolved = true;
             associated.RequestDelete();
         });
         solved = true;
@@ -111,4 +112,46 @@ bool FusePuzzle::IsSolved() {
 
 bool FusePuzzle::Is(std::string type) {
     return type == "FusePuzzle";
+}
+
+// FusePuzzle initiator
+FusePuzzle::Initiator::Initiator(GameObject& associated) : Component(associated) {
+    openSound = new Sound("Recursos/audio/sounds/objetos/caixa_energia.wav");
+}
+
+void FusePuzzle::Initiator::Update(float dt) {
+    SpriteRenderer* sr = (SpriteRenderer*) associated.GetComponent("SpriteRenderer");
+    Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
+    LightEmitter* light = (LightEmitter*) associated.GetComponent("LightEmitter");
+    if (!sr || !intr || !light) return;
+
+    if (GameData::fusePuzzleSolved) {
+        sr->SetFrame(1);
+        intr->SetActivationDistance(0.0f);
+        light->SetEnabledAll(true);
+    } else {
+        sr->SetFrame(0);
+        intr->SetActivationDistance(100.0f);
+        intr->SetType(InteractableHUD::INTERACT);
+        intr->SetHUDText("Interagir");
+        intr->SetAction([this](State* state, GameObject* go) {
+            openSound->Play();
+
+            GameObject* fp = new GameObject();
+            fp->AddComponent(new FusePuzzle(*fp));
+            fp->box.z = PUZZLE_LAYER;
+            fp->lazyRender = false;
+            fp->pauseOnOpenUI = false;
+            state->AddObject(fp);
+        });
+        light->SetEnabledAll(false);
+    }
+}
+
+void FusePuzzle::Initiator::Render() {}
+
+void FusePuzzle::Initiator::Start() {}
+
+bool FusePuzzle::Initiator::Is(std::string type) {
+    return type == "FusePuzzleInitiator";
 }

@@ -13,6 +13,9 @@
 #include "math/Vec2.h"
 #include "hud/DialogueHUD.h"
 #include "utils/Timer.h"
+#include "components/Interactable.h"
+#include "components/LightEmitter.h"
+#include "core/GameData.h"
 
 class FusePuzzle : public Component
 {
@@ -60,6 +63,18 @@ public:
 
     Sprite bg;
     Sound* fusePressed;
+
+    // Initiator component
+    class Initiator : public Component {
+    public:
+        Initiator(GameObject& associated);
+        void Update(float dt);
+        void Render();
+        void Start();
+        bool Is(std::string type);
+
+        Sound* openSound;
+    };
 };
 
 #endif // FUSEPUZZLE_H
