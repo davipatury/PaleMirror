@@ -125,7 +125,7 @@ void StageState::LoadAssets() {
     rooms["banheiroIntro"] = banheiroIntroRoom;
 
     currentRoom = mainRoom;
-    mainRoom->bgMusic.FadeInPos(0.0);
+    //mainRoom->bgMusic.FadeInPos(0.0);
     mainRoom->Enter();
 
     // Give flashlight on begin (REMOVE LATER)
@@ -225,8 +225,8 @@ void StageState::Update(float dt) {
         Actions::ChangeRoom("banheiroIntro")(this, nullptr);
         FLASHLIGHT->SetDark(false);
         DialogueHUD::RequestDialogue("prologoPreRitual");
-        DialogueHUD::RequestDialogue("prologoRitual");
         scene = RITUAL_BEFORE;
+        DialogueHUD::RequestDialogue("prologoRitual");
     }
 
     if (scene == RITUAL_BEFORE && DialogueHUD::isEmpty()){

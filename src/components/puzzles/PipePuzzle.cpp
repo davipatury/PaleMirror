@@ -12,6 +12,7 @@ void PipePuzzle::PipePressed(int idx){
     pipePressed->Play();
     rotated[idx] = (rotated[idx] + 1) % 4;
     pipeTargetAngles[idx] += 90.0f;
+    std::cout << idx << ' ' << rotated[idx] << std::endl;
 }
 
 void PipePuzzle::Update(float dt) {
@@ -98,9 +99,9 @@ void PipePuzzle::Start() {
 }
 
 bool PipePuzzle::IsSolved() {
-    return ((rotated[0] == 0 || rotated[0] == 2) && (rotated[1] == 2 || rotated[1] == 3) && rotated[6] == 1 && rotated[2] == 3 && 
-    rotated[3] == 0 && (rotated[7] == 1 || rotated[7] == 3) && rotated[11] != 2 && 
-    rotated[10] == 3 && rotated[14] == 2 && (rotated[15] == 0 || rotated[15] == 2));
+    return ((rotated[0] == 0 || rotated[0] == 2) && (rotated[1] == 2 || rotated[1] == 3) && rotated[6] == 0 && rotated[2] == 3 && 
+    rotated[3] == 2 && (rotated[7] == 1 || rotated[7] == 3) && rotated[11] != 2 && 
+    rotated[10] == 3 && rotated[14] == 3 && (rotated[15] == 0 || rotated[15] == 2));
 }
 
 bool PipePuzzle::Is(std::string type) {
