@@ -131,7 +131,8 @@ void RunaRitual::Update(float dt) {
         intr->SetAction(LigarRuna);
         break;
     }
-    case GameData::RUNA_LIGADA: {
+    case GameData::RUNA_LIGADA:
+    case GameData::RUNA_SUMMONADA: {
         sr->SetFrame(1);
         velas.SetFrame(3);
         intr->SetActivationDistance(0.0f);

@@ -12,20 +12,22 @@ MainRoom::MainRoom(State* state) : Room(state) {
     cameraLimits = Rect(basePos.x, basePos.y, 4500, 3375);
 
     // Entry CRB 1
-    entryPos.push_back(Vec2{934, 2390});
-    entryPos.push_back(Vec2{1193, 2536});
+    entryPos.push_back(Vec2{934, 2390});  // 0
+    entryPos.push_back(Vec2{1193, 2536}); // 1
 
     // Entry CRB 2
-    entryPos.push_back(Vec2{1902, 1837});
-    entryPos.push_back(Vec2{2156, 1986});
+    entryPos.push_back(Vec2{1902, 1837}); //2
+    entryPos.push_back(Vec2{2156, 1986}); //3
 
     // Entry CRB 3
-    entryPos.push_back(Vec2{2902, 1262});
-    entryPos.push_back(Vec2{3157, 1410});
+    entryPos.push_back(Vec2{2902, 1262}); //4
+    entryPos.push_back(Vec2{3157, 1410}); //5
 
     // Entry bathroom block
-    entryPos.push_back(Vec2{1336, 1549});
-    entryPos.push_back(Vec2{1579, 1403});
+    entryPos.push_back(Vec2{1336, 1549}); //6
+    entryPos.push_back(Vec2{1579, 1403}); //7
+
+    entryPos.push_back(Vec2{2257, 2500}); //8
 }
 
 void MainRoom::Build() {
