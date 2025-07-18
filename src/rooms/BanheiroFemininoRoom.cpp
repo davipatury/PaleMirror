@@ -77,12 +77,34 @@ void BanheiroFemininoRoom::Build() {
     state->AddObject(marias);
     */
 
+    // Cano parede - PipePuzzle
+    GameObject* canoParede = createGO("[OBJ] Cano Parede", 328, 656);
+    SpriteRenderer* canoParedeSprite = new SpriteRenderer(*canoParede, "Recursos/img/objetos/cano_parede.png");
+    canoParedeSprite->SetScale(1.5, 1.5);
+    canoParede->AddComponent(canoParedeSprite);
+    canoParede->AddComponent(new Interactable(*canoParede, nullptr));
+    canoParede->AddComponent(new PipePuzzle::Initiator(*canoParede));
+    state->AddObject(canoParede);
+
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-FEM] Espelho", 560, 175);
     espelho->AddComponent(new SpriteRenderer(*espelho, "Recursos/img/objetos/espelho_banheiro.png"));
     espelho->AddComponent(new Interactable(*espelho, nullptr));
     espelho->AddComponent(new MirrorPuzzle::Initiator(*espelho));
     state->AddObject(espelho);
+
+    // Caixa Fusivel - FusePuzzle
+    GameObject* caixaFusivel = createGO("[OBJ] Caixa Fusivel", 958, 384);
+    SpriteRenderer* caixaFusivelSprite = new SpriteRenderer(*caixaFusivel, "Recursos/img/objetos/caixa_energia.png", 2, 1);
+    caixaFusivelSprite->SetScale(1.25, 1.25);
+    caixaFusivel->AddComponent(caixaFusivelSprite);
+    caixaFusivel->AddComponent(new Interactable(*caixaFusivel, nullptr));
+    caixaFusivel->AddComponent(new LightEmitter(*caixaFusivel, {
+        // Offset, Scale, Enabled, Sprite path
+        {{31, 35}, {0.25, 0.25}, false, "Recursos/img/lighting/backlight_inv_yellow.png"}
+    }));
+    caixaFusivel->AddComponent(new FusePuzzle::Initiator(*caixaFusivel));
+    state->AddObject(caixaFusivel);
 
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ--BANHEIRO-FEM] Porta", 278, 815);

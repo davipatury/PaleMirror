@@ -46,6 +46,11 @@ void PortugueseClassRoom::Build() {
     zombie->AddComponent(new Zombie(*zombie));
     state->AddObject(zombie);
 
+    GameObject* vela2 = createGO("[OBJ] Vela", 851, 615);
+    vela2->AddComponent(new SpriteRenderer(*vela2, "Recursos/img/items/vela.png"));
+    vela2->AddComponent(new Interactable(*vela2, Actions::CollectItem(ITEM_VELA), ITEM_COLLECT_DIST, nullptr, {-35, -35}, "Pegar"));
+    state->AddObject(vela2);
+
     // Filtro
     GameObject* filtro = createGO("[OBJ-PORTUGUES] Filtro", 0, 0);
     filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_sala.png"));
