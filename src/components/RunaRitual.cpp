@@ -17,6 +17,7 @@ RunaRitual::RunaRitual(GameObject &associated, bool sempreCompleto) : Component(
 // States actions
 void RunaAlagada(State* state, GameObject* associated) {
     DialogueHUD::RequestDialogue("waterOn");
+    
     //std::cout << "Preciso remover essa agua" << std::endl;
 }
 
@@ -68,8 +69,8 @@ void RunaRitual::Update(float dt) {
         light->SetEnabledAll(true);
         return;
     }
-    if (!sr || !intr || !light) return;
-
+    if (!sr || !intr || !light || CURRENT_STATE.openUI) return;
+    
     switch (GameData::runeState) {
     case GameData::RUNA_ALAGADA: {
         sr->SetFrame(2);

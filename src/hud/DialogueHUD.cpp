@@ -397,6 +397,7 @@ void DialogueHUD::Update(float dt) {
                 currentLine++;
                 if (currentLine >= dialogueLines.at(currentDialogue).size()) {
                     CURRENT_STATE.openUI = false;
+                    INPUT_MANAGER.ReleaseCButton(SDL_CONTROLLER_BUTTON_A);
                     currentDialogue = "";
                     if (dialogueEndFunc != nullptr) dialogueEndFunc();
                 } else startLine = true;

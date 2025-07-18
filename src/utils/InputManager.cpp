@@ -206,6 +206,10 @@ float InputManager::ParseAxis(int value, float deadzone) {
     return actualValue / JOYSTICK_MAX_VALUE;
 }
 
+void InputManager::ReleaseCButton(int cbutton) {
+    controllerState[cbutton] = false;
+}
+
 /*
  * General
  */

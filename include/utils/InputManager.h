@@ -66,6 +66,7 @@ public:
     bool CButtonRelease(int button);
     bool IsCButtonDown(int button);
     Vec2 ControllerAxis(int joystick, float deadzone = JOYSTICK_DEADZONE);
+    void ReleaseCButton(int button);
 
     // General
     bool UpPressed(float delay = JOYSTICK_DIR_DELAY);
