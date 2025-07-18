@@ -37,6 +37,42 @@ void PortugueseClassRoom::Build() {
     blGO->AddComponent(new IsoCollider(*blGO, {24, 1}));
     state->AddObject(blGO);
 
+    // Cadeira
+    GameObject* cadeira21 = createGO("[OBJ] CadeiraAzul", 690, 495);
+    SpriteRenderer* cadeira21Sprite = new SpriteRenderer(*cadeira21, "Recursos/img/objetos/CADEIRAM.png");
+    cadeira21Sprite->SetScale(1.65, 1.65);
+    cadeira21Sprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    cadeira21->AddComponent(cadeira21Sprite);
+    cadeira21->AddComponent(new IsoCollider(*cadeira21, {0.7, 0.7}, {0, -17}));
+    state->AddObject(cadeira21);
+
+    // Mesa
+    GameObject* mesa21 = createGO("[OBJ] MesaAzul", 690+36, 495+21);
+    SpriteRenderer* mesa21Sprite = new SpriteRenderer(*mesa21, "Recursos/img/objetos/MESAazul.png");
+    mesa21Sprite->SetScale(1.65, 1.65);
+    mesa21Sprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesa21->AddComponent(mesa21Sprite);
+    mesa21->AddComponent(new IsoCollider(*mesa21, {0.8, 1}, {0, -17}));
+    state->AddObject(mesa21);
+
+    // Mesa
+    GameObject* mesaprof = createGO("[OBJ] MesaProfessor", 900, 600);
+    SpriteRenderer* mesaprofSprite = new SpriteRenderer(*mesaprof, "Recursos/img/objetos/mesa_professor.png");
+    mesaprofSprite->SetScale(1.65, 1.65);
+    mesaprofSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesaprof->AddComponent(mesaprofSprite);
+    mesaprof->AddComponent(new IsoCollider(*mesaprof, {0.8, 1}, {0, -17}));
+    state->AddObject(mesaprof);
+
+    // Cadeira
+    GameObject* cadeiraprof = createGO("[OBJ] CadeiraProfessor", 900+35, 600+10);
+    SpriteRenderer* cadeiraprofSprite = new SpriteRenderer(*cadeiraprof, "Recursos/img/objetos/cadeira_rodinhas.png");
+    cadeiraprofSprite->SetScale(1.65, 1.65);
+    cadeiraprofSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    cadeiraprof->AddComponent(cadeiraprofSprite);
+    cadeiraprof->AddComponent(new IsoCollider(*cadeiraprof, {0.8, 1}, {0, -17}));
+    state->AddObject(cadeiraprof);
+
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ] Porta", 765, 855);
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 0), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));

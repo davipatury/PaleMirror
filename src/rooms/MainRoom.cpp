@@ -28,6 +28,10 @@ MainRoom::MainRoom(State* state) : Room(state) {
     entryPos.push_back(Vec2{1579, 1403}); //7
 
     entryPos.push_back(Vec2{2257, 2500}); //8
+
+    entryPos.push_back(Vec2{2884, 1261}); //9
+    entryPos.push_back(Vec2{3133, 1400}); //10
+
 }
 
 void MainRoom::Build() {
@@ -130,6 +134,38 @@ void MainRoom::Build() {
     door21->AddComponent(new Interactable(*door21, Actions::ChangeRoom("history"), DOOR_INTERACT_DIST, door21sr));
     state->AddObject(door21);
 
+    GameObject* lixeira1 = createGO("[OBJ] Lixeira1", 2000, 1900);
+    auto lixeira1sr = new SpriteRenderer(*lixeira1, "Recursos/img/objetos/lixeira_azul.png");
+    lixeira1sr->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    lixeira1sr->SetScale(1.9, 1.9);
+    lixeira1->AddComponent(lixeira1sr);
+    lixeira1->AddComponent(new IsoCollider(*lixeira1, {0.5, 0.4}, {-10, -9}));
+    state->AddObject(lixeira1);
+
+    GameObject* lixeira2 = createGO("[OBJ] Lixeira2", 2030, 1925);
+    auto lixeira2sr = new SpriteRenderer(*lixeira2, "Recursos/img/objetos/lixeira_vermelha.png");
+    lixeira2sr->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    lixeira2sr->SetScale(1.9, 1.9);
+    lixeira2->AddComponent(lixeira2sr);
+    lixeira2->AddComponent(new IsoCollider(*lixeira2, {0.5, 0.4}, {-10, -9}));
+    state->AddObject(lixeira2);
+
+    GameObject* lixeira3 = createGO("[OBJ] Lixeira2", 2060, 1935);
+    auto lixeira3sr = new SpriteRenderer(*lixeira3, "Recursos/img/objetos/lixeira_verde.png");
+    lixeira3sr->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    lixeira3sr->SetScale(1.9, 1.9);
+    lixeira3->AddComponent(lixeira3sr);
+    lixeira3->AddComponent(new IsoCollider(*lixeira3, {0.5, 0.4}, {-10, -9}));
+    state->AddObject(lixeira3);
+
+    GameObject* lixeira4 = createGO("[OBJ] Lixeira2", 2090, 1955);
+    auto lixeira4sr = new SpriteRenderer(*lixeira4, "Recursos/img/objetos/lixeira_amarela.png");
+    lixeira4sr->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    lixeira4sr->SetScale(1.9, 1.9);
+    lixeira4->AddComponent(lixeira4sr);
+    lixeira4->AddComponent(new IsoCollider(*lixeira4, {0.5, 0.4}, {-10, -9}));
+    state->AddObject(lixeira4);
+
     // Bloco de salas 2 - Porta 2
     GameObject* door22 = createGO("[OBJ] Porta2-2", crblock2->box.x + 433, crblock2->box.y + 564);
     auto door22sr = new SpriteRenderer(*door22, "Recursos/img/objetos/porta_highlight.png");
@@ -149,7 +185,7 @@ void MainRoom::Build() {
     GameObject* door31 = createGO("[OBJ] Porta3-1", crblock3->box.x + 181, crblock3->box.y + 431);
     auto door31sr = new SpriteRenderer(*door31, "Recursos/img/objetos/porta_highlight.png");
     door31->AddComponent(door31sr);
-    door31->AddComponent(new IsoCollider(*door31, {0.5, 0.4}, {-20, -22}));
+    door31->AddComponent(new IsoCollider(*door31, {0.5, 0.4}, {-14, -30}));
     door31->AddComponent(new Interactable(*door31, Actions::ChangeRoom("diretor"), DOOR_INTERACT_DIST, door31sr));
     state->AddObject(door31);
 
