@@ -9,6 +9,7 @@ BanheiroFemininoRoom::BanheiroFemininoRoom(State* state) : Room(state) {
     cameraLimits = Rect(basePos.x, basePos.y, 1500, 1125);
 
     entryPos.push_back(Vec2{50245, 718});
+    entryPos.push_back(Vec2{50782, 487});
 }
 
 void BanheiroFemininoRoom::Build() {

@@ -69,8 +69,8 @@ void BanheiroDemRoom::Build() {
     velas->AddComponent(velasSR);
     velas->AddComponent(new LightEmitter(*velas, {
         // Offset, Scale, Enabled, Sprite path
-        {{26, -5}, {0.5, 0.5}, true, "Recursos/img/lighting/backlight_inv_orange.png"},
-        {{232, 112}, {0.5, 0.5}, true, "Recursos/img/lighting/backlight_inv_orange.png"}
+        {{57, -119}, {0.5, 0.5}, true, "Recursos/img/lighting/backlight_inv_orange.png"},
+        {{263, 179}, {0.5, 0.5}, true, "Recursos/img/lighting/backlight_inv_orange.png"}
     }));
     state->AddObject(velas);
 

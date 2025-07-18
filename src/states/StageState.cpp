@@ -39,7 +39,6 @@ void StageState::LoadAssets() {
 
     // Shadows
 
-    /*
     GameObject* scc = new GameObject("[ShadowCasterController");
     scc->AddComponent(new ShadowCaster::Controller(*scc));
     scc->box.z = SHADOW_LAYER;
@@ -56,7 +55,6 @@ void StageState::LoadAssets() {
     flHUD->lazyRender = false;
     flHUD->pauseOnOpenUI = false;
     AddObject(flHUD);
-    */
 
     // General
     GameObject* hud = new GameObject("[HUD]");
