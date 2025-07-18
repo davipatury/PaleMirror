@@ -93,19 +93,6 @@ void BanheiroFemininoRoom::Build() {
     espelho->AddComponent(new MirrorPuzzle::Initiator(*espelho));
     state->AddObject(espelho);
 
-    // Caixa Fusivel - FusePuzzle
-    GameObject* caixaFusivel = createGO("[OBJ] Caixa Fusivel", 958, 384);
-    SpriteRenderer* caixaFusivelSprite = new SpriteRenderer(*caixaFusivel, "Recursos/img/objetos/caixa_energia.png", 2, 1);
-    caixaFusivelSprite->SetScale(1.25, 1.25);
-    caixaFusivel->AddComponent(caixaFusivelSprite);
-    caixaFusivel->AddComponent(new Interactable(*caixaFusivel, nullptr));
-    caixaFusivel->AddComponent(new LightEmitter(*caixaFusivel, {
-        // Offset, Scale, Enabled, Sprite path
-        {{31, 35}, {0.25, 0.25}, false, "Recursos/img/lighting/backlight_inv_yellow.png"}
-    }));
-    caixaFusivel->AddComponent(new FusePuzzle::Initiator(*caixaFusivel));
-    state->AddObject(caixaFusivel);
-
     // Porta
     GameObject* roomDoorBack = createGO("[OBJ--BANHEIRO-FEM] Porta", 278, 815);
     roomDoorBack->AddComponent(new Interactable(*roomDoorBack, Actions::ChangeRoom("main", 6), DOOR_BACK_INTERACT_DIST, nullptr, {-35, -35}, "Sair"));

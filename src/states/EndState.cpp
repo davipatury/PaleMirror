@@ -11,22 +11,20 @@ EndState::~EndState(){
 }
 
 void EndState::LoadAssets() {
-    backgroundMusic.Open(GameData::playerVictory ? "Recursos/audio/endStateWin.ogg" : "Recursos/audio/endStateLose.ogg");
+    backgroundMusic.Open(GameData::playerVictory ? "Recursos/audio/music/creditos.mp3" : "Recursos/audio/music/game_over.wav");
     backgroundMusic.Play();
 
     GameObject* bg = new GameObject();
-    SpriteRenderer* bgSprite = new SpriteRenderer(*bg, GameData::playerVictory ? "Recursos/img/Win.png" : "Recursos/img/black.png", 1, 1);
+    SpriteRenderer* bgSprite = new SpriteRenderer(*bg, GameData::playerVictory ? "Recursos/img/black.png" : "Recursos/img/black.png", 1, 1);
     bgSprite->SetCameraFollower(true);
     bg->AddComponent(bgSprite);
     bg->box.z = -2;
     AddObject(bg);
 
-    GameObject* text = new GameObject();
-    text->AddComponent(new Text(*text, "Recursos/font/PixelifySans-Regular.ttf", 30, Text::TextStyle::SOLID, GameData::playerVictory ? "Parabens! Voce venceu!" : "Voce perdeu :(", {255, 255, 255, 255}));
-    text->box.x = (WINDOW_WIDTH - text->box.w) * 0.5;
-    text->box.y = (WINDOW_HEIGHT - text->box.h) * 0.5;
-    text->box.z = 0;
-    AddObject(text);
+    std::string endText = GameData::playerVictory ? "CREDITOS_MUITO_FODA.png" : "YOU DIED";
+    text = new TextHUD({0, 0}, "Recursos/font/PixelifySans-Regular.ttf", 80, TextHUD::SOLID, endText, {79, 2, 3, 255});
+    Vec2 endTextPos = {(float) ((WINDOW_WIDTH - text->GetWidth()) * 0.5), (float) ((WINDOW_HEIGHT - text->GetHeight()) * 0.5)};
+    text->SetPos(endTextPos);
 
     if (!GameData::playerVictory) {
         GameObject* blood = new GameObject();
@@ -60,6 +58,7 @@ void EndState::Update(float dt) {
 
 void EndState::Render() {
     RenderArray();
+    text->Render();
 }
 
 void EndState::Pause() {}

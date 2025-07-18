@@ -21,7 +21,7 @@ Character* Character::player = nullptr;
 
 Character::Character(GameObject& associated, const char* sprite) : Component(associated) {
     linearSpeed = 160;
-    hp = 1000;
+    hp = 100;
     flip = false;
     lastMoveDirection = Vec2(1, 0);
     deathSound = new Sound("Recursos/audio/Dead.wav");

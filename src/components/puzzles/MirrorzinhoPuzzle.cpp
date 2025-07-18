@@ -198,8 +198,8 @@ MirrorzinhoPuzzle::Initiator::Initiator(GameObject& associated) : Component(asso
 void MirrorzinhoPuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
-    if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
-    puzzleClosed = nullptr;
+    StageState* stage = (StageState*) &CURRENT_STATE;
+    if (stage->openUI) return;
 
     intr->SetActivationDistance(250);
     intr->SetHUDOffset({100, 230});
@@ -228,7 +228,6 @@ void MirrorzinhoPuzzle::Initiator::Update(float dt) {
             mp->pauseOnOpenUI = false;
             state->AddObject(mp);
 
-            puzzleClosed = &mp->isDead;
             intr->SetActivationDistance(0);
         });
     }
