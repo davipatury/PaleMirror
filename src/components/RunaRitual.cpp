@@ -72,10 +72,6 @@ void RunaRitual::Update(float dt) {
     }
     if (!sr || !intr || !light) return;
 
-    if( GameData::runeState == GameData::RUNA_LIGADA) {
-        GameData::runeState = GameData::RUNA_VAZIA;
-    }
-
     switch (GameData::runeState) {
     case GameData::RUNA_ALAGADA: {
         sr->SetFrame(2);
