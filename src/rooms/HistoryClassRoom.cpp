@@ -91,6 +91,24 @@ void HistoryClassRoom::Build() {
     mesa21->AddComponent(new IsoCollider(*mesa21, {0.8, 1}, {0, -17}));
     state->AddObject(mesa21);
 
+    // Mesa
+    GameObject* mesaprof = createGO("[OBJ] MesaProfessor", 900, 600);
+    SpriteRenderer* mesaprofSprite = new SpriteRenderer(*mesaprof, "Recursos/img/objetos/mesa_professor.png");
+    mesaprofSprite->SetScale(1.65, 1.65);
+    mesaprofSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    mesaprof->AddComponent(mesaprofSprite);
+    mesaprof->AddComponent(new IsoCollider(*mesaprof, {0.8, 1}, {0, -17}));
+    state->AddObject(mesaprof);
+
+    // Cadeira
+    GameObject* cadeiraprof = createGO("[OBJ] CadeiraProfessor", 900+35, 600+10);
+    SpriteRenderer* cadeiraprofSprite = new SpriteRenderer(*cadeiraprof, "Recursos/img/objetos/cadeira_rodinhas.png");
+    cadeiraprofSprite->SetScale(1.65, 1.65);
+    cadeiraprofSprite->SetFrame(0, SDL_FLIP_HORIZONTAL);
+    cadeiraprof->AddComponent(cadeiraprofSprite);
+    cadeiraprof->AddComponent(new IsoCollider(*cadeiraprof, {0.8, 1}, {0, -17}));
+    state->AddObject(cadeiraprof);
+
     // Velas
     GameObject* vela = createGO("[OBJ] Vela", 851, 685);
     vela->AddComponent(new SpriteRenderer(*vela, "Recursos/img/items/vela.png"));

@@ -277,6 +277,11 @@ void LockPuzzle::Initiator::Update(float dt) {
     if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
     puzzleClosed = nullptr;
 
+    if(GameData::runeState == GameData::RUNA_LIGADA) {
+        
+        
+    } 
+
     intr->SetActivationDistance(40.0f);
     if (GameData::lockPuzzleSolved) {
         intr->SetHUDText("Entrar");
