@@ -114,6 +114,8 @@ void MirrorzinhoPuzzle::Update(float dt) {
         }
         DialogueHUD::RequestDialogue("mirrorzinhoPuzzle_solved", [this]() {
             GameData::mirrorzinhoPuzzleSolved = true;
+            StageState* state = (StageState*) &CURRENT_STATE;
+            Actions::ChangeRoom("banheiroFem", 1)(state, nullptr);
             associated.RequestDelete();
         });
         solved = true;
@@ -197,6 +199,7 @@ void MirrorzinhoPuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
     if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
+    puzzleClosed = nullptr;
 
     intr->SetActivationDistance(250);
     intr->SetHUDOffset({100, 230});

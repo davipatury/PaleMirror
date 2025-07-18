@@ -121,6 +121,7 @@ void PipePuzzle::Initiator::Update(float dt) {
     Interactable* intr = (Interactable*) associated.GetComponent("Interactable");
     if (!intr) return;
     if (puzzleClosed != nullptr && !(*puzzleClosed)) return;
+    puzzleClosed = nullptr;
 
     if (GameData::pipePuzzleSolved) {
         intr->SetActivationDistance(0);

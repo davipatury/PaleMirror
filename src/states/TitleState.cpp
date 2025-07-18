@@ -33,6 +33,15 @@ void TitleState::LoadAssets() {
     bg->box.z = -2;
     AddObject(bg);
 
+    GameObject* logo = new GameObject();
+    SpriteRenderer* logoSprite = new SpriteRenderer((*logo), "Recursos/img/menu/logo.png");
+    logoSprite->SetCameraFollower(true);
+    logo->AddComponent(logoSprite);
+    logo->box.x = 35;
+    logo->box.y = 35;
+    logo->box.z = -1;
+    AddObject(logo);
+
     float textY = 700;
     startButtonText = new TextHUD({0, 0}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Jogar", {0, 0, 0, 0});
     loadButtonText = new TextHUD({0, 0}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Sair", {0, 0, 0, 0});

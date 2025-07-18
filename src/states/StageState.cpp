@@ -109,6 +109,10 @@ void StageState::LoadAssets() {
     banheiroIntroRoom->Build();
     BanheiroDemRoom* banheiroDemRoom = new BanheiroDemRoom(this);
     banheiroDemRoom->Build();
+    DiretorRoom* diretorRoom = new DiretorRoom(this);
+    diretorRoom->Build();
+    ProfessoresRoom* professoresRoom = new ProfessoresRoom(this);
+    professoresRoom->Build();
 
     rooms["main"] = mainRoom;
     rooms["history"] = historyRoom;
@@ -119,6 +123,8 @@ void StageState::LoadAssets() {
     rooms["banheiroMasc"] = banheiroMascRoom;
     rooms["banheiroIntro"] = banheiroIntroRoom;
     rooms["banheiroDem"] = banheiroDemRoom;
+    rooms["diretor"] = diretorRoom;
+    rooms["professores"] = professoresRoom;
 
     currentRoom = mainRoom;
     //mainRoom->bgMusic.FadeInPos(0.0);
