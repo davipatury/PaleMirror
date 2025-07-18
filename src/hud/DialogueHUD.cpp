@@ -91,6 +91,13 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         }
     };
 
+    // Water
+    dialogueLines["waterOn"] = {
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
+            "Ah não, que nojeira. É impossível fazer o desenho do ritual nesse chão com essa água podre."
+        }
+    };
+
     dialogueLines["prologoPreRitual"] = {
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
         "E se alguem da escola nos ver aqui?", true
