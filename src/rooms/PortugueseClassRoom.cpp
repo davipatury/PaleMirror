@@ -51,7 +51,7 @@ void PortugueseClassRoom::Build() {
     vela2->AddComponent(new Interactable(*vela2, Actions::CollectItem(ITEM_VELA), ITEM_COLLECT_DIST, nullptr, {-35, -35}, "Pegar"));
     state->AddObject(vela2);
 
-    // Filtro
+    // Filtrods
     GameObject* filtro = createGO("[OBJ-PORTUGUES] Filtro", 0, 0);
     filtro->AddComponent(new SpriteRenderer(*filtro, "Recursos/img/rooms/filtro_sala.png"));
     filtro->box.z = 1;
