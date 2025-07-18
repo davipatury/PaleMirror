@@ -185,6 +185,24 @@ void StageState::Update(float dt) {
         AddObject(mp);
     }
 
+    // Spawn mirrorzinho puzzle
+    if (!openUI && INPUT_MANAGER.KeyPress('m')) {
+        GameObject* mp = new GameObject();
+        mp->AddComponent(new MirrorzinhoPuzzle((*mp), std::vector<MirrorzinhoPuzzle::Piece>{
+            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/1.png", Vec2{0, 0}),
+            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/2.png", Vec2{81, 0}),
+            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/3.png", Vec2{0, 198}),
+            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/4.png", Vec2{57, 148}),
+            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/5.png", Vec2{0, 290}),
+            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/6.png", Vec2{184, 382})
+        }));
+        mp->box.z = PUZZLE_LAYER;
+        mp->lazyRender = false;
+        mp->pauseOnOpenUI = false;
+        AddObject(mp);
+    }
+    
+
     // Spawn fuse puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('f')) {
         GameObject* fp = new GameObject();

@@ -70,6 +70,8 @@ void BanheiroDemRoom::Build() {
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-DEM] Espelho", 560, 175);
     espelho->AddComponent(new SpriteRenderer(*espelho, "Recursos/img/objetos/espelho_banheiro-helena.png"));
+    espelho->AddComponent(new Interactable(*espelho, nullptr));
+    espelho->AddComponent(new MirrorzinhoPuzzle::Initiator(*espelho));
     state->AddObject(espelho);
 
     // Porta

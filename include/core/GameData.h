@@ -13,6 +13,7 @@ public:
     static bool fusePuzzleSolved;
     static bool lockPuzzleSolved;
     static bool mirrorPuzzleSolved;
+    static bool mirrorzinhoPuzzleSolved;
     static bool paintPuzzleSolved;
     static bool pipePuzzleSolved;
 };

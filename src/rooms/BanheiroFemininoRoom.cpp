@@ -70,10 +70,11 @@ void BanheiroFemininoRoom::Build() {
     state->AddObject(ritual);
 
     // Marias
-    GameObject* marias = createGO("[OBJ-BANHEIRO-INTRO] Marias", 310, 700);
+    /*GameObject* marias = createGO("[OBJ-BANHEIRO-INTRO] Marias", 310, 700);
     marias->AddComponent(new SpriteRenderer(*marias, "Recursos/img/objetos/marias.png"));
     marias->AddComponent(new IsoCollider(*marias, {1.0, 1.0}, {-20, -30}));
     state->AddObject(marias);
+    */
 
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-FEM] Espelho", 560, 175);

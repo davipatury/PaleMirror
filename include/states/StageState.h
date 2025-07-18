@@ -21,6 +21,7 @@
 #include "physics/IsoCollider.h"
 #include "math/Line.h"
 #include "components/puzzles/MirrorPuzzle.h"
+#include "components/puzzles/MirrorzinhoPuzzle.h"
 #include "components/puzzles/FusePuzzle.h"
 #include "components/puzzles/PaintPuzzle.h"
 #include "components/puzzles/PipePuzzle.h"
