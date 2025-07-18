@@ -39,6 +39,7 @@ void StageState::LoadAssets() {
 
     // Shadows
 
+    /*
     GameObject* scc = new GameObject("[ShadowCasterController");
     scc->AddComponent(new ShadowCaster::Controller(*scc));
     scc->box.z = SHADOW_LAYER;
@@ -55,6 +56,7 @@ void StageState::LoadAssets() {
     flHUD->lazyRender = false;
     flHUD->pauseOnOpenUI = false;
     AddObject(flHUD);
+    */
 
     // General
     GameObject* hud = new GameObject("[HUD]");
@@ -130,11 +132,14 @@ void StageState::LoadAssets() {
     //mainRoom->bgMusic.FadeInPos(0.0);
     mainRoom->Enter();
 
+
+    /*
     Actions::ChangeRoom("banheiroIntro")(this, nullptr);
     FLASHLIGHT->SetDark(false);
     DialogueHUD::RequestDialogue("prologoPreRitual");
     scene = RITUAL_BEFORE;
     DialogueHUD::RequestDialogue("prologoRitual");
+    */
 
     // Give flashlight on begin (REMOVE LATER)
     //INVENTORY->Collect(ITEM_LANTERNA);
