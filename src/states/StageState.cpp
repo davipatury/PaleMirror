@@ -130,9 +130,15 @@ void StageState::LoadAssets() {
     //mainRoom->bgMusic.FadeInPos(0.0);
     mainRoom->Enter();
 
+    Actions::ChangeRoom("banheiroIntro")(this, nullptr);
+    FLASHLIGHT->SetDark(false);
+    DialogueHUD::RequestDialogue("prologoPreRitual");
+    scene = RITUAL_BEFORE;
+    DialogueHUD::RequestDialogue("prologoRitual");
+
     // Give flashlight on begin (REMOVE LATER)
-    INVENTORY->Collect(ITEM_LANTERNA);
-    INVENTORY->Collect(ITEM_CANO);
+    //INVENTORY->Collect(ITEM_LANTERNA);
+    //INVENTORY->Collect(ITEM_CANO);
 }
 
 void StageState::Start() {
@@ -162,11 +168,6 @@ void StageState::Update(float dt) {
         Uint32 flags = SDL_GetWindowFlags(GAME_WINDOW);
         bool isFullscreen = flags & SDL_WINDOW_FULLSCREEN;
         SDL_SetWindowFullscreen(GAME_WINDOW, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
-    }
-
-    if (INPUT_MANAGER.KeyPress('y')) {
-        std::cout << "Finge que arrumei os canos la" << std::endl;
-        GameData::runeState = GameData::RUNA_VAZIA;
     }
 
     // Dialogue debug
@@ -209,6 +210,7 @@ void StageState::Update(float dt) {
     }
 
     // Spawn fuse puzzle
+    /*
     if (!openUI && INPUT_MANAGER.KeyPress('f')) {
         GameObject* fp = new GameObject();
         fp->AddComponent(new FusePuzzle(*fp));
@@ -217,6 +219,7 @@ void StageState::Update(float dt) {
         fp->pauseOnOpenUI = false;
         AddObject(fp);
     }
+    */
 
     // Spawn paint puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('p')) {
@@ -229,6 +232,7 @@ void StageState::Update(float dt) {
     }
 
     // Spawn pipe puzzle
+    /*
     if (!openUI && INPUT_MANAGER.KeyPress('i')) {
         GameObject* pip = new GameObject();
         pip->AddComponent(new PipePuzzle(*pip));
@@ -236,16 +240,17 @@ void StageState::Update(float dt) {
         pip->lazyRender = false;
         pip->pauseOnOpenUI = false;
         AddObject(pip);
-    }
+    }*/
 
     //  Scenes
+    /*
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
         Actions::ChangeRoom("banheiroIntro")(this, nullptr);
         FLASHLIGHT->SetDark(false);
         DialogueHUD::RequestDialogue("prologoPreRitual");
         scene = RITUAL_BEFORE;
         DialogueHUD::RequestDialogue("prologoRitual");
-    }
+    }*/
 
     if (scene == RITUAL_BEFORE && DialogueHUD::isEmpty()){
         Actions::ChangeRoom("banheiroDem")(this, nullptr);
@@ -289,6 +294,7 @@ void StageState::Update(float dt) {
     
     
     // Spawn locker puzzle
+    /*
     if (!openUI && INPUT_MANAGER.KeyPress('l')) {
         GameObject* lp = new GameObject();
         lp->AddComponent(new LockPuzzle(*lp, "1234"));
@@ -296,7 +302,7 @@ void StageState::Update(float dt) {
         lp->lazyRender = false;
         lp->pauseOnOpenUI = false;
         AddObject(lp);
-    }
+    }*/
 
     if(GameData::zombieFarAway and zombieFarAwayTimer.Get() > 15) {
         GameData::zombieFarAway = false;

@@ -272,6 +272,7 @@ void PaintPuzzle::Initiator::Update(float dt) {
     } else {
         intr->SetHUDText("Interagir");
         intr->SetAction([this, intr](State* state, GameObject* go) {
+            if (GameData::paintPuzzleSolved) return;
             GameObject* pp = new GameObject();
             pp->AddComponent(new PaintPuzzle(*pp));
             pp->box.z = PUZZLE_LAYER;

@@ -40,6 +40,17 @@ void EndState::Start() {
     LoadAssets();
     StartArray();
     started = true;
+
+    GameData::playerVictory = false;
+    GameData::zombieFarAway = true;
+    GameData::runeState = GameData::RUNA_ALAGADA;
+
+    GameData::fusePuzzleSolved = false;
+    GameData::lockPuzzleSolved = false;
+    GameData::mirrorPuzzleSolved = false;
+    GameData::mirrorzinhoPuzzleSolved = false;
+    GameData::paintPuzzleSolved = false;
+    GameData::pipePuzzleSolved = false;
 }
 
 void EndState::Update(float dt) {

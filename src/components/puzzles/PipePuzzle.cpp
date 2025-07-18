@@ -128,8 +128,7 @@ void PipePuzzle::Initiator::Update(float dt) {
         intr->SetActivationDistance(70);
         intr->SetHUDText("Interagir");
         intr->SetAction([this, intr](State* state, GameObject* go) {
-            
-        DialogueHUD::RequestDialogue("fuseOn");
+            DialogueHUD::RequestDialogue("fuseOn");
         });
         return;
     } 
@@ -140,6 +139,7 @@ void PipePuzzle::Initiator::Update(float dt) {
         intr->SetHUDText("Interagir");
 
         intr->SetAction([this, intr](State* state, GameObject* go) {
+            if (GameData::pipePuzzleSolved) return;
             openSound->Play();
 
             GameObject* pip = new GameObject();

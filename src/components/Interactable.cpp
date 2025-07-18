@@ -10,7 +10,7 @@
 #include "utils/DrawCircle.h"
 #include <string>
 
-#define DEBUG_INTERACT_RANGE
+//#define DEBUG_INTERACT_RANGE
 
 Interactable::Interactable(GameObject& associated, std::function<void (State*, GameObject*)> a, float ad, SpriteRenderer* sr, Vec2 offset, std::string text, InteractableHUD::InteractableType type): Component(associated),
     action(a), highlightSr(sr), activationDistance(ad), hudOffset(offset), hudText(text), type(type)

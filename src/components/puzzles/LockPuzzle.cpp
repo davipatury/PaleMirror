@@ -292,6 +292,7 @@ void LockPuzzle::Initiator::Update(float dt) {
     } else {
         intr->SetHUDText("Abrir");
         intr->SetAction([this, intr](State* state, GameObject* go) {
+            if (GameData::lockPuzzleSolved) return;
             openSound->Play();
 
             GameObject* lp = new GameObject();

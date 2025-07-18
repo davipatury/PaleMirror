@@ -137,6 +137,7 @@ void FusePuzzle::Initiator::Update(float dt) {
         intr->SetType(InteractableHUD::INTERACT);
         intr->SetHUDText("Interagir");
         intr->SetAction([intr, this](State* state, GameObject* go) {
+            if (GameData::fusePuzzleSolved) return;
             openSound->Play();
 
             GameObject* fp = new GameObject();

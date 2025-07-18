@@ -209,6 +209,7 @@ void MirrorPuzzle::Initiator::Update(float dt) {
     } else {
         intr->SetHUDText("Interagir");
         intr->SetAction([this, intr](State* state, GameObject* go) {
+            if (GameData::mirrorPuzzleSolved) return;
             openSound->Play();
 
             GameObject* mp = new GameObject();
