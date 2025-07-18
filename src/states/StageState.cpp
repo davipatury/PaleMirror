@@ -201,7 +201,6 @@ void StageState::Update(float dt) {
         mp->pauseOnOpenUI = false;
         AddObject(mp);
     }
-    
 
     // Spawn fuse puzzle
     if (!openUI && INPUT_MANAGER.KeyPress('f')) {
@@ -249,7 +248,8 @@ void StageState::Update(float dt) {
     }
 
     if(scene == RITUAL_DURING && DialogueHUD::isEmpty){
-
+        DialogueHUD::RequestDialogue("prologoPosRitual");
+        scene = RITUAL_AFTER;
     }
 
     if(introplaying and !Mix_PlayingMusic()){

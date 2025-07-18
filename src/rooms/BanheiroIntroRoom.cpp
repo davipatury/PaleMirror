@@ -6,7 +6,7 @@ BanheiroIntroRoom::BanheiroIntroRoom(State* state) : Room(state) {
     lockCameraOnRoom = false;
     basePos = Vec2{70000, 0};
     cameraLimits = Rect(basePos.x, basePos.y, 1500, 1125);
-    entryPos.push_back(Vec2{70500, 718});
+    entryPos.push_back(Vec2{70720, 718});
 }
 
 void BanheiroIntroRoom::Build() {
@@ -55,17 +55,27 @@ void BanheiroIntroRoom::Build() {
     boxes->AddComponent(new IsoCollider(*boxes, {0.5, 1.2}, {61, -90}));
     state->AddObject(boxes);
 
+    GameObject* marias = createGO("[OBJ-BANHEIRO-INTRO] Marias", 720, 450);
+    marias->AddComponent(new SpriteRenderer(*marias, "Recursos/img/objetos/marias.png"));
+    marias->AddComponent(new IsoCollider(*marias, {1.0, 1.0}, {-20, -30}));
+    state->AddObject(marias);
+
     // Simbolo ritual
-   /* GameObject* ritual = createGO("[OBJ-BANHEIRO-INTRO] Ritual", 433, 730);
-    SpriteRenderer* ritualSR = new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual_1.png");
-    ritualSR->SetColorMod(255, 82, 0);
-    ritual->AddComponent(ritualSR);
-    state->AddObject(ritual);*/
+    GameObject* ritual = createGO("[OBJ-BANHEIRO-INTRO] Ritual", 433, 730);
+    ritual->AddComponent(new SpriteRenderer(*ritual, "Recursos/img/objetos/simbolo_ritual.png", 3, 1));
+    ritual->AddComponent(new Interactable(*ritual, nullptr));
+    ritual->AddComponent(new LightEmitter(*ritual, {
+        // Offset, Scale, Enabled, Sprite path
+        {{26, -5}, {0.5, 0.5}, false, "Recursos/img/lighting/backlight_inv_orange.png"},
+        {{232, 112}, {0.5, 0.5}, false, "Recursos/img/lighting/backlight_inv_orange.png"}
+    }));
+    ritual->AddComponent(new RunaRitual(*ritual));
+    state->AddObject(ritual);
 
     // Vela
-    GameObject* velas = createGO("[OBJ-BANHEIRO-INTRO] velas", 433, 730);
-    velas->AddComponent(new SpriteRenderer(*velas, "Recursos/img/objetos/velasacesas.png"));
-    state->AddObject(velas);
+    //GameObject* velas = createGO("[OBJ-BANHEIRO-INTRO] velas", 433, 730);
+    //velas->AddComponent(new SpriteRenderer(*velas, "Recursos/img/objetos/velasacesas.png"));
+    //state->AddObject(velas);
 
     // Espelho
     GameObject* espelho = createGO("[OBJ-BANHEIRO-INTRO] Espelho", 560, 175);
