@@ -43,8 +43,8 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "*estatica* *estatica* *estatica*"
         },*/
         {"Madu", "Madu", {167, 8, 8, 255}, "madu", true},
-        {"Maju", "Maju", {118, 191, 27, 255}, "maju"},
-        {"Malu", "Malu", {223, 197, 62, 255}, "malu"}
+        {"Maju", "Maju", {59, 125, 79, 255}, "maju"},
+        {"Malu", "Malu", {254, 174, 52, 255}, "malu"}
     };
 
     // Paint puzzle lines
@@ -84,10 +84,10 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
         "E se alguem da escola nos ver aqui?", true
         },
-        {"Maju", "Maju", {118, 191, 27, 255},
+        {"Maju", "Maju", {59, 125, 79, 255},
         "Cala a boca! É por isso que a gente esperou todo mundo sair para invadir a escola, cabeça de pirulito.", true
         },
-        {"Malu", "Malu", {223, 197, 62, 255},
+        {"Malu", "Malu", {254, 174, 52, 255},
         "Está com medinho do ritual Helena? Achei que você queria entrar para o nosso grupinho...", true
         },
         {"Madu", "Madu", {167, 8, 8, 255},
@@ -96,7 +96,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaBrava", "Helena", {101, 38, 141, 255},
         "Não estou!", true
         },
-        {"Malu", "Malu", {223, 197, 62, 255},
+        {"Malu", "Malu", {254, 174, 52, 255},
         "Então prove para gente, vai na frente e faça o ritual.", true
         },
         {"HelenaNeutra", "Helena", {101, 38, 141, 255},
@@ -111,10 +111,10 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"HelenaAssustada", "Helena", {101, 38, 141, 255},
         "O QUE VOCÊS ESTÃO FAZENDO? ABREM A PORTA! POR FAVOR!", true
         },
-        {"Maju", "Maju", {118, 191, 27, 255},
+        {"Maju", "Maju", {59, 125, 79, 255},
         "Você sempre têm ideias tão boas Malu!", true
         },
-        {"Malu", "Malu", {223, 197, 62, 255},
+        {"Malu", "Malu", {254, 174, 52, 255},
         "Eu sei, eu sou perfeita.", true
         },
         {"Madu", "Madu", {167, 8, 8, 255},
@@ -133,7 +133,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         "Q-quem é vo-você? C-como sabe meu nome?",
         },
         {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},
-        "Desculpe te assustar, me chamo Eneleh, você acabou desmaiando e eu fiquei preocupada... eu vi o que elas fizeram com você.", true
+        "Desculpe te assustar, me chamo Aneleh, você acabou desmaiando e eu fiquei preocupada... eu vi o que elas fizeram com você.", true
         },
         {"HelenaBrava", "Helena", {101, 38, 141, 255},
         "Ughh, eu fui TÃO ingênua, mas obrigada pela preocupação.", true
@@ -150,7 +150,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
         {"AnelehInocente", "Aneleh", {199, 90, 15, 255},
         "Verdadade. Desculpe, é que não estou acostumada com isso. Eu nunca tive uma amiga, sempre fui excluída e zombavam de mim... você entende né?", true
         },
-        {"HelanaNeutra", "Helena", {101, 38, 141, 255},
+        {"HelenaNeutra", "Helena", {101, 38, 141, 255},
         "Err, te entendo bem.", true
         },
         {"AnelehFeliz", "Aneleh", {199, 90, 15, 255},

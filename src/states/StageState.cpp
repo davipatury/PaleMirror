@@ -1,6 +1,7 @@
 #include "states/StageState.h"
 #include "components/Interactable.h"
 #include "actions/Actions.h"
+#include "hud/FlashlightHUD.h"
 #include <memory>
 #include "core/GameData.h"
 #include "math.h"
@@ -217,12 +218,25 @@ void StageState::Update(float dt) {
         AddObject(pip);
     }
 
-    //  Start cutscene
+    //  Scenes
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
+        std::cout << "entrou" << std::endl;
         Actions::ChangeRoom("banheiroIntro")(this, nullptr);
-        //DialogueHUD::RequestDialogue("prologoPreRitual");
-        //DialogueHUD::RequestDialogue("prologoRitual");
-        //DialogueHUD::RequestDialogue("prologoPosRitual");
+        FLASHLIGHT->SetDark(false);
+        DialogueHUD::RequestDialogue("prologoPreRitual");
+        DialogueHUD::RequestDialogue("prologoRitual");
+        scene = RITUAL_BEFORE;
+    }
+
+    if (scene == RITUAL_BEFORE && DialogueHUD::isEmpty()){
+        std::cout << "before" << std::endl;
+        FLASHLIGHT->SetDark(true);
+        DialogueHUD::RequestDialogue("prologoPosRitual");
+        scene = RITUAL_DURING;
+    }
+
+    if(scene == RITUAL_DURING && DialogueHUD::isEmpty){
+        std::cout << "during" << std::endl;
     }
 
 
