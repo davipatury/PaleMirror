@@ -8,6 +8,7 @@ PauseHUD::PauseHUD(GameObject& associated) : Component(associated),
 {
     resumeButtonText = new TextHUD({225, 700}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Continuar", {0, 0, 0, 0});
     quitButtonText = new TextHUD({704, 700}, "Recursos/font/PixelifySans-Regular.ttf", 75, TextHUD::BLENDED, "Sair", {0, 0, 0, 0});
+    changeSound = new Sound("Recursos/audio/sounds/menu/click_menu.wav");
 }
 
 PauseHUD::~PauseHUD() {}
@@ -16,9 +17,16 @@ void PauseHUD::Update(float dt) {
     if (ESCAPE_CHECK) TogglePause();
 
     if (paused) {
-        if (UP_CHECK)   selectedOption = 0;
-        if (DOWN_CHECK) selectedOption = 1;
+        if (UP_CHECK && selectedOption == 1) {
+            changeSound->Play();
+            selectedOption = 0;
+        }
+        if (DOWN_CHECK && selectedOption == 0) {
+            changeSound->Play();
+            selectedOption = 1;
+        }
         if (CONFIRM_CHECK) {
+            changeSound->Play();
             if (selectedOption == 0) TogglePause();
             else CURRENT_STATE.RequestPop();
         }

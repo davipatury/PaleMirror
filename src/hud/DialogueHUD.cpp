@@ -224,7 +224,7 @@ DialogueHUD::DialogueHUD(GameObject& associated) : Component(associated),
     currentLine = 0;
     startLine = false;
 
-    picturePos.y = 214;
+    picturePos.y = 0;
 
     // Controls
     keySpace.SetScale(0.5, 0.5);

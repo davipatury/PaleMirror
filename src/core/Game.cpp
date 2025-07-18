@@ -73,6 +73,9 @@ Game::Game(const char* title, int width, int height) {
         std::cout << SDL_GetError() << std::endl;
     }
 
+    windowWidth = width;
+    windowHeight = height;
+
     storedState = nullptr;
     frameStart = SDL_GetTicks();
     dt = 0;
