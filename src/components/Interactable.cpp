@@ -10,7 +10,7 @@
 #include "utils/DrawCircle.h"
 #include <string>
 
-//#define DEBUG_INTERACT_RANGE
+// #define DEBUG_INTERACT_RANGE
 
 Interactable::Interactable(GameObject& associated, std::function<void (State*, GameObject*)> a, float ad, SpriteRenderer* sr, Vec2 offset, std::string text, InteractableHUD::InteractableType type): Component(associated),
     action(a), highlightSr(sr), activationDistance(ad), hudOffset(offset), hudText(text), type(type)
@@ -44,6 +44,7 @@ void Interactable::Update(float dt) {
     // Execute action
     if (canInteract) {
         if((type == InteractableHUD::INTERACT && INTERACT_CHECK) || (type == InteractableHUD::USE_ITEM && USE_CHECK)) {
+            INPUT_MANAGER.ReleaseCButton(SDL_CONTROLLER_BUTTON_A);
             action(&CURRENT_STATE, &associated);
         }
         if (!associated.IsDead()) INTERACTABLE->RecordInteractable(&associated, hudOffset, type, hudText);

@@ -38,13 +38,13 @@ void StageState::LoadAssets() {
     AddObject(character);
 
     // Shadows
-
     GameObject* scc = new GameObject("[ShadowCasterController");
     scc->AddComponent(new ShadowCaster::Controller(*scc));
     scc->box.z = SHADOW_LAYER;
     scc->lazyRender = false;
     scc->pauseOnOpenUI = false;
     AddObject(scc);
+
     // HUD
     // Flashlight
     GameObject* flHUD = new GameObject("[FlashlightHUD]");
@@ -69,11 +69,12 @@ void StageState::LoadAssets() {
     InteractableHUD::instance = intr;
     hud->AddComponent(intr);
     // DebugHUD
-    hud->AddComponent(new DebugHUD(*hud));
+    // hud->AddComponent(new DebugHUD(*hud));
     hud->box.z = HUD_LAYER;
     hud->lazyRender = false;
     hud->pauseOnOpenUI = false;
     AddObject(hud);
+
     // Pause
     GameObject* pauseHUD = new GameObject("[PauseHUD]");
     pauseHUD->AddComponent(new PauseHUD(*pauseHUD));
@@ -153,16 +154,6 @@ void StageState::Update(float dt) {
         quitRequested = true;
     }
 
-    // Debug delete monsters
-    if (INPUT_MANAGER.KeyPress(SDLK_DELETE)) {
-        for (int i = 0; i < objectArray.size(); i++) {
-            GameObject* go = objectArray[i].get();
-            if (go->GetComponent("Zombie") != nullptr || go->GetComponent("AIController") != nullptr) {
-                go->RequestDelete();
-            }
-        }
-    }
-
     // Fullscreen
     if (INPUT_MANAGER.KeyPress(SDLK_F11)) {
         Uint32 flags = SDL_GetWindowFlags(GAME_WINDOW);
@@ -170,80 +161,8 @@ void StageState::Update(float dt) {
         SDL_SetWindowFullscreen(GAME_WINDOW, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
     }
 
-    // Dialogue debug
-    if (!openUI && INPUT_MANAGER.KeyPress('o')) {
-        DialogueHUD::RequestDialogue("test");
-    }
-
-    // Spawn mirror puzzle
-    if (!openUI && INPUT_MANAGER.KeyPress('m')) {
-        GameObject* mp = new GameObject();
-        mp->AddComponent(new MirrorPuzzle((*mp), std::vector<MirrorPuzzle::Piece>{
-            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/1.png", Vec2{0, 0}),
-            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/2.png", Vec2{81, 0}),
-            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/3.png", Vec2{0, 198}),
-            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/4.png", Vec2{57, 148}),
-            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/5.png", Vec2{0, 290}),
-            MirrorPuzzle::Piece("Recursos/img/mirror_puzzle/6.png", Vec2{184, 382})
-        }));
-        mp->box.z = PUZZLE_LAYER;
-        mp->lazyRender = false;
-        mp->pauseOnOpenUI = false;
-        AddObject(mp);
-    }
-
-    // Spawn mirrorzinho puzzle
-    if (!openUI && INPUT_MANAGER.KeyPress('m')) {
-        GameObject* mp = new GameObject();
-        mp->AddComponent(new MirrorzinhoPuzzle((*mp), std::vector<MirrorzinhoPuzzle::Piece>{
-            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/1.png", Vec2{0, 0}),
-            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/2.png", Vec2{81, 0}),
-            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/3.png", Vec2{0, 198}),
-            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/4.png", Vec2{57, 148}),
-            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/5.png", Vec2{0, 290}),
-            MirrorzinhoPuzzle::Piece("Recursos/img/mirror_puzzle/6.png", Vec2{184, 382})
-        }));
-        mp->box.z = PUZZLE_LAYER;
-        mp->lazyRender = false;
-        mp->pauseOnOpenUI = false;
-        AddObject(mp);
-    }
-
-    // Spawn fuse puzzle
-    /*
-    if (!openUI && INPUT_MANAGER.KeyPress('f')) {
-        GameObject* fp = new GameObject();
-        fp->AddComponent(new FusePuzzle(*fp));
-        fp->box.z = PUZZLE_LAYER;
-        fp->lazyRender = false;
-        fp->pauseOnOpenUI = false;
-        AddObject(fp);
-    }
-    */
-
-    // Spawn paint puzzle
-    if (!openUI && INPUT_MANAGER.KeyPress('p')) {
-        GameObject* pp = new GameObject();
-        pp->AddComponent(new PaintPuzzle(*pp));
-        pp->box.z = PUZZLE_LAYER;
-        pp->lazyRender = false;
-        pp->pauseOnOpenUI = false;
-        AddObject(pp);
-    }
-
-    // Spawn pipe puzzle
-    /*
-    if (!openUI && INPUT_MANAGER.KeyPress('i')) {
-        GameObject* pip = new GameObject();
-        pip->AddComponent(new PipePuzzle(*pip));
-        pip->box.z = PUZZLE_LAYER;
-        pip->lazyRender = false;
-        pip->pauseOnOpenUI = false;
-        AddObject(pip);
-    }*/
-
     //  Scenes
-    /*
+    /* Prologue scene
     if (!openUI && INPUT_MANAGER.KeyPress('b')) {
         Actions::ChangeRoom("banheiroIntro")(this, nullptr);
         FLASHLIGHT->SetDark(false);
@@ -264,9 +183,9 @@ void StageState::Update(float dt) {
     }
 
     if(introplaying and !Mix_PlayingMusic()){
-        backgroundMusic.Open("Recursos/audio/music/boss-loop.wav");
+        backgroundMusic.Open("Recursos/audio/music/boss-loop-ab.mp3");
         backgroundMusic.Play();
-        Mix_VolumeMusic(70);
+        Mix_VolumeMusic(80);
     }
 
     if(Boss::startBoss){
@@ -278,8 +197,12 @@ void StageState::Update(float dt) {
         Boss::startBoss = false;
     }
 
+    if (INPUT_MANAGER.KeyPress(SDLK_j)) {
+        Actions::ChangeRoom("banheiroMasc")(this, nullptr);
+    }
+
     // Custcene Boss
-    if (!openUI && (INPUT_MANAGER.KeyPress('k') || (GameData::runeState == GameData::RUNA_LIGADA && GameData::mirrorPuzzleSolved))) {
+    if (!openUI && (INPUT_MANAGER.KeyPress(SDLK_k) || (GameData::runeState == GameData::RUNA_LIGADA && GameData::mirrorPuzzleSolved))) {
         Actions::ChangeRoom("main", 8)(this, nullptr);
         GameData::runeState = GameData::RUNA_SUMMONADA;
 
@@ -290,19 +213,6 @@ void StageState::Update(float dt) {
         AddObject(aneleh);
         Boss::startBoss = true;
     }
-
-    
-    
-    // Spawn locker puzzle
-    /*
-    if (!openUI && INPUT_MANAGER.KeyPress('l')) {
-        GameObject* lp = new GameObject();
-        lp->AddComponent(new LockPuzzle(*lp, "1234"));
-        lp->box.z = PUZZLE_LAYER;
-        lp->lazyRender = false;
-        lp->pauseOnOpenUI = false;
-        AddObject(lp);
-    }*/
 
     if(GameData::zombieFarAway and zombieFarAwayTimer.Get() > 15) {
         GameData::zombieFarAway = false;

@@ -3,7 +3,7 @@
 
 #include "components/puzzles/PaintPuzzle.h"
 
-#define DEBUG_DIALOGUE
+//#define DEBUG_DIALOGUE
 
 #define DIALOGUE_WRAP_LEN 910
 #define TEXT_COOLDOWN 0.005

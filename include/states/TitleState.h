@@ -31,9 +31,11 @@ public:
     Music titleMusic;
     int selectedOption;
 
+    Sprite menuBg;
+    Sprite menuControls;
+
     bool blinking = false;
     Timer bgBlinkTimer;
-    GameObject* bg;
     bool tutorial = false;
 
     Sprite button;

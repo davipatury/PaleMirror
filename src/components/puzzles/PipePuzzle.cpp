@@ -2,6 +2,8 @@
 
 #include "states/StageState.h"
 
+// #define PIPE_PUZZLE_DEBUG
+
 #define PIPE_PUZZLE_RECT_X 0
 #define PIPE_PUZZLE_RECT_Y 0
 
@@ -14,7 +16,9 @@ void PipePuzzle::PipePressed(int idx){
     pipePressed->Play();
     rotated[idx] = (rotated[idx] + 1) % 4;
     pipeTargetAngles[idx] += 90.0f;
-    std::cout << idx << ' ' << rotated[idx] << std::endl;
+#ifdef PIPE_PUZZLE_DEBUG
+    std::cout << "[PipePuzzle] " << idx << ' ' << rotated[idx] << std::endl;
+#endif
 }
 
 void PipePuzzle::Update(float dt) {

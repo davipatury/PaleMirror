@@ -4,8 +4,12 @@
 
 #define MARGIN 100
 
-TitleState::TitleState(): button("Recursos/img/menu/butao-sombreado.png"),
-                         activeButton("Recursos/img/menu/butao-mais-destacado.png") {
+TitleState::TitleState() :
+    button("Recursos/img/menu/butao-sombreado.png"),
+    activeButton("Recursos/img/menu/butao-mais-destacado.png"),
+    menuBg("Recursos/img/menu/menu.png", 5, 1, true),
+    menuControls("Recursos/img/menu/controles.png", 2, 1, true)
+{
     started = false;
     quitRequested = false;
     popRequested = false;
@@ -25,13 +29,6 @@ void TitleState::LoadAssets() {
 
     changeSound = new Sound("Recursos/audio/sounds/menu/click_menu.wav");
     playSound = new Sound("Recursos/audio/sounds/menu/click_start.wav");
-
-    bg = new GameObject();
-    SpriteRenderer* bgSprite = new SpriteRenderer((*bg), "Recursos/img/menu/menu.png", 7, 1);
-    bgSprite->SetCameraFollower(true);
-    bg->AddComponent(bgSprite);
-    bg->box.z = -2;
-    AddObject(bg);
 
     GameObject* logo = new GameObject();
     SpriteRenderer* logoSprite = new SpriteRenderer((*logo), "Recursos/img/menu/logo.png");
@@ -66,11 +63,9 @@ void TitleState::Update(float dt) {
 
     bgBlinkTimer.Update(dt);
 
-    SpriteRenderer* bgSr = (SpriteRenderer*) bg->GetComponent("SpriteRenderer");
-
     if (tutorial) {
-        if (INPUT_MANAGER.HasController()) bgSr->SetFrame(5);
-        else bgSr->SetFrame(6);
+        if (INPUT_MANAGER.HasController()) menuControls.SetFrame(0);
+        else menuControls.SetFrame(1);
 
         if (CONFIRM_CHECK) {
             playSound->Play();
@@ -83,17 +78,17 @@ void TitleState::Update(float dt) {
     } else {
         // Piscar
         if (blinking) {
-            if (bgBlinkTimer.Get() > 1) {
+            if (bgBlinkTimer.Get() > 0.7) {
                 blinking = false;
                 bgBlinkTimer.Restart();
             }
         } else {
-            bgSr->SetFrame(1);
-            if (bgBlinkTimer.Get() > 5) {
+            menuBg.SetFrame(1);
+            if (bgBlinkTimer.Get() > 4) {
                 blinking = true;
                 int randomFrame = rand() % 4;
                 if (randomFrame > 0) randomFrame++;
-                bgSr->SetFrame(randomFrame);
+                menuBg.SetFrame(randomFrame);
                 bgBlinkTimer.Restart();
             }
         }
@@ -119,6 +114,9 @@ void TitleState::Update(float dt) {
 }
 
 void TitleState::Render() {
+    if (tutorial) menuControls.Render(0, 0, menuControls.GetWidth(), menuControls.GetHeight());
+    else          menuBg.Render(0, 0, menuBg.GetWidth(), menuBg.GetHeight());
+
     RenderArray();
 
     if (!tutorial) {
