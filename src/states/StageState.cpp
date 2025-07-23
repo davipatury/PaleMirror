@@ -197,12 +197,8 @@ void StageState::Update(float dt) {
         Boss::startBoss = false;
     }
 
-    if (INPUT_MANAGER.KeyPress(SDLK_j)) {
-        Actions::ChangeRoom("banheiroMasc")(this, nullptr);
-    }
-
     // Custcene Boss
-    if (!openUI && (INPUT_MANAGER.KeyPress(SDLK_k) || (GameData::runeState == GameData::RUNA_LIGADA && GameData::mirrorPuzzleSolved))) {
+    if (!openUI && ((GameData::runeState == GameData::RUNA_LIGADA && GameData::mirrorPuzzleSolved))) {
         Actions::ChangeRoom("main", 8)(this, nullptr);
         GameData::runeState = GameData::RUNA_SUMMONADA;
 
